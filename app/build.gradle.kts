@@ -53,15 +53,19 @@ dependencies {
     implementation(Dependencies.AndroidX.core)
     implementation(Dependencies.AndroidX.lifecycleRuntime)
     implementation(Dependencies.AndroidX.activityCompose)
+
     implementation(Dependencies.Compose.ui)
     implementation(Dependencies.Compose.uiToolingPreview)
     implementation(Dependencies.Compose.material)
+    implementation(Dependencies.Compose.navigation)
 
     implementation(Dependencies.retrofit)
     implementation(Dependencies.guava)
     implementation(Dependencies.simpleXml)
+    implementation(Dependencies.timber)
 
     implementation(Dependencies.Hilt.hilt)
+    implementation(Dependencies.Hilt.navigationCompose)
     kapt(Dependencies.Hilt.hiltCompiler)
     kapt(Dependencies.Hilt.daggerHiltCompiler)
 

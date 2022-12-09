@@ -10,11 +10,13 @@ object Dependencies {
         const val ui = "androidx.compose.ui:ui:${Versions.compose}"
         const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview:${Versions.compose}"
         const val material = "androidx.compose.material3:material3:${Versions.material}"
+        const val navigation = "androidx.navigation:navigation-compose:${Versions.compose}"
     }
 
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val guava = "com.google.guava:guava:${Versions.guava}"
     const val simpleXml = "org.simpleframework:simple-xml:${Versions.simpleXml}"
+    const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
 
     object Test {
         const val jUnit = "junit:junit:${Versions.jUnit}"
@@ -34,7 +36,8 @@ object Dependencies {
     object Hilt {
         const val gradlePlugin = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}"
         const val hilt = "com.google.dagger:hilt-android:${Versions.hilt}"
-        const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltCompiler}"
+        const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltAndroidX}"
         const val daggerHiltCompiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
+        const val navigationCompose = "androidx.hilt:hilt-navigation-compose:${Versions.hiltAndroidX}"
     }
 }

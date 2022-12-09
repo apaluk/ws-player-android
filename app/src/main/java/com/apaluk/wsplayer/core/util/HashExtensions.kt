@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.core.utils
+package com.apaluk.wsplayer.core.util
 
 import com.apaluk.wsplayer.core.hashing.Md5Crypt
 import com.google.common.hash.Hashing

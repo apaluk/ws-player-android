@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WsPlayer</string>
+
+    <string name="wsp_login_username">User name</string>
+    <string name="wsp_login_password">Password</string>
+    <string name="wsp_login_positive_button">Login</string>
 </resources>

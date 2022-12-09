@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.data.remote
+package com.apaluk.wsplayer.data.webshare.remote
 
 import okhttp3.MultipartBody
 

@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.data.remote
+package com.apaluk.wsplayer.data.webshare.remote
 
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -26,6 +26,6 @@ interface WebShareApi {
     suspend fun login(
         @Field("username_or_email") userName: String,
         @Field("password") password: String,
-        @Field("keep_logged_in") keepLoggedIn: Int
+        @Field("keep_logged_in") keepLoggedIn: Int = 1
     ): Response<ResponseBody>
 }
