@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.core.hashing;
+package com.apaluk.wsplayer.core.util.hashing;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more

@@ -17,6 +17,7 @@ object Dependencies {
     const val guava = "com.google.guava:guava:${Versions.guava}"
     const val simpleXml = "org.simpleframework:simple-xml:${Versions.simpleXml}"
     const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
+    const val okHttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.okHttpLoggingInterceptor}"
 
     object Test {
         const val jUnit = "junit:junit:${Versions.jUnit}"
@@ -39,5 +40,18 @@ object Dependencies {
         const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltAndroidX}"
         const val daggerHiltCompiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
         const val navigationCompose = "androidx.hilt:hilt-navigation-compose:${Versions.hiltAndroidX}"
+    }
+
+    object Moshi {
+        const val converter = "com.squareup.retrofit2:converter-moshi:${Versions.moshiConverter}"
+        const val moshi = "com.squareup.moshi:moshi:${Versions.moshi}"
+        const val adapters = "com.squareup.moshi:moshi-adapters:${Versions.moshi}"
+        const val codegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
+    }
+
+    object ExoPlayer {
+        const val exoPlayer = "androidx.media3:media3-exoplayer:${Versions.exoPlayer}"
+        const val ui = "androidx.media3:media3-ui:${Versions.exoPlayer}"
+        const val okHttpDataSource = "androidx.media3:media3-datasource-okhttp:${Versions.exoPlayer}"
     }
 }

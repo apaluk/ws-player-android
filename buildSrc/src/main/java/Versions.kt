@@ -15,4 +15,8 @@ object Versions {
     const val hilt = "2.42"
     const val hiltAndroidX = "1.0.0"
     const val timber = "5.0.1"
+    const val moshi = "1.13.0"
+    const val moshiConverter = "2.9.0"
+    const val okHttpLoggingInterceptor = "4.9.1"
+    const val exoPlayer = "1.0.0-beta03"
 }

@@ -1,8 +1,10 @@
 package com.apaluk.wsplayer.data.webshare
 
+import com.apaluk.wsplayer.core.login.LoginManager
 import com.apaluk.wsplayer.core.util.Resource
 import com.apaluk.wsplayer.core.util.webShareRepositoryFlow
 import com.apaluk.wsplayer.data.webshare.remote.WebShareApi
+import com.apaluk.wsplayer.data.webshare.remote.dto.FileLinkDto
 import com.apaluk.wsplayer.data.webshare.remote.dto.LoginDto
 import com.apaluk.wsplayer.data.webshare.remote.dto.SaltDto
 import kotlinx.coroutines.flow.Flow
@@ -24,4 +26,9 @@ class WebShareRepository @Inject constructor(
         resultMapping = { it.token }
     )
 
+    fun getFileLink(fileIdent: String) = webShareRepositoryFlow(
+        apiOperation = { webShareApi.getFileLink(requireNotNull(LoginManager.token), fileIdent)},
+        dtoType = FileLinkDto::class.java,
+        resultMapping = { it.link }
+    )
 }

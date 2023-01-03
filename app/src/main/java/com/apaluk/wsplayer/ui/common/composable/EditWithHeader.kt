@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun EditWithHeader(
+fun TextFieldWithHeader(
     modifier: Modifier = Modifier,
     header: String,
     editText: String,

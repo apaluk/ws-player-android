@@ -63,11 +63,21 @@ dependencies {
     implementation(Dependencies.guava)
     implementation(Dependencies.simpleXml)
     implementation(Dependencies.timber)
+    implementation(Dependencies.okHttpLoggingInterceptor)
 
     implementation(Dependencies.Hilt.hilt)
     implementation(Dependencies.Hilt.navigationCompose)
     kapt(Dependencies.Hilt.hiltCompiler)
     kapt(Dependencies.Hilt.daggerHiltCompiler)
+
+    implementation(Dependencies.Moshi.moshi)
+    implementation(Dependencies.Moshi.converter)
+    implementation(Dependencies.Moshi.adapters)
+    kapt(Dependencies.Moshi.codegen)
+
+    implementation(Dependencies.ExoPlayer.exoPlayer)
+    implementation(Dependencies.ExoPlayer.ui)
+    implementation(Dependencies.ExoPlayer.okHttpDataSource)
 
     testImplementation(Dependencies.Test.jUnit)
     androidTestImplementation(Dependencies.AndroidTest.jUnitExt)

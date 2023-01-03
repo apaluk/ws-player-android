@@ -42,7 +42,31 @@ fun <D, R: ResponseDto> webShareRepositoryFlow(
     }
 }
 
-suspend fun <T> FlowCollector<Resource<T>>.emitError(message: String) {
+fun <D, R> repositoryFlow(
+    apiOperation: suspend () -> Response<R>,
+    resultMapping: suspend (R) -> D
+): Flow<Resource<D>>  = flow {
+    try {
+        emit(Resource.Loading())
+        val response = apiOperation.invoke()
+        if (!response.isSuccessful) {
+            emitError("Response: code=${response.code()} error=${response.errorBody()?.string()}")
+            return@flow
+        }
+        val body = response.body() ?: run {
+            emitError("Response body is null.")
+            return@flow
+        }
+        val result = resultMapping(body)
+        emit(Resource.Success(data = result))
+    } catch (e: Exception) {
+        e.throwIfCancellation()
+        emit(Resource.Error("Error: ${e.message}"))
+        Timber.w(e)
+    }
+}
+
+private suspend fun <T> FlowCollector<Resource<T>>.emitError(message: String) {
     Timber.w(message)
     emit(Resource.Error(message = message))
 }
