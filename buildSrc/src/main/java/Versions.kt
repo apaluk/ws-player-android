@@ -19,4 +19,6 @@ object Versions {
     const val moshiConverter = "2.9.0"
     const val okHttpLoggingInterceptor = "4.9.1"
     const val exoPlayer = "1.0.0-beta03"
+    const val datastore = "1.0.0"
+    const val encryptedDatastore = "1.0.0-alpha02"
 }

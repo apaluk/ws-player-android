@@ -1,19 +1,31 @@
 package com.apaluk.wsplayer.ui.login
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.apaluk.wsplayer.ui.common.composable.TextFieldWithHeader
+import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
+import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 
 @Composable
@@ -23,16 +35,20 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    LoginScreenContent(
-        modifier = modifier,
-        uiState = uiState,
-        onUpdateUsername = viewModel::updateUserName,
-        onUpdatePassword = viewModel::updatePassword,
-        onLogin = viewModel::login
-    )
-    if(uiState.loggedIn) {
-        viewModel.onLoggedIn()
-        onSuccessFullLogin()
+    UiStateAnimator(uiState = uiState.uiState) {
+        LoginScreenContent(
+            modifier = modifier,
+            uiState = uiState,
+            onUpdateUsername = viewModel::updateUserName,
+            onUpdatePassword = viewModel::updatePassword,
+            onLogin = viewModel::login
+        )
+    }
+    LaunchedEffect(uiState.loggedIn) {
+        if(uiState.loggedIn) {
+            viewModel.onLoggedIn()
+            onSuccessFullLogin()
+        }
     }
 }
 
@@ -44,9 +60,9 @@ private fun LoginScreenContent(
     onUpdatePassword: (String) -> Unit = {},
     onLogin: () -> Unit = {}
 ) {
-    Column(
+    Box(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     )
     {
         Column(
@@ -57,22 +73,26 @@ private fun LoginScreenContent(
             verticalArrangement = Arrangement.Center
         ) {
             TextFieldWithHeader(
-                header = stringResource(id = com.apaluk.wsplayer.R.string.wsp_login_username),
+                header = stringResourceSafe(id = com.apaluk.wsplayer.R.string.wsp_login_username),
                 editText = uiState.userName,
-                onTextChanged = onUpdateUsername
+                onTextChanged = onUpdateUsername,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
             Spacer(modifier = modifier.height(16.dp))
             TextFieldWithHeader(
-                header = stringResource(id = com.apaluk.wsplayer.R.string.wsp_login_password),
+                header = stringResourceSafe(id = com.apaluk.wsplayer.R.string.wsp_login_password),
                 editText = uiState.password,
-                onTextChanged = onUpdatePassword
+                onTextChanged = onUpdatePassword,
+                modifier = modifier,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = PasswordVisualTransformation()
             )
             Spacer(modifier = modifier.height(16.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(onClick = { onLogin() }) {
-                    Text(text = stringResource(id = com.apaluk.wsplayer.R.string.wsp_login_positive_button))
+                    Text(text = stringResourceSafe(id = com.apaluk.wsplayer.R.string.wsp_login_positive_button))
                 }
                 if(uiState.loggingIn) {
                     Spacer(modifier = modifier.width(32.dp))
@@ -81,8 +101,20 @@ private fun LoginScreenContent(
                     )
                 }
             }
-        }
 
+            uiState.errorMessage?.let { errorMessage ->
+                Spacer(modifier = modifier.height(16.dp))
+
+                // FIXME theme
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    style = TextStyle(
+                        fontSize = 12.sp
+                    )
+                )
+            }
+        }
     }
 }
 

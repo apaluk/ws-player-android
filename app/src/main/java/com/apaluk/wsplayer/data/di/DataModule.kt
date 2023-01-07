@@ -1,6 +1,5 @@
 package com.apaluk.wsplayer.data.di
 
-import android.content.Context
 import com.apaluk.wsplayer.BuildConfig
 import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
@@ -8,7 +7,6 @@ import com.apaluk.wsplayer.data.webshare.remote.WebShareApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -3,6 +3,7 @@ object Dependencies {
     object AndroidX {
         const val core = "androidx.core:core-ktx:${Versions.coreKtx}"
         const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycleRuntime}"
+        const val lifecycleProcess = "androidx.lifecycle:lifecycle-process:${Versions.lifecycleRuntime}"
         const val activityCompose = "androidx.activity:activity-compose:${Versions.activityCompose}"
     }
 
@@ -54,4 +55,7 @@ object Dependencies {
         const val ui = "androidx.media3:media3-ui:${Versions.exoPlayer}"
         const val okHttpDataSource = "androidx.media3:media3-datasource-okhttp:${Versions.exoPlayer}"
     }
+
+    const val datastore = "androidx.datastore:datastore-preferences:${Versions.datastore}"
+    const val encryptedDatastore = "io.github.osipxd:encrypted-datastore:$${Versions.encryptedDatastore}"
 }

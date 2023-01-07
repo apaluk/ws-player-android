@@ -7,6 +7,8 @@ import org.simpleframework.xml.Root
 open class ResponseDto {
     @field:Element(name = "status", required = true)
     lateinit var status: String
+    @field:Element(name = "message", required = false)
+    lateinit var message: String
 }
 
 enum class StatusDto {

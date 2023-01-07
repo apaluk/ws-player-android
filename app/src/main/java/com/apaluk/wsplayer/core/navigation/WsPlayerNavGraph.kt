@@ -37,7 +37,13 @@ fun WsPlayerNavGraph(
         ) {
             LoginScreen(
                 modifier = modifier,
-                onSuccessFullLogin = { navController.navigate(route = DASHBOARD_ROUTE)}
+                onSuccessFullLogin = {
+                    navController.navigate(route = DASHBOARD_ROUTE) {
+                        popUpTo(WsPlayerDestinations.LOGIN_ROUTE) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
         composable(

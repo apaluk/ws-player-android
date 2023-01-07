@@ -20,7 +20,7 @@ fun <D, R: ResponseDto> webShareRepositoryFlow(
         emit(Resource.Loading())
         val response = apiOperation.invoke()
         if (!response.isSuccessful) {
-            emitError("Response: code=${response.code()} error=${response.errorBody()?.string()} body=${response.body()?.string()}")
+            emitError("HTTP error ${response.code()}")
             return@flow
         }
         val body = response.body()?.string() ?: run {
@@ -30,7 +30,7 @@ fun <D, R: ResponseDto> webShareRepositoryFlow(
         val webshareResponse = Persister().read(dtoType, body)
         val webshareResponseStatus = webshareResponse.status.toStatusDto()
         if(webshareResponseStatus != StatusDto.OK) {
-            emitError("WebShare response=$webshareResponse body=$body")
+            emitError(webshareResponse.message)
             return@flow
         }
         val result = resultMapping(webshareResponse)

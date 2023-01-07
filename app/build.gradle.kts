@@ -52,6 +52,7 @@ dependencies {
 
     implementation(Dependencies.AndroidX.core)
     implementation(Dependencies.AndroidX.lifecycleRuntime)
+    implementation(Dependencies.AndroidX.lifecycleProcess)
     implementation(Dependencies.AndroidX.activityCompose)
 
     implementation(Dependencies.Compose.ui)
@@ -64,6 +65,7 @@ dependencies {
     implementation(Dependencies.simpleXml)
     implementation(Dependencies.timber)
     implementation(Dependencies.okHttpLoggingInterceptor)
+    implementation(Dependencies.datastore)
 
     implementation(Dependencies.Hilt.hilt)
     implementation(Dependencies.Hilt.navigationCompose)
@@ -78,6 +80,7 @@ dependencies {
     implementation(Dependencies.ExoPlayer.exoPlayer)
     implementation(Dependencies.ExoPlayer.ui)
     implementation(Dependencies.ExoPlayer.okHttpDataSource)
+
 
     testImplementation(Dependencies.Test.jUnit)
     androidTestImplementation(Dependencies.AndroidTest.jUnitExt)
