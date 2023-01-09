@@ -34,7 +34,6 @@ class StreamCinemaRepository @Inject constructor(
                 )
             )
             streamCinemaApi.mediaFilter(
-                accessToken = "5ze3qiq6lmoartnpktvl",
                 filterConfig = filterConfig,
                 sortConfig = sortConfig
             )
@@ -47,11 +46,19 @@ class StreamCinemaRepository @Inject constructor(
     fun getMediaStreams(mediaId: String) = repositoryFlow(
         apiOperation = {
             streamCinemaApi.getStreams(
-                accessToken = "5ze3qiq6lmoartnpktvl",
                 mediaId = mediaId
             )
         },
         resultMapping = { it.map { item -> item.toMediaStream() } }
+    )
+
+    fun search(text: String) = repositoryFlow(
+        apiOperation = {
+            streamCinemaApi.search(
+                searchText = text
+            )
+        },
+        resultMapping = {}
     )
 
 }

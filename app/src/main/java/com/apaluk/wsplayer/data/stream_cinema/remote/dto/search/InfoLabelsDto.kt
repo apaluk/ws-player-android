@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.data.stream_cinema.remote.dto
+package com.apaluk.wsplayer.data.stream_cinema.remote.dto.search
 
 
 import com.squareup.moshi.Json
@@ -11,19 +11,19 @@ data class InfoLabelsDto(
     @Json(name = "dateadded")
     val dateadded: String,
     @Json(name = "director")
-    val director: List<String>,
+    val director: List<String>?,
     @Json(name = "duration")
-    val duration: Int,
+    val duration: Int?,
     @Json(name = "episode")
     val episode: Int?,
     @Json(name = "genre")
     val genre: List<String>,
     @Json(name = "mediatype")
-    val mediatype: String?,
+    val mediatype: String,
     @Json(name = "mpaa")
     val mpaa: String?,
     @Json(name = "originaltitle")
-    val originalTitle: String?,
+    val originaltitle: String?,
     @Json(name = "premiered")
     val premiered: String?,
     @Json(name = "season")
@@ -35,5 +35,5 @@ data class InfoLabelsDto(
     @Json(name = "writer")
     val writer: List<String>?,
     @Json(name = "year")
-    val year: Int?
+    val year: Int
 )

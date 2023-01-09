@@ -71,7 +71,7 @@ class LoginManager @Inject constructor(
     private suspend fun loginInternal(username: String, password: String): Resource<Unit> {
         val salt = webShareRepository.getSalt(username).last().data ?: run {
             // seems that getSalt returns error for invalid username
-            Timber.e("Invalid username")
+            Timber.e("Failed to get salt.")
             return Resource.Error(message = "Invalid username")
         }
         val passwordDigest = password.md5Crypt(salt).sha1()
@@ -108,7 +108,7 @@ class LoginManager @Inject constructor(
                     webshareToken.value = loginResult.data
                 }
                 is Resource.Error -> {
-                    Timber.e("Failed to update WebShare token!")
+                    Timber.w("Failed to update WebShare token!")
                 }
                 is Resource.Loading -> {}   // ignore
             }

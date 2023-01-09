@@ -7,5 +7,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ParentInfoLabelsDto(
     @Json(name = "originaltitle")
-    val originaltitle: List<String>
+    val originaltitle: List<String>?
 )
