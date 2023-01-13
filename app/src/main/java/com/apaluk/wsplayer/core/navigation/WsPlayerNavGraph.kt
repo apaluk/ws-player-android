@@ -1,6 +1,7 @@
 package com.apaluk.wsplayer.core.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -9,14 +10,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.DASHBOARD_ROUTE
+import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.LOGIN_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.MEDIA_ITEM_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.SEARCH_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.VIDEO_PLAYER_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.MEDIA_ID_ARG
-import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.MEDIA_ITEM_SCREEN
-import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.VIDEO_PLAYER_SCREEN
 import com.apaluk.wsplayer.core.util.base64Decode
-import com.apaluk.wsplayer.core.util.base64Encode
 import com.apaluk.wsplayer.ui.dashboard.DashboardScreen
 import com.apaluk.wsplayer.ui.dashboard.MediaItemScreen
 import com.apaluk.wsplayer.ui.login.LoginScreen
@@ -27,24 +26,19 @@ import com.apaluk.wsplayer.ui.search.SearchScreen
 fun WsPlayerNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    navActions: WsPlayerNavActions = remember { WsPlayerNavActions(navController) }
 ) {
     NavHost(
         navController = navController,
-        startDestination = WsPlayerDestinations.LOGIN_ROUTE,
+        startDestination = LOGIN_ROUTE,
         modifier = modifier
     ) {
         composable(
-            route = WsPlayerDestinations.LOGIN_ROUTE
+            route = LOGIN_ROUTE
         ) {
             LoginScreen(
                 modifier = modifier,
-                onSuccessFullLogin = {
-                    navController.navigate(route = DASHBOARD_ROUTE) {
-                        popUpTo(WsPlayerDestinations.LOGIN_ROUTE) {
-                            inclusive = true
-                        }
-                    }
-                }
+                onSuccessFullLogin = { navActions.navigateToDashboard() }
             )
         }
         composable(
@@ -52,7 +46,7 @@ fun WsPlayerNavGraph(
         ) {
             DashboardScreen(
                 modifier = modifier,
-                onSearch = { navController.navigate(route = SEARCH_ROUTE) }
+                onSearch = { navActions.navigateToSearch() }
             )
         }
         composable(
@@ -70,7 +64,7 @@ fun WsPlayerNavGraph(
             )
         ) {
             MediaItemScreen(
-                onMediaIdSelected = { url -> navController.navigate(route = "${VIDEO_PLAYER_SCREEN}/${url.base64Encode()}")}
+                onMediaIdSelected = { navActions.navigateToPlayer(url = it) }
             )
         }
         composable(
@@ -79,7 +73,8 @@ fun WsPlayerNavGraph(
                 navArgument(MEDIA_ID_ARG) { type = NavType.StringType}
             )
         ) { entry ->
-            PlayerScreen(requireNotNull(entry.arguments?.getString(MEDIA_ID_ARG)).base64Decode())
+            val videoUrl = requireNotNull(entry.arguments?.getString(MEDIA_ID_ARG)).base64Decode()
+            PlayerScreen(url = videoUrl)
         }
     }
 }

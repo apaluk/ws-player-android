@@ -101,7 +101,6 @@ fun SearchResult(
             verticalArrangement = Arrangement.Center
         ) {
             Row {
-                Timber.d("xxx title=${item.title} original=${item.originalTitle}")
                 Text(
                     modifier = Modifier.alignByBaseline(),
                     text = item.title,
@@ -113,7 +112,7 @@ fun SearchResult(
                 val originalTitle = item.originalTitle
                 if(originalTitle != null && originalTitle != item.title) {
                     Text(
-                        modifier = Modifier.padding(start = 4.dp).alignByBaseline(),
+                        modifier = Modifier.padding(start = 6.dp).alignByBaseline(),
                         text = "($originalTitle)",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onBackground,

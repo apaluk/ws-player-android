@@ -29,7 +29,6 @@ fun PlayerScreen(
     viewModel: PlayerViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    Timber.d("xxx player url=$url")
     VideoPlayer(uri = Uri.parse(url))
 }
 

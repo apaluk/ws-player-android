@@ -40,7 +40,6 @@ class MediaItemViewModel @Inject constructor(
     fun onStreamSelected(streamIdent: String) {
         viewModelScope.launch {
             val link = getFileLinkUseCase(streamIdent).last()
-            Timber.d("xxx file link=${link.data}")
             _uiState.update { it.copy(selectedVideoUrl = link.data) }
         }
     }
