@@ -5,6 +5,7 @@ import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.*
 import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toMedia
 import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toMediaStream
+import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toSearchResultItems
 import com.squareup.moshi.Moshi
 import javax.inject.Inject
 
@@ -58,7 +59,7 @@ class StreamCinemaRepository @Inject constructor(
                 searchText = text
             )
         },
-        resultMapping = {}
+        resultMapping = { it.toSearchResultItems() }
     )
 
 }

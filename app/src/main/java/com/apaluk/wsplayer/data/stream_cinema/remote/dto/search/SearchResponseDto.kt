@@ -7,9 +7,9 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SearchResponseDto(
     @Json(name = "data")
-    val `data`: List<DataDto>,
+    val searchResultItems: List<SearchResultItemDto>,
     @Json(name = "pagination")
-    val pagination: PaginationDto,
+    val pagination: PaginationDto?,
     @Json(name = "totalCount")
     val totalCount: Int
 )

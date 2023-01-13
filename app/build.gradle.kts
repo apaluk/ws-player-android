@@ -66,6 +66,7 @@ dependencies {
     implementation(Dependencies.timber)
     implementation(Dependencies.okHttpLoggingInterceptor)
     implementation(Dependencies.datastore)
+    implementation(Dependencies.coil)
 
     implementation(Dependencies.Hilt.hilt)
     implementation(Dependencies.Hilt.navigationCompose)

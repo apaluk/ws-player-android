@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class DataDto(
+data class SearchResultItemDto(
     @Json(name = "_id")
     val id: String,
     @Json(name = "_score")

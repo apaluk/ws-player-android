@@ -25,7 +25,7 @@ data class SourceDto(
     @Json(name = "ratings")
     val ratings: RatingsDto,
     @Json(name = "revenue")
-    val revenue: Int?,
+    val revenue: Long?,
     @Json(name = "root_parent")
     val rootParent: String?,
     @Json(name = "services")

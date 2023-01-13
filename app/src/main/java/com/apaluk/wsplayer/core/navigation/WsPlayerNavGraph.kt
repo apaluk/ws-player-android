@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.DASHBOARD_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.MEDIA_ITEM_ROUTE
+import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.SEARCH_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.VIDEO_PLAYER_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.MEDIA_ID_ARG
 import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.MEDIA_ITEM_SCREEN
@@ -20,13 +21,13 @@ import com.apaluk.wsplayer.ui.dashboard.DashboardScreen
 import com.apaluk.wsplayer.ui.dashboard.MediaItemScreen
 import com.apaluk.wsplayer.ui.login.LoginScreen
 import com.apaluk.wsplayer.ui.player.PlayerScreen
+import com.apaluk.wsplayer.ui.search.SearchScreen
 
 @Composable
 fun WsPlayerNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-
     NavHost(
         navController = navController,
         startDestination = WsPlayerDestinations.LOGIN_ROUTE,
@@ -51,7 +52,15 @@ fun WsPlayerNavGraph(
         ) {
             DashboardScreen(
                 modifier = modifier,
-                onMediaIdSelected = { mediaId -> navController.navigate(route = "$MEDIA_ITEM_SCREEN/$mediaId")}
+                onSearch = { navController.navigate(route = SEARCH_ROUTE) }
+            )
+        }
+        composable(
+            route = SEARCH_ROUTE
+        ) {
+            SearchScreen(
+                modifier = modifier,
+                navController = navController   // TODO needs refactor?
             )
         }
         composable(

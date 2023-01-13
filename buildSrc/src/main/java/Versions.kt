@@ -21,4 +21,5 @@ object Versions {
     const val exoPlayer = "1.0.0-beta03"
     const val datastore = "1.0.0"
     const val encryptedDatastore = "1.0.0-alpha02"
+    const val coil = "2.2.2"
 }

@@ -35,5 +35,5 @@ data class InfoLabelsDto(
     @Json(name = "writer")
     val writer: List<String>?,
     @Json(name = "year")
-    val year: Int
+    val year: Int?
 )

@@ -1,6 +1,7 @@
 package com.apaluk.wsplayer.data.stream_cinema.remote.dto.search
 
 
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.CsfdDto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

@@ -57,5 +57,5 @@ object Dependencies {
     }
 
     const val datastore = "androidx.datastore:datastore-preferences:${Versions.datastore}"
-    const val encryptedDatastore = "io.github.osipxd:encrypted-datastore:$${Versions.encryptedDatastore}"
+    const val coil = "io.coil-kt:coil-compose:${Versions.coil}"
 }
