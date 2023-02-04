@@ -1,10 +1,12 @@
 package com.apaluk.wsplayer.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 private val LightColors = lightColorScheme(
@@ -72,6 +74,11 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+private val wsPlayerShapes = Shapes(
+    large = RoundedCornerShape(32.dp),
+    extraLarge = RoundedCornerShape(128.dp)
+)
+
 @Composable
 fun WsPlayerTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -84,8 +91,14 @@ fun WsPlayerTheme(
             DarkColors
 //        }
 
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(
+        color = Color(0xFF181819)
+    )
+
     MaterialTheme(
         colorScheme = colors,
-        content = content
+        content = content,
+        shapes = wsPlayerShapes
     )
 }

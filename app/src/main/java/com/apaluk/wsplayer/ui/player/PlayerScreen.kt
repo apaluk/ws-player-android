@@ -5,6 +5,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,16 +21,22 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import com.apaluk.wsplayer.ui.common.composable.FullScreenLoader
 import okhttp3.OkHttpClient
-import timber.log.Timber
 
 @Composable
 fun PlayerScreen(
-    url: String,
-    viewModel: PlayerViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: PlayerViewModel = hiltViewModel()
 ) {
-    VideoPlayer(uri = Uri.parse(url))
+    val uiState = viewModel.uiState.collectAsState()
+    val url = uiState.value.videoUrl
+    if(url == null) {
+        FullScreenLoader(modifier = modifier)
+    }
+    else {
+        VideoPlayer(uri = Uri.parse(url))
+    }
 }
 
 @Composable

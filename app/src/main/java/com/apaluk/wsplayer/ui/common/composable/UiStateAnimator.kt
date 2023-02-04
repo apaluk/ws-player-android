@@ -1,8 +1,8 @@
 package com.apaluk.wsplayer.ui.common.composable
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.apaluk.wsplayer.R
-import com.apaluk.wsplayer.core.util.Resource
-import com.apaluk.wsplayer.core.util.hashing.ComposableFun
+import com.apaluk.wsplayer.core.util.ComposableFun
 import com.apaluk.wsplayer.ui.common.util.UiState
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
+import com.apaluk.wsplayer.ui.common.util.text
 
 @Composable
 fun UiStateAnimator(
@@ -30,7 +32,7 @@ fun UiStateAnimator(
         UiState.Loading -> loading()
         UiState.Content -> content()
         UiState.Empty -> empty()
-        is UiState.Error -> error(uiState.text ?: stringResourceSafe(id = R.string.wsp_default_error_state))
+        is UiState.Error -> error(uiState.text())
     }
 }
 
@@ -55,14 +57,16 @@ fun DefaultEmptyState(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Column {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(32.dp)
+                .align(Alignment.Center),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -75,14 +79,16 @@ fun DefaultErrorState(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Column {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.error,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.error,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(32.dp)
+                .align(Alignment.Center),
+            textAlign = TextAlign.Center
+        )
     }
 
 }

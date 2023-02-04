@@ -38,8 +38,8 @@ object Dependencies {
     object Hilt {
         const val gradlePlugin = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}"
         const val hilt = "com.google.dagger:hilt-android:${Versions.hilt}"
-        const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltAndroidX}"
         const val daggerHiltCompiler = "com.google.dagger:hilt-compiler:${Versions.hilt}"
+        const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltAndroidX}"
         const val navigationCompose = "androidx.hilt:hilt-navigation-compose:${Versions.hiltAndroidX}"
     }
 
@@ -58,4 +58,5 @@ object Dependencies {
 
     const val datastore = "androidx.datastore:datastore-preferences:${Versions.datastore}"
     const val coil = "io.coil-kt:coil-compose:${Versions.coil}"
+    const val accompanist = "com.google.accompanist:accompanist-systemuicontroller:${Versions.accompanist}"
 }

@@ -1,37 +1,25 @@
 package com.apaluk.wsplayer.data.stream_cinema.remote.mapper
 
-import com.apaluk.wsplayer.data.stream_cinema.remote.dto.MediaDataDto
+import com.apaluk.wsplayer.core.util.requireNotNullOrEmpty
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.media.MediaDetailDto
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.search.HitDto
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.search.I18nInfoLabelDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.search.SearchResponseDto
-import com.apaluk.wsplayer.data.stream_cinema.remote.dto.search.SearchResultItemDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.MediaStreamsResponseItemDto
-import com.apaluk.wsplayer.domain.model.media.Media
-import com.apaluk.wsplayer.domain.model.media.MediaStream
-import com.apaluk.wsplayer.domain.model.media.SearchResultItem
-
-fun MediaDataDto.toMedia(): Media =
-    Media(
-        id = id,
-        name = source.infoLabels.originalTitle.orEmpty()
-    )
-
-fun MediaStreamsResponseItemDto.toMediaStream(): MediaStream =
-    MediaStream(
-        id = id,
-        ident = ident,
-        audios = audio.map { "${it.language} (${it.codec})" },
-        videos = video.map { it.codec }
-    )
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.SubtitleDto
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.VideoDto
+import com.apaluk.wsplayer.domain.model.media.*
 
 fun SearchResponseDto.toSearchResultItems(): List<SearchResultItem> =
-    searchResultItems.mapNotNull { it.toSearchResultItem() }
+    hits.hits.mapNotNull { it.toSearchResultItem() }
 
-fun SearchResultItemDto.toSearchResultItem(): SearchResultItem? =
+fun HitDto.toSearchResultItem(): SearchResultItem? =
     try {
         SearchResultItem(
             id = id,
             title = getTitle(),
             originalTitle = source.infoLabels.originaltitle,
-            year = source.infoLabels.year.toString(),
+            year = source.infoLabels.year?.toString().orEmpty(),
             genre = source.infoLabels.genre,
             duration = source.infoLabels.duration ?: 0,
             cast = source.cast.map { it.name },
@@ -42,21 +30,98 @@ fun SearchResultItemDto.toSearchResultItem(): SearchResultItem? =
         null
     }
 
-private fun SearchResultItemDto.getImageUrl(): String? =
-    getPosterImageUrl("en") ?: getPosterImageUrl("sk") ?: getPosterImageUrl("cs")
+fun MediaDetailDto.toMediaDetail(): MediaDetail =
+    MediaDetail(
+        id = id,
+        title = getTitle(),
+        originalTitle = infoLabels.originaltitle,
+        year = infoLabels.year.toString(),
+        directors = infoLabels.director,
+        writer = infoLabels.writer,
+        cast = cast.map { it.name },
+        genre = infoLabels.genre,
+        plot = getPlot(),
+        imageUrl = getImageUrl(),
+        duration = infoLabels.duration
+    )
 
-private fun SearchResultItemDto.getPosterImageUrl(lang: String): String? =
-    source.i18nInfoLabels
-        .firstOrNull { it.lang == lang }
+fun MediaStreamsResponseItemDto.toMediaStream(): MediaStream {
+    val duration = video.firstOrNull()?.duration?.toInt() ?: 0
+    return MediaStream(
+        ident = ident,
+        size = size,
+        duration = duration,
+        speed = if (duration == 0) 0.0 else size.toDouble() / duration.toDouble(),
+        audios = audio.map { it.language }.filter { it.isNotBlank() }.distinct(),
+        video = video.firstOrNull()?.toVideoDefinition() ?: VideoDefinition.SD,
+        subtitles = subtitles.mapNotNull { it.toSubtitles() }
+    )
+}
+
+private fun HitDto.getImageUrl(): String? =
+    source.i18nInfoLabels.getPosterImageUrl("en")
+        ?: source.i18nInfoLabels.getPosterImageUrl("sk")
+        ?: source.i18nInfoLabels.getPosterImageUrl("cs")
+
+private fun MediaDetailDto.getImageUrl(): String? =
+    i18nInfoLabels.getFanArtImageUrl("en")
+        ?: i18nInfoLabels.getFanArtImageUrl("sk")
+        ?: i18nInfoLabels.getFanArtImageUrl("cs")
+
+private fun List<I18nInfoLabelDto>.getPosterImageUrl(lang: String): String? =
+    this.firstOrNull { it.lang == lang }
         ?.art?.poster
 
-private fun SearchResultItemDto.getTitle(): String =
-    getTitle("sk") ?: getTitle("cs") ?: getTitle("en") ?: requireNotNull(source.infoLabels.originaltitle)
+private fun List<I18nInfoLabelDto>.getFanArtImageUrl(lang: String): String? =
+    this.firstOrNull { it.lang == lang }
+        ?.art?.fanart
 
-private fun SearchResultItemDto.getTitle(lang: String): String? =
-    source.i18nInfoLabels
-        .firstOrNull { it.lang == lang }
+private fun HitDto.getTitle(): String =
+    source.i18nInfoLabels.getTitle("sk")
+        ?: source.i18nInfoLabels.getTitle("cs")
+        ?: source.i18nInfoLabels.getTitle("en")
+        ?: requireNotNull(source.infoLabels.originaltitle)
+
+private fun MediaDetailDto.getTitle(): String =
+    i18nInfoLabels.getTitle("sk")
+        ?: i18nInfoLabels.getTitle("cs")
+        ?: i18nInfoLabels.getTitle("en")
+        ?: requireNotNull(infoLabels.originaltitle)
+
+private fun MediaDetailDto.getPlot(): String =
+    i18nInfoLabels.getPlot("sk")
+        ?: i18nInfoLabels.getPlot("cs")
+        ?: i18nInfoLabels.getPlot("en").orEmpty()
+
+private fun List<I18nInfoLabelDto>.getTitle(lang: String): String? =
+    firstOrNull { it.lang == lang }
         ?.title.run {
             // if it's blank, return null
             if(this.isNullOrBlank()) null else this
         }
+
+private fun List<I18nInfoLabelDto>.getPlot(lang: String): String? =
+    firstOrNull { it.lang == lang }
+        ?.plot.run {
+            // if it's blank, return null
+            if(this.isNullOrBlank()) null else this
+        }
+
+private fun VideoDto.toVideoDefinition(): VideoDefinition =
+    when {
+        height > 2500 -> VideoDefinition.U8K
+        height > 2000 -> VideoDefinition.U4K
+        height > 900 -> VideoDefinition.FHD
+        height > 600 -> VideoDefinition.HD
+        else -> VideoDefinition.SD
+    }
+
+private fun SubtitleDto.toSubtitles(): Subtitles? =
+    try {
+        Subtitles(
+            lang = requireNotNullOrEmpty(language),
+            forced = forced ?: false
+        )
+    } catch (e: Exception) {
+        null
+    }

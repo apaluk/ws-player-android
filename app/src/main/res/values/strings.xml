@@ -14,4 +14,10 @@
     <string name="wsp_search_hint">Search for movies, TV shows, actors…</string>
     <string name="wsp_search_empty_results">No results found</string>
 
+    <string name="wsp_media_play">Play</string>
+    <string name="wsp_media_director">Director</string>
+    <string name="wsp_media_cast">Cast</string>
+    <string name="wsp_media_writer">Writer</string>
+    <string name="wsp_media_select_stream">Select stream</string>
+
 </resources>

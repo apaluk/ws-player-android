@@ -14,8 +14,6 @@ data class VideoDto(
     val d: Boolean,
     @Json(name = "duration")
     val duration: Double,
-    @Json(name = "hdr")
-    val hdr: Boolean?,
     @Json(name = "height")
     val height: Int,
     @Json(name = "_id")

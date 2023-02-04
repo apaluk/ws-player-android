@@ -22,4 +22,5 @@ object Versions {
     const val datastore = "1.0.0"
     const val encryptedDatastore = "1.0.0-alpha02"
     const val coil = "2.2.2"
+    const val accompanist = "0.27.0"
 }

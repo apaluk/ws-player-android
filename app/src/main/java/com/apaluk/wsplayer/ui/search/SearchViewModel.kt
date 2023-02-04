@@ -22,22 +22,32 @@ class SearchViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun onMediaSelected(mediaId: String) {
+    fun onSearchScreenAction(action: SearchScreenAction) {
+        when(action) {
+            is SearchScreenAction.SearchTextChanged -> onSearchTextChanged(action.text)
+            is SearchScreenAction.MediaSelected ->
+                if(action.mediaId == null) clearSelectedMedia() else onMediaSelected(action.mediaId)
+            SearchScreenAction.TriggerSearch -> triggerSearch()
+            SearchScreenAction.ClearSearch -> clearSearch()
+        }
+    }
+
+    private fun onMediaSelected(mediaId: String) {
         _uiState.update { it.copy(selectedMediaId = mediaId) }
     }
 
-    fun clearSelectedMedia() {
+    private fun clearSelectedMedia() {
         _uiState.update { it.copy(selectedMediaId = null) }
     }
 
-    fun onSearchTextChanged(text: String) {
+    private fun onSearchTextChanged(text: String) {
         _uiState.update { it.copy(searchText = text) }
     }
 
-    fun triggerSearch() {
+    private fun triggerSearch() {
         viewModelScope.launch {
             _uiState.update { it.copy(searchState = UiState.Loading, scrollListToTop = true) }
-            val searchResource = streamCinemaRepository.search(_uiState.value.searchText).last()
+            val searchResource = streamCinemaRepository.search(_uiState.value.searchText.trim()).last()
             _uiState.update { it.copy(
                 searchResults = searchResource.data.orEmpty(),
                 searchState = searchResource.toUiState(),
@@ -46,16 +56,23 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun clearSearch() {
+    private fun clearSearch() {
         _uiState.update { it.copy(searchText = "", searchResults = emptyList()) }
     }
 }
 
 data class SearchUiState(
-    val selectedMediaId: String? = null,    // TODO nechat?
+    val selectedMediaId: String? = null,
     val searchText: String = "",
     val errorToast: String? = null,
     val searchResults: List<SearchResultItem> = emptyList(),
     val searchState: UiState = UiState.Idle,
     val scrollListToTop: Boolean = false
 )
+
+sealed class SearchScreenAction {
+    data class SearchTextChanged(val text: String): SearchScreenAction()
+    object TriggerSearch: SearchScreenAction()
+    object ClearSearch: SearchScreenAction()
+    data class MediaSelected(val mediaId: String?): SearchScreenAction()
+}

@@ -8,6 +8,8 @@ import com.squareup.moshi.JsonClass
 data class ServicesDto(
     @Json(name = "csfd")
     val csfd: String?,
+    @Json(name = "fanart")
+    val fanart: String?,
     @Json(name = "imdb")
     val imdb: String?,
     @Json(name = "slug")
@@ -19,5 +21,7 @@ data class ServicesDto(
     @Json(name = "trakt_with_type")
     val traktWithType: String?,
     @Json(name = "tvdb")
-    val tvdb: String?
+    val tvdb: String?,
+    @Json(name = "tvrage")
+    val tvrage: String?
 )

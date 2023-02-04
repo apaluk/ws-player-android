@@ -6,10 +6,12 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class SearchResponseDto(
-    @Json(name = "data")
-    val searchResultItems: List<SearchResultItemDto>,
-    @Json(name = "pagination")
-    val pagination: PaginationDto?,
-    @Json(name = "totalCount")
-    val totalCount: Int
+    @Json(name = "hits")
+    val hits: HitsDto,
+    @Json(name = "_shards")
+    val shards: ShardsDto,
+    @Json(name = "timed_out")
+    val timedOut: Boolean,
+    @Json(name = "took")
+    val took: Int
 )

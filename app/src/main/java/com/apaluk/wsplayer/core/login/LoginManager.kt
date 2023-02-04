@@ -2,9 +2,9 @@ package com.apaluk.wsplayer.core.login
 
 import com.apaluk.wsplayer.core.settings.AppSettings
 import com.apaluk.wsplayer.core.util.Resource
-import com.apaluk.wsplayer.core.util.md5Crypt
+import com.apaluk.wsplayer.core.util.hashing.md5Crypt
 import com.apaluk.wsplayer.core.util.requireNotNullOrEmpty
-import com.apaluk.wsplayer.core.util.sha1
+import com.apaluk.wsplayer.core.util.hashing.sha1
 import com.apaluk.wsplayer.data.webshare.WebShareRepository
 import com.apaluk.wsplayer.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope

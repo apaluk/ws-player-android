@@ -7,17 +7,25 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class I18nInfoLabelDto(
     @Json(name = "art")
-    val art: ArtDto?,
+    val art: ArtDtoX?,
     @Json(name = "lang")
-    val lang: String?,
+    val lang: String,
+    @Json(name = "name")
+    val name: String?,
     @Json(name = "parent_titles")
-    val parentTitles: List<String>?,
+    val parentTitles: List<Any>?,
     @Json(name = "plot")
     val plot: String?,
     @Json(name = "plotoutline")
-    val plotoutline: String?,
+    val plotoutline: Any?,
+    @Json(name = "rating")
+    val rating: Double?,
+    @Json(name = "tagline")
+    val tagline: String?,
     @Json(name = "title")
     val title: String?,
     @Json(name = "trailer")
-    val trailer: String?
+    val trailer: String?,
+    @Json(name = "votes")
+    val votes: String?
 )

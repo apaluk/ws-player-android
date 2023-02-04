@@ -1,7 +1,6 @@
 package com.apaluk.wsplayer.data.stream_cinema.remote.dto.search
 
 
-import com.apaluk.wsplayer.data.stream_cinema.remote.dto.CsfdDto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -11,6 +10,8 @@ data class RatingsDto(
     val csfd: CsfdDto?,
     @Json(name = "imdb")
     val imdb: ImdbDto?,
+    @Json(name = "Metacritic")
+    val metacritic: MetacriticDto?,
     @Json(name = "Rotten Tomatoes")
     val rottenTomatoes: RottenTomatoesDto?,
     @Json(name = "tmdb")

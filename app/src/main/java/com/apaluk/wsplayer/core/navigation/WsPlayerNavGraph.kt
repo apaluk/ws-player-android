@@ -11,14 +11,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.DASHBOARD_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.LOGIN_ROUTE
-import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.MEDIA_ITEM_ROUTE
+import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.MEDIA_DETAIL_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.SEARCH_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.VIDEO_PLAYER_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.MEDIA_ID_ARG
+import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.WEBSHARE_IDENT_ARG
 import com.apaluk.wsplayer.core.util.base64Decode
 import com.apaluk.wsplayer.ui.dashboard.DashboardScreen
-import com.apaluk.wsplayer.ui.dashboard.MediaItemScreen
 import com.apaluk.wsplayer.ui.login.LoginScreen
+import com.apaluk.wsplayer.ui.media_detail.MediaDetailScreen
 import com.apaluk.wsplayer.ui.player.PlayerScreen
 import com.apaluk.wsplayer.ui.search.SearchScreen
 
@@ -38,7 +39,7 @@ fun WsPlayerNavGraph(
         ) {
             LoginScreen(
                 modifier = modifier,
-                onSuccessFullLogin = { navActions.navigateToDashboard() }
+                navActions = navActions
             )
         }
         composable(
@@ -46,7 +47,7 @@ fun WsPlayerNavGraph(
         ) {
             DashboardScreen(
                 modifier = modifier,
-                onSearch = { navActions.navigateToSearch() }
+                navActions = navActions
             )
         }
         composable(
@@ -54,27 +55,27 @@ fun WsPlayerNavGraph(
         ) {
             SearchScreen(
                 modifier = modifier,
-                navController = navController   // TODO needs refactor?
+                navActions = navActions
             )
         }
         composable(
-            route = MEDIA_ITEM_ROUTE,
+            route = MEDIA_DETAIL_ROUTE,
             arguments = listOf(
                 navArgument(MEDIA_ID_ARG) { type = NavType.StringType}
             )
         ) {
-            MediaItemScreen(
-                onMediaIdSelected = { navActions.navigateToPlayer(url = it) }
+            MediaDetailScreen(
+                modifier = modifier,
+                navActions = navActions,
             )
         }
         composable(
             route = VIDEO_PLAYER_ROUTE,
             arguments = listOf(
-                navArgument(MEDIA_ID_ARG) { type = NavType.StringType}
+                navArgument(WEBSHARE_IDENT_ARG) { type = NavType.StringType}
             )
-        ) { entry ->
-            val videoUrl = requireNotNull(entry.arguments?.getString(MEDIA_ID_ARG)).base64Decode()
-            PlayerScreen(url = videoUrl)
+        ) {
+            PlayerScreen(modifier = modifier)
         }
     }
 }

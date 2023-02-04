@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
@@ -18,16 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.apaluk.wsplayer.R
+import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.domain.model.media.SearchResultItem
+import com.apaluk.wsplayer.ui.common.composable.MovieTitle
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
-import timber.log.Timber
 
 @Composable
 fun SearchResults(
@@ -46,7 +44,11 @@ fun SearchResults(
                 item = result,
                 onClicked = { onResultClicked(result.id) }
             )
-            Divider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 1.dp)
+            Divider(
+                modifier = Modifier.padding(horizontal = 4.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                thickness = 1.dp
+            )
         }
     }
     LaunchedEffect(scrollToTop) {
@@ -59,20 +61,19 @@ fun SearchResults(
 @Composable
 fun SearchResult(
     item: SearchResultItem,
-    modifier: Modifier = Modifier,
     onClicked: () -> Unit,
 ) {
     val imgHeight = 180.dp
     val imgWidth = 120.dp
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(imgHeight)
             .clickable { onClicked() }
             .padding(vertical = 4.dp)
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .width(imgWidth)
                 .height(imgHeight)
                 .background(color = MaterialTheme.colorScheme.surfaceVariant),
@@ -80,14 +81,20 @@ fun SearchResult(
         ) {
             if (item.imageUrl.isNullOrEmpty()) {
                 Image(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(start = 4.dp),
                     painter = painterResource(id = R.drawable.ic_movie_64),
                     contentDescription = null
                 )
             } else {
                 AsyncImage(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(start = 4.dp),
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(item.imageUrl)
-                        .crossfade(durationMillis = 100)
+                        .crossfade(durationMillis = Constants.SHORT_ANIM_DURATION)
                         .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop
@@ -95,37 +102,17 @@ fun SearchResult(
             }
         }
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .padding(16.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
-            Row {
-                Text(
-                    modifier = Modifier.alignByBaseline(),
-                    text = item.title,
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1
-                )
-                val originalTitle = item.originalTitle
-                if(originalTitle != null && originalTitle != item.title) {
-                    Text(
-                        modifier = Modifier.padding(start = 6.dp).alignByBaseline(),
-                        text = "($originalTitle)",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                }
-
-            }
+            MovieTitle(
+                title = item.title,
+                originalTitle = item.originalTitle
+            )
             Text(
-                modifier = modifier.padding(vertical = 12.dp),
+                modifier = Modifier.padding(vertical = 12.dp),
                 text = item.year,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyLarge

@@ -3,7 +3,6 @@
 package com.apaluk.wsplayer.ui.search
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apaluk.wsplayer.R
+import com.apaluk.wsplayer.core.navigation.WsPlayerNavActions
 import com.apaluk.wsplayer.ui.common.composable.BackButton
 import com.apaluk.wsplayer.ui.common.composable.DefaultEmptyState
 import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
@@ -32,27 +32,29 @@ import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navActions: WsPlayerNavActions
 ) {
     val viewModel: SearchViewModel = hiltViewModel()
     val uiState = viewModel.uiState.collectAsState()
     SearchScreenContent(
         modifier = modifier,
         uiState = uiState.value,
-        onSearchTextChanged = viewModel::onSearchTextChanged,
-        onSearch = viewModel::triggerSearch,
-        onClearSearch = viewModel::clearSearch,
-        onBack = { navController.navigateUp() }
+        onSearchScreenAction = viewModel::onSearchScreenAction,
+        onBack = { navActions.navigateUp() }
     )
+    LaunchedEffect(uiState.value.selectedMediaId) {
+        uiState.value.selectedMediaId?.let {
+            navActions.navigateToMediaId(it)
+        }
+        viewModel.onSearchScreenAction(SearchScreenAction.MediaSelected(null))
+    }
 }
 
 @Composable
 private fun SearchScreenContent(
     modifier: Modifier = Modifier,
     uiState: SearchUiState,
-    onSearchTextChanged: (String) -> Unit,
-    onSearch: () -> Unit,
-    onClearSearch: () -> Unit,
+    onSearchScreenAction: (SearchScreenAction) -> Unit,
     onBack: () -> Unit
 ) {
     val toolbarHeight = 82.dp
@@ -72,9 +74,7 @@ private fun SearchScreenContent(
                     SearchBar(
                         modifier = modifier,
                         uiState = uiState,
-                        onSearchTextChanged = onSearchTextChanged,
-                        onSearch = onSearch,
-                        onClearSearch = onClearSearch
+                        onSearchScreenAction = onSearchScreenAction
                     )
                 }
             )
@@ -90,7 +90,7 @@ private fun SearchScreenContent(
                 SearchResults(
                     modifier = modifier.padding(paddingValues),
                     results = uiState.searchResults,
-                    onResultClicked = {},
+                    onResultClicked = { onSearchScreenAction(SearchScreenAction.MediaSelected(it)) },
                     scrollToTop = uiState.scrollListToTop
                 )
             }
@@ -102,9 +102,7 @@ private fun SearchScreenContent(
 fun SearchBar(
     modifier: Modifier = Modifier,
     uiState: SearchUiState,
-    onSearchTextChanged: (String) -> Unit,
-    onSearch: () -> Unit,
-    onClearSearch: () -> Unit
+    onSearchScreenAction: (SearchScreenAction) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -127,7 +125,7 @@ fun SearchBar(
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = MaterialTheme.colorScheme.background
             ),
-            onValueChange = { onSearchTextChanged(it) },
+            onValueChange = { onSearchScreenAction(SearchScreenAction.SearchTextChanged(it)) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_search_24),
@@ -140,7 +138,7 @@ fun SearchBar(
                         modifier = modifier
                             .clickable {
                                 keyboardController?.show()
-                                onClearSearch()
+                                onSearchScreenAction(SearchScreenAction.ClearSearch)
                             },
                         painter = painterResource(id = R.drawable.ic_clear_24),
                         contentDescription = null
@@ -159,8 +157,9 @@ fun SearchBar(
         Button(
             onClick = {
                 keyboardController?.hide()
-                onSearch()
-            }
+                onSearchScreenAction(SearchScreenAction.TriggerSearch)
+            },
+            enabled = uiState.searchText.isNotBlank()
         ) {
             Text(text = stringResourceSafe(id = R.string.wsp_search_button))
         }
@@ -176,9 +175,7 @@ fun SearchScreenPreview() {
     WsPlayerTheme {
         SearchScreenContent(
             uiState = SearchUiState(),
-            onSearchTextChanged = {},
-            onSearch = {},
-            onClearSearch = {},
+            onSearchScreenAction = {},
             onBack = {}
         )
     }
