@@ -85,6 +85,10 @@ dependencies {
 
 
     testImplementation(Dependencies.Test.jUnit)
+    testImplementation(Dependencies.Test.mockk)
+    testImplementation(Dependencies.Test.hilt)
+    testImplementation(Dependencies.Test.truth)
+    testImplementation(Dependencies.Test.coroutines)
     androidTestImplementation(Dependencies.AndroidTest.jUnitExt)
     androidTestImplementation(Dependencies.AndroidTest.espresso)
     androidTestImplementation(Dependencies.AndroidTest.composeUiTest)

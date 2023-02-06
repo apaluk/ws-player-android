@@ -1,0 +1,62 @@
+package com.apaluk.wsplayer.ui.login
+
+import com.apaluk.wsplayer.core.login.LoginManagerFake
+import com.apaluk.wsplayer.core.login.LoginManager
+import com.apaluk.wsplayer.core.util.MainDispatcherRule
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class LoginViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    private val loginManager: LoginManager = LoginManagerFake()
+    private lateinit var viewModel: LoginViewModel
+
+    @Before
+    fun setUp() {
+        viewModel = LoginViewModel(loginManager)
+    }
+
+    @Test
+    fun `setting username and password updates ui state`() = runTest {
+        assertThat(viewModel.uiState.value.userName).isEmpty()
+        assertThat(viewModel.uiState.value.password).isEmpty()
+        viewModel.updateUserName("user")
+        viewModel.updatePassword("pass")
+        assertThat(viewModel.uiState.value.userName).isEqualTo("user")
+        assertThat(viewModel.uiState.value.password).isEqualTo("pass")
+    }
+
+    @Test
+    fun `successful login sets loggedIn flag`() = runTest {
+        assertThat(viewModel.uiState.value.loggedIn).isFalse()
+        viewModel.updateUserName("user")
+        viewModel.updatePassword("pass")
+        viewModel.login()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.loggedIn).isTrue()
+        assertThat(viewModel.uiState.value.errorMessage).isNull()
+        viewModel.onLoggedIn()
+        assertThat(viewModel.uiState.value.loggedIn).isFalse()
+    }
+
+    @Test
+    fun `unsuccessful login sets error message`() = runTest {
+        assertThat(viewModel.uiState.value.loggedIn).isFalse()
+        assertThat(viewModel.uiState.value.errorMessage).isNull()
+        viewModel.updateUserName("wrong")
+        viewModel.updatePassword("pass")
+        viewModel.login()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.loggedIn).isFalse()
+        assertThat(viewModel.uiState.value.errorMessage).isNotEmpty()
+    }
+}

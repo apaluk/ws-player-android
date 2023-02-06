@@ -22,6 +22,10 @@ object Dependencies {
 
     object Test {
         const val jUnit = "junit:junit:${Versions.jUnit}"
+        const val mockk = "io.mockk:mockk:${Versions.mockk}"
+        const val hilt = "com.google.dagger:hilt-android-testing:${Versions.hilt}"
+        const val truth = "com.google.truth:truth:${Versions.truth}"
+        const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutinesTest}"
     }
 
     object AndroidTest {

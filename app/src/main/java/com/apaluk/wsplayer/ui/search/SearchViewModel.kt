@@ -57,7 +57,11 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun clearSearch() {
-        _uiState.update { it.copy(searchText = "", searchResults = emptyList()) }
+        _uiState.update { it.copy(
+            searchText = "",
+            searchResults = emptyList(),
+            searchState = UiState.Idle
+        ) }
     }
 }
 

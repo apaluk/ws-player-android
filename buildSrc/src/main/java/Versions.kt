@@ -23,4 +23,7 @@ object Versions {
     const val encryptedDatastore = "1.0.0-alpha02"
     const val coil = "2.2.2"
     const val accompanist = "0.27.0"
+    const val mockk = "1.10.0"
+    const val truth = "1.1.3"
+    const val coroutinesTest = "1.6.4"
 }

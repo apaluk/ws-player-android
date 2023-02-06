@@ -1,0 +1,99 @@
+package com.apaluk.wsplayer.ui.search
+
+import com.apaluk.wsplayer.core.util.MainDispatcherRule
+import com.apaluk.wsplayer.core.util.Resource
+import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepository
+import com.apaluk.wsplayer.domain.model.media.SearchResultItem
+import com.apaluk.wsplayer.ui.common.util.UiState
+import com.google.common.truth.Truth.assertThat
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.*
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class SearchViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    private lateinit var viewModel: SearchViewModel
+
+    @Before
+    fun setup() {
+        val allSearchResults = ('a'..'z').map {  c ->
+            SearchResultItem(
+                id = "",
+                title = "a$c",
+                originalTitle = null,
+                year = "",
+                genre = emptyList(),
+                duration = 1,
+                cast = emptyList(),
+                director = emptyList(),
+                imageUrl = null
+            )
+        }.toList()
+        val repository = mockk<StreamCinemaRepository>()
+        val searchTextSlot = slot<String>()
+        every { repository.search(capture(searchTextSlot)) } answers {
+            flowOf(
+                Resource.Loading(),
+                Resource.Success(data = allSearchResults
+                    .filter { searchResultItem ->
+                        searchResultItem.title.contains(searchTextSlot.captured)
+                    }
+                )
+            )
+        }
+        viewModel = SearchViewModel(repository)
+    }
+
+    @Test
+    fun `successful search updates the ui state`() = runTest {
+        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Idle)
+        viewModel.onSearchScreenAction(SearchScreenAction.SearchTextChanged("ac"))
+        assertThat(viewModel.uiState.value.searchText).isEqualTo("ac")
+        viewModel.onSearchScreenAction(SearchScreenAction.TriggerSearch)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Content)
+        assertThat(viewModel.uiState.value.searchResults).isNotEmpty()
+        assertThat(viewModel.uiState.value.scrollListToTop).isFalse()
+        assertThat(viewModel.uiState.value.errorToast).isNull()
+    }
+
+    @Test
+    fun `clearing search removes the content`() = runTest {
+        viewModel.onSearchScreenAction(SearchScreenAction.SearchTextChanged("ac"))
+        viewModel.onSearchScreenAction(SearchScreenAction.TriggerSearch)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Content)
+        viewModel.onSearchScreenAction(SearchScreenAction.ClearSearch)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Idle)
+        assertThat(viewModel.uiState.value.searchText).isEmpty()
+        assertThat(viewModel.uiState.value.searchResults).isEmpty()
+    }
+
+    @Test
+    fun `selecting media updates the ui state`() = runTest {
+        assertThat(viewModel.uiState.value.selectedMediaId).isNull()
+        viewModel.onSearchScreenAction(SearchScreenAction.MediaSelected("x"))
+        assertThat(viewModel.uiState.value.selectedMediaId).isEqualTo("x")
+        viewModel.onSearchScreenAction(SearchScreenAction.MediaSelected(null))
+        assertThat(viewModel.uiState.value.selectedMediaId).isNull()
+    }
+
+    @Test
+    fun `unsuccessful search sets empty ui state`() = runTest {
+        viewModel.onSearchScreenAction(SearchScreenAction.SearchTextChanged("xxxxx"))
+        viewModel.onSearchScreenAction(SearchScreenAction.TriggerSearch)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Empty)
+    }
+}

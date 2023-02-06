@@ -45,7 +45,7 @@ fun SearchResults(
                 onClicked = { onResultClicked(result.id) }
             )
             Divider(
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier.padding(horizontal = 6.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 thickness = 1.dp
             )
