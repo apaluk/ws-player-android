@@ -2,8 +2,10 @@ package com.apaluk.wsplayer.data.di
 
 import com.apaluk.wsplayer.BuildConfig
 import com.apaluk.wsplayer.core.util.Constants
+import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepositoryImpl
 import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
 import com.apaluk.wsplayer.data.webshare.remote.WebShareApi
+import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,4 +60,10 @@ object DataModule {
             .create(StreamCinemaApi::class.java)
     }
 
+    @Provides
+    fun provideStreamCinemaRepository(
+        streamCinemaApi: StreamCinemaApi
+    ): StreamCinemaRepository {
+        return StreamCinemaRepositoryImpl(streamCinemaApi)
+    }
 }

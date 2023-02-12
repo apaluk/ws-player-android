@@ -92,6 +92,7 @@ dependencies {
     androidTestImplementation(Dependencies.AndroidTest.jUnitExt)
     androidTestImplementation(Dependencies.AndroidTest.espresso)
     androidTestImplementation(Dependencies.AndroidTest.composeUiTest)
+    androidTestImplementation(Dependencies.Test.truth)
     debugImplementation(Dependencies.Debug.composeUi)
     debugImplementation(Dependencies.Debug.composeUiTooling)
 }

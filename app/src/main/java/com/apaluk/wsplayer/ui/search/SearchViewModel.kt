@@ -2,8 +2,8 @@ package com.apaluk.wsplayer.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepository
 import com.apaluk.wsplayer.domain.model.media.SearchResultItem
+import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.ui.common.util.UiState
 import com.apaluk.wsplayer.ui.common.util.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ class SearchViewModel @Inject constructor(
     private val streamCinemaRepository: StreamCinemaRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SearchUiState())
+    private val _uiState = MutableStateFlow(SearchUiState(showKeyboard = true))
     val uiState = _uiState.asStateFlow()
 
     fun onSearchScreenAction(action: SearchScreenAction) {
@@ -29,6 +29,7 @@ class SearchViewModel @Inject constructor(
                 if(action.mediaId == null) clearSelectedMedia() else onMediaSelected(action.mediaId)
             SearchScreenAction.TriggerSearch -> triggerSearch()
             SearchScreenAction.ClearSearch -> clearSearch()
+            SearchScreenAction.KeyboardShown -> onKeyboardShown()
         }
     }
 
@@ -63,6 +64,10 @@ class SearchViewModel @Inject constructor(
             searchState = UiState.Idle
         ) }
     }
+
+    private fun onKeyboardShown() {
+        _uiState.update { it.copy(showKeyboard = false) }
+    }
 }
 
 data class SearchUiState(
@@ -71,7 +76,8 @@ data class SearchUiState(
     val errorToast: String? = null,
     val searchResults: List<SearchResultItem> = emptyList(),
     val searchState: UiState = UiState.Idle,
-    val scrollListToTop: Boolean = false
+    val scrollListToTop: Boolean = false,
+    val showKeyboard: Boolean = false
 )
 
 sealed class SearchScreenAction {
@@ -79,4 +85,5 @@ sealed class SearchScreenAction {
     object TriggerSearch: SearchScreenAction()
     object ClearSearch: SearchScreenAction()
     data class MediaSelected(val mediaId: String?): SearchScreenAction()
+    object KeyboardShown: SearchScreenAction()
 }

@@ -5,12 +5,13 @@ import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
 import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toMediaDetail
 import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toMediaStream
 import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toSearchResultItems
+import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import javax.inject.Inject
 
-class StreamCinemaRepository @Inject constructor(
+class StreamCinemaRepositoryImpl @Inject constructor(
     private val streamCinemaApi: StreamCinemaApi
-) {
-    fun getMediaStreams(mediaId: String) = repositoryFlow(
+): StreamCinemaRepository {
+    override fun getMediaStreams(mediaId: String) = repositoryFlow(
         apiOperation = {
             streamCinemaApi.getStreams(
                 mediaId = mediaId
@@ -19,7 +20,7 @@ class StreamCinemaRepository @Inject constructor(
         resultMapping = { it.map { item -> item.toMediaStream() } }
     )
 
-    fun search(text: String) = repositoryFlow(
+    override fun search(text: String) = repositoryFlow(
         apiOperation = {
             streamCinemaApi.search(
                 searchText = text
@@ -28,7 +29,7 @@ class StreamCinemaRepository @Inject constructor(
         resultMapping = { it.toSearchResultItems() }
     )
 
-    fun getMediaDetails(mediaId: String) = repositoryFlow(
+    override fun getMediaDetails(mediaId: String) = repositoryFlow(
         apiOperation = {
             streamCinemaApi.mediaDetails(mediaId = mediaId)
         },

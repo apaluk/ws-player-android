@@ -7,9 +7,9 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class StreamInfoDto(
     @Json(name = "audio")
-    val audio: AudioDtoX,
+    val audio: AudioDtoX?,
     @Json(name = "subtitles")
     val subtitles: SubtitlesDtoX?,
     @Json(name = "video")
-    val video: VideoDto
+    val video: VideoDto?
 )

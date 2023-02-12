@@ -7,5 +7,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class RottenTomatoesDto(
     @Json(name = "rating")
-    val rating: Double
+    val rating: Double?
 )

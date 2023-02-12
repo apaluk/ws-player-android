@@ -10,16 +10,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
-data class LoginUiState(
-    val uiState: UiState = UiState.Loading,
-    val userName: String = "",
-    val password: String = "",
-    val loggingIn: Boolean = false,
-    val loggedIn: Boolean = false,
-    val errorMessage: String? = null
-)
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginManager: LoginManager
@@ -39,20 +29,29 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun updateUserName(userName: String) {
+    fun onLoginScreenAction(action: LoginScreenAction) {
+        when(action) {
+            is LoginScreenAction.UpdateUsername -> updateUserName(action.userName)
+            is LoginScreenAction.UpdatePassword -> updatePassword(action.password)
+            LoginScreenAction.TriggerLogin -> login()
+            LoginScreenAction.OnLoggedIn -> onLoggedIn()
+        }
+    }
+
+    private fun updateUserName(userName: String) {
         _uiState.value
         _uiState.update {
             it.copy(userName = userName)
         }
     }
 
-    fun updatePassword(password: String) {
+    private fun updatePassword(password: String) {
         _uiState.update {
             it.copy(password = password)
         }
     }
 
-    fun login() {
+    private fun login() {
         viewModelScope.launch {
             _uiState.update { it.copy(loggingIn = true, errorMessage = null) }
             val loginResult = loginManager.tryLogin(
@@ -67,10 +66,26 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onLoggedIn() {
+    private fun onLoggedIn() {
         _uiState.update { it.copy(loggedIn = false) }
     }
 
+}
+
+data class LoginUiState(
+    val uiState: UiState = UiState.Loading,
+    val userName: String = "",
+    val password: String = "",
+    val loggingIn: Boolean = false,
+    val loggedIn: Boolean = false,
+    val errorMessage: String? = null
+)
+
+sealed class LoginScreenAction {
+    data class UpdateUsername(val userName: String): LoginScreenAction()
+    data class UpdatePassword(val password: String): LoginScreenAction()
+    object TriggerLogin: LoginScreenAction()
+    object OnLoggedIn: LoginScreenAction()
 }
 
 private fun LoginManager.LoginState.shouldShowLoading() =

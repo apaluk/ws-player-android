@@ -16,15 +16,15 @@ data class Subtitles(
 )
 
 enum class VideoDefinition {
-    SD, HD, FHD, U4K, U8K;
+    SD, HD, FHD, UHD_4K, UHD_8K;
 
     override fun toString(): String =
         when(this) {
             SD -> "SD"
             HD -> "HD"
             FHD -> "FHD"
-            U4K -> "4K"
-            U8K -> "8K"
+            UHD_4K -> "4K"
+            UHD_8K -> "8K"
         }
 }
 
@@ -33,8 +33,8 @@ fun VideoDefinition.height(): Int =
         VideoDefinition.SD -> 480
         VideoDefinition.HD -> 720
         VideoDefinition.FHD -> 1080
-        VideoDefinition.U4K -> 2160
-        VideoDefinition.U8K -> 4320
+        VideoDefinition.UHD_4K -> 2160
+        VideoDefinition.UHD_8K -> 4320
     }
 
 val DUMMY_MEDIA_STREAMS = listOf(

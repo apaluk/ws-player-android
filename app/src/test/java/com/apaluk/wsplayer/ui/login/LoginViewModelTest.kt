@@ -1,6 +1,6 @@
 package com.apaluk.wsplayer.ui.login
 
-import com.apaluk.wsplayer.core.login.LoginManagerFake
+import com.apaluk.wsplayer.core.testing.LoginManagerFake
 import com.apaluk.wsplayer.core.login.LoginManager
 import com.apaluk.wsplayer.core.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
@@ -29,8 +29,8 @@ class LoginViewModelTest {
     fun `setting username and password updates ui state`() = runTest {
         assertThat(viewModel.uiState.value.userName).isEmpty()
         assertThat(viewModel.uiState.value.password).isEmpty()
-        viewModel.updateUserName("user")
-        viewModel.updatePassword("pass")
+        viewModel.onLoginScreenAction(LoginScreenAction.UpdateUsername("user"))
+        viewModel.onLoginScreenAction(LoginScreenAction.UpdatePassword("pass"))
         assertThat(viewModel.uiState.value.userName).isEqualTo("user")
         assertThat(viewModel.uiState.value.password).isEqualTo("pass")
     }
@@ -38,13 +38,13 @@ class LoginViewModelTest {
     @Test
     fun `successful login sets loggedIn flag`() = runTest {
         assertThat(viewModel.uiState.value.loggedIn).isFalse()
-        viewModel.updateUserName("user")
-        viewModel.updatePassword("pass")
-        viewModel.login()
+        viewModel.onLoginScreenAction(LoginScreenAction.UpdateUsername("user"))
+        viewModel.onLoginScreenAction(LoginScreenAction.UpdatePassword("pass"))
+        viewModel.onLoginScreenAction(LoginScreenAction.TriggerLogin)
         advanceUntilIdle()
         assertThat(viewModel.uiState.value.loggedIn).isTrue()
         assertThat(viewModel.uiState.value.errorMessage).isNull()
-        viewModel.onLoggedIn()
+        viewModel.onLoginScreenAction(LoginScreenAction.OnLoggedIn)
         assertThat(viewModel.uiState.value.loggedIn).isFalse()
     }
 
@@ -52,9 +52,9 @@ class LoginViewModelTest {
     fun `unsuccessful login sets error message`() = runTest {
         assertThat(viewModel.uiState.value.loggedIn).isFalse()
         assertThat(viewModel.uiState.value.errorMessage).isNull()
-        viewModel.updateUserName("wrong")
-        viewModel.updatePassword("pass")
-        viewModel.login()
+        viewModel.onLoginScreenAction(LoginScreenAction.UpdateUsername("wrong"))
+        viewModel.onLoginScreenAction(LoginScreenAction.UpdatePassword("pass"))
+        viewModel.onLoginScreenAction(LoginScreenAction.TriggerLogin)
         advanceUntilIdle()
         assertThat(viewModel.uiState.value.loggedIn).isFalse()
         assertThat(viewModel.uiState.value.errorMessage).isNotEmpty()

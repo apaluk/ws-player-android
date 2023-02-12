@@ -1,16 +1,10 @@
 package com.apaluk.wsplayer.ui.search
 
+import com.apaluk.wsplayer.core.testing.StreamCinemaRepositoryFake
 import com.apaluk.wsplayer.core.util.MainDispatcherRule
-import com.apaluk.wsplayer.core.util.Resource
-import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepository
-import com.apaluk.wsplayer.domain.model.media.SearchResultItem
 import com.apaluk.wsplayer.ui.common.util.UiState
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Rule
@@ -26,32 +20,7 @@ class SearchViewModelTest {
 
     @Before
     fun setup() {
-        val allSearchResults = ('a'..'z').map {  c ->
-            SearchResultItem(
-                id = "",
-                title = "a$c",
-                originalTitle = null,
-                year = "",
-                genre = emptyList(),
-                duration = 1,
-                cast = emptyList(),
-                director = emptyList(),
-                imageUrl = null
-            )
-        }.toList()
-        val repository = mockk<StreamCinemaRepository>()
-        val searchTextSlot = slot<String>()
-        every { repository.search(capture(searchTextSlot)) } answers {
-            flowOf(
-                Resource.Loading(),
-                Resource.Success(data = allSearchResults
-                    .filter { searchResultItem ->
-                        searchResultItem.title.contains(searchTextSlot.captured)
-                    }
-                )
-            )
-        }
-        viewModel = SearchViewModel(repository)
+        viewModel = SearchViewModel(StreamCinemaRepositoryFake())
     }
 
     @Test

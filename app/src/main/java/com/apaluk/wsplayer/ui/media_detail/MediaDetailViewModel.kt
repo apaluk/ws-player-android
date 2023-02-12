@@ -3,23 +3,18 @@ package com.apaluk.wsplayer.ui.media_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs
-import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepository
 import com.apaluk.wsplayer.domain.model.media.MediaDetail
 import com.apaluk.wsplayer.domain.model.media.MediaStream
+import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.ui.common.util.UiState
-import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.common.util.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel

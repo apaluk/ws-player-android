@@ -4,6 +4,8 @@ package com.apaluk.wsplayer.ui.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,16 +18,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavActions
 import com.apaluk.wsplayer.ui.common.composable.BackButton
 import com.apaluk.wsplayer.ui.common.composable.DefaultEmptyState
 import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
+import com.apaluk.wsplayer.ui.common.composable.WspButton
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 
@@ -106,6 +109,7 @@ fun SearchBar(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
+    var keyboardShown = remember { false }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -152,20 +156,30 @@ fun SearchBar(
                     overflow = TextOverflow.Ellipsis
                 )
             },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    keyboardController?.hide()
+                    onSearchScreenAction(SearchScreenAction.TriggerSearch)
+                }
+            ),
             maxLines = 1
         )
-        Button(
+        WspButton(
+            text = stringResourceSafe(id = R.string.wsp_search_button),
             onClick = {
                 keyboardController?.hide()
                 onSearchScreenAction(SearchScreenAction.TriggerSearch)
             },
-            enabled = uiState.searchText.isNotBlank()
-        ) {
-            Text(text = stringResourceSafe(id = R.string.wsp_search_button))
-        }
+            enabled = uiState.searchText.isNotBlank(),
+            textStyle = MaterialTheme.typography.bodyMedium
+        )
     }
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+    LaunchedEffect(uiState.showKeyboard) {
+        if(uiState.showKeyboard) {
+            focusRequester.requestFocus()
+            onSearchScreenAction(SearchScreenAction.KeyboardShown)
+        }
     }
 }
 

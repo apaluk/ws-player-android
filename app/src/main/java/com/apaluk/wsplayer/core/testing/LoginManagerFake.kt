@@ -1,5 +1,6 @@
-package com.apaluk.wsplayer.core.login
+package com.apaluk.wsplayer.core.testing
 
+import com.apaluk.wsplayer.core.login.LoginManager
 import com.apaluk.wsplayer.core.util.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

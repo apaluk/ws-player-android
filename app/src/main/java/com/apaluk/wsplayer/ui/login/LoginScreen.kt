@@ -1,8 +1,12 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.apaluk.wsplayer.ui.login
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -11,20 +15,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavActions
 import com.apaluk.wsplayer.ui.common.composable.TextFieldWithHeader
 import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
+import com.apaluk.wsplayer.ui.common.composable.WspButton
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 
@@ -35,92 +44,124 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    UiStateAnimator(uiState = uiState.uiState) {
-        LoginScreenContent(
-            modifier = modifier,
-            uiState = uiState,
-            onUpdateUsername = viewModel::updateUserName,
-            onUpdatePassword = viewModel::updatePassword,
-            onLogin = viewModel::login
-        )
-    }
+    LoginScreenContent(
+        uiState = uiState,
+        onLoginScreenAction = viewModel::onLoginScreenAction,
+        modifier = modifier
+    )
     LaunchedEffect(uiState.loggedIn) {
         if(uiState.loggedIn) {
-            viewModel.onLoggedIn()
+            viewModel.onLoginScreenAction(LoginScreenAction.OnLoggedIn)
             navActions.navigateToDashboard()
         }
     }
 }
 
 @Composable
-private fun LoginScreenContent(
-    modifier: Modifier = Modifier,
+fun LoginScreenContent(
     uiState: LoginUiState,
-    onUpdateUsername: (String) -> Unit = {},
-    onUpdatePassword: (String) -> Unit = {},
-    onLogin: () -> Unit = {}
+    modifier: Modifier = Modifier,
+    onLoginScreenAction: (LoginScreenAction) -> Unit = {}
+) {
+    UiStateAnimator(uiState = uiState.uiState) {
+        LoginScreenForm(
+            modifier = modifier,
+            uiState = uiState,
+            onLoginScreenAction = onLoginScreenAction
+        )
+    }
+}
+
+@Composable
+fun LoginScreenForm(
+    uiState: LoginUiState,
+    modifier: Modifier = Modifier,
+    onLoginScreenAction: (LoginScreenAction) -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     )
     {
+        val keyboardController = LocalSoftwareKeyboardController.current
         Column(
             modifier = modifier
-                .widthIn(max = 400.dp)
+                .widthIn(max = 500.dp)
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 32.dp),
+                    .padding(horizontal = 32.dp, vertical = 24.dp),
                 text = stringResourceSafe(id = R.string.wsp_login_welcome),
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Center
+                style = MaterialTheme.typography.displayLarge,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.SemiBold
             )
             Text(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp, vertical = 32.dp),
                 text = stringResourceSafe(id = R.string.wsp_login_instructions),
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
             )
             TextFieldWithHeader(
-                header = stringResourceSafe(id = com.apaluk.wsplayer.R.string.wsp_login_username),
+                modifier = Modifier.testTag("login:username"),
+                header = stringResourceSafe(id = R.string.wsp_login_username),
                 editText = uiState.userName,
-                onTextChanged = onUpdateUsername,
+                onTextChanged = {
+                    onLoginScreenAction(LoginScreenAction.UpdateUsername(it))
+                },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
             Spacer(modifier = modifier.height(16.dp))
             TextFieldWithHeader(
                 header = stringResourceSafe(id = com.apaluk.wsplayer.R.string.wsp_login_password),
                 editText = uiState.password,
-                onTextChanged = onUpdatePassword,
-                modifier = modifier,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                onTextChanged =  {
+                    onLoginScreenAction(LoginScreenAction.UpdatePassword(it))
+                },
+                modifier = Modifier.testTag("login:password"),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        onLoginScreenAction(LoginScreenAction.TriggerLogin)
+                    }
+                ),
                 visualTransformation = PasswordVisualTransformation()
             )
-            Spacer(modifier = modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(onClick = { onLogin() }) {
-                    Text(text = stringResourceSafe(id = com.apaluk.wsplayer.R.string.wsp_login_positive_button))
-                }
+                WspButton(
+                    onClick = { onLoginScreenAction(LoginScreenAction.TriggerLogin) },
+                    text = stringResourceSafe(id = com.apaluk.wsplayer.R.string.wsp_login_positive_button)
+                )
                 if(uiState.loggingIn) {
-                    Spacer(modifier = modifier.width(32.dp))
+                    Spacer(modifier = Modifier.width(32.dp))
                     CircularProgressIndicator(
-                        modifier = modifier.size(32.dp)
+                        modifier = Modifier
+                            .size(32.dp)
+                            .semantics {
+                                contentDescription = "login:spinner"
+                            }
                     )
                 }
             }
-
             uiState.errorMessage?.let { errorMessage ->
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp),
                     contentAlignment = Alignment.Center
@@ -128,9 +169,7 @@ private fun LoginScreenContent(
                     Text(
                         text = errorMessage,
                         color = MaterialTheme.colorScheme.error,
-                        style = TextStyle(
-                            fontSize = 12.sp
-                        )
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -142,14 +181,15 @@ private fun LoginScreenContent(
 @Composable
 private fun BasicPreview() {
     WsPlayerTheme {
-        LoginScreenContent(
+        LoginScreenForm(
             modifier = Modifier,
             uiState = LoginUiState(
                 userName = "apaluk",
                 password = "nbusr123",
                 loggingIn = true,
                 errorMessage = "Something went wrong!"
-            )
+            ),
+            onLoginScreenAction = {}
         )
     }
 }

@@ -109,8 +109,8 @@ private fun List<I18nInfoLabelDto>.getPlot(lang: String): String? =
 
 private fun VideoDto.toVideoDefinition(): VideoDefinition =
     when {
-        height > 2500 -> VideoDefinition.U8K
-        height > 2000 -> VideoDefinition.U4K
+        height > 2500 -> VideoDefinition.UHD_8K
+        height > 2000 -> VideoDefinition.UHD_4K
         height > 900 -> VideoDefinition.FHD
         height > 600 -> VideoDefinition.HD
         else -> VideoDefinition.SD

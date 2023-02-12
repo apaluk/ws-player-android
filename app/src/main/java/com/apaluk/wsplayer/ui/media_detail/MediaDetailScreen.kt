@@ -73,8 +73,8 @@ fun MediaDetailScreen(
 @Composable
 fun MediaDetailScreenContent(
     uiState: MediaDetailUiState,
-    onMediaDetailAction: (MediaDetailAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMediaDetailAction: (MediaDetailAction) -> Unit = {}
 ) {
     Row(
         modifier = modifier.fillMaxSize(),

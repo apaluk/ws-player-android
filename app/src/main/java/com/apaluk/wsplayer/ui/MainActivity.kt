@@ -1,5 +1,6 @@
 package com.apaluk.wsplayer.ui
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavGraph
+import com.apaluk.wsplayer.ui.common.composable.LockScreenOrientation
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,6 +21,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
             WsPlayerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
