@@ -9,6 +9,7 @@ import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.MediaStreamsRes
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.SubtitleDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.VideoDto
 import com.apaluk.wsplayer.domain.model.media.*
+import kotlin.math.roundToInt
 
 fun SearchResponseDto.toSearchResultItems(): List<SearchResultItem> =
     hits.hits.mapNotNull { it.toSearchResultItem() }
@@ -42,7 +43,7 @@ fun MediaDetailDto.toMediaDetail(): MediaDetail =
         genre = infoLabels.genre,
         plot = getPlot(),
         imageUrl = getImageUrl(),
-        duration = infoLabels.duration
+        duration = streamInfo.video?.duration?.roundToInt() ?: infoLabels.duration
     )
 
 fun MediaStreamsResponseItemDto.toMediaStream(): MediaStream {

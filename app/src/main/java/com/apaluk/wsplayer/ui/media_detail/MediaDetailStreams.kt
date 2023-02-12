@@ -44,7 +44,9 @@ fun MediaDetailStreams(
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
                 itemsIndexed(streams) { index, stream ->
                     MediaStreamChip(
                         mediaStream = stream,
@@ -54,7 +56,7 @@ fun MediaDetailStreams(
                         onClick = { onStreamSelected(it) }
                     )
                     if(index == streams.lastIndex) {
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }
