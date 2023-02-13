@@ -19,7 +19,7 @@ data class InfoLabelsDto(
     @Json(name = "mpaa")
     val mpaa: String?,
     @Json(name = "originaltitle")
-    val originaltitle: String,
+    val originaltitle: String?,
     @Json(name = "premiered")
     val premiered: String?,
     @Json(name = "studio")

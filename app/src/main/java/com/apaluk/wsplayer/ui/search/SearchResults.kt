@@ -82,7 +82,6 @@ fun SearchResult(
             if (item.imageUrl.isNullOrEmpty()) {
                 Image(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
                         .padding(start = 4.dp),
                     painter = painterResource(id = R.drawable.ic_movie_64),
                     contentDescription = null

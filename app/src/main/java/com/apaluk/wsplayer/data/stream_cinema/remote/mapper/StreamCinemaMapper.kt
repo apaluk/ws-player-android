@@ -87,7 +87,8 @@ private fun MediaDetailDto.getTitle(): String =
     i18nInfoLabels.getTitle("sk")
         ?: i18nInfoLabels.getTitle("cs")
         ?: i18nInfoLabels.getTitle("en")
-        ?: requireNotNull(infoLabels.originaltitle)
+        ?: infoLabels.originaltitle
+        ?: ""
 
 private fun MediaDetailDto.getPlot(): String =
     i18nInfoLabels.getPlot("sk")
