@@ -1,11 +1,13 @@
 package com.apaluk.wsplayer.data.stream_cinema
 
+import com.apaluk.wsplayer.core.util.Resource
 import com.apaluk.wsplayer.core.util.repositoryFlow
 import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
-import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toMediaDetail
-import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toMediaStream
-import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.toSearchResultItems
+import com.apaluk.wsplayer.data.stream_cinema.remote.mapper.*
+import com.apaluk.wsplayer.domain.model.media.TvShowEpisode
+import com.apaluk.wsplayer.domain.model.media.TvShowSeason
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StreamCinemaRepositoryImpl @Inject constructor(
@@ -34,5 +36,15 @@ class StreamCinemaRepositoryImpl @Inject constructor(
             streamCinemaApi.mediaDetails(mediaId = mediaId)
         },
         resultMapping = { it.toMediaDetail() }
+    )
+
+    override fun getTvShowSeasons(mediaId: String): Flow<Resource<List<TvShowSeason>>> = repositoryFlow(
+        apiOperation = { streamCinemaApi.getTvShowSeasons(mediaId = mediaId) },
+        resultMapping = { it.toListOfSeasons() }
+    )
+
+    override fun getTvShowSeasonEpisodes(mediaId: String): Flow<Resource<List<TvShowEpisode>>> = repositoryFlow(
+        apiOperation = { streamCinemaApi.getTvShowSeasonEpisodes(mediaId = mediaId) },
+        resultMapping = { it.toListOfEpisodes() }
     )
 }

@@ -4,8 +4,10 @@ import com.apaluk.wsplayer.BuildConfig
 import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepositoryImpl
 import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
+import com.apaluk.wsplayer.data.stream_cinema.remote.adapter.MediaTypeAdapter
 import com.apaluk.wsplayer.data.webshare.remote.WebShareApi
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +17,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -49,13 +52,23 @@ object DataModule {
     }
 
     @Provides
+    @StreamCinemaMoshi
+    fun provideStreamCinemaMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(MediaTypeAdapter())
+            .build()
+    }
+    
+
+    @Provides
     fun provideStreamCinemaApi(
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
+        @StreamCinemaMoshi streamCinemaMoshi: Moshi
     ): StreamCinemaApi {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl("https://plugin.sc2.zone")
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(streamCinemaMoshi))
             .build()
             .create(StreamCinemaApi::class.java)
     }
@@ -67,3 +80,7 @@ object DataModule {
         return StreamCinemaRepositoryImpl(streamCinemaApi)
     }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class StreamCinemaMoshi

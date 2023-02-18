@@ -5,6 +5,7 @@ import com.apaluk.wsplayer.core.util.Resource
 import com.apaluk.wsplayer.domain.model.media.*
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 
 class StreamCinemaRepositoryFake: StreamCinemaRepository {
@@ -84,4 +85,12 @@ class StreamCinemaRepositoryFake: StreamCinemaRepository {
             )
         )
     )
+
+    override fun getTvShowSeasons(mediaId: String): Flow<Resource<List<TvShowSeason>>> {
+        return emptyFlow()  // TODO
+    }
+
+    override fun getTvShowSeasonEpisodes(mediaId: String): Flow<Resource<List<TvShowEpisode>>> {
+        return emptyFlow()  // TODO
+    }
 }

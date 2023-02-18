@@ -8,6 +8,9 @@ import com.apaluk.wsplayer.data.stream_cinema.remote.dto.search.SearchResponseDt
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.MediaStreamsResponseItemDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.SubtitleDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.VideoDto
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.episodes.TvShowSeasonEpisodesResponseDto
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.seasons.SourceDto
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.seasons.TvShowSeasonsResponseDto
 import com.apaluk.wsplayer.domain.model.media.*
 import kotlin.math.roundToInt
 
@@ -59,15 +62,21 @@ fun MediaStreamsResponseItemDto.toMediaStream(): MediaStream {
     )
 }
 
-private fun HitDto.getImageUrl(): String? =
-    source.i18nInfoLabels.getPosterImageUrl("en")
-        ?: source.i18nInfoLabels.getPosterImageUrl("sk")
-        ?: source.i18nInfoLabels.getPosterImageUrl("cs")
+fun TvShowSeasonsResponseDto.toListOfSeasons(): List<TvShowSeason> =
+    hits.hits.map { it.source.toTvShowSeason() }
+
+fun TvShowSeasonEpisodesResponseDto.toListOfEpisodes(): List<TvShowEpisode> =
+    hits.hits.map { it.source.toTvShowEpisode() }
+
+private fun HitDto.getImageUrl(): String? = source.i18nInfoLabels.getPosterImageUrl()
 
 private fun MediaDetailDto.getImageUrl(): String? =
     i18nInfoLabels.getFanArtImageUrl("en")
         ?: i18nInfoLabels.getFanArtImageUrl("sk")
         ?: i18nInfoLabels.getFanArtImageUrl("cs")
+
+private fun List<I18nInfoLabelDto>.getPosterImageUrl(): String? =
+    getPosterImageUrl("en") ?: getPosterImageUrl("sk") ?: getPosterImageUrl("cs")
 
 private fun List<I18nInfoLabelDto>.getPosterImageUrl(lang: String): String? =
     this.firstOrNull { it.lang == lang }
@@ -90,10 +99,7 @@ private fun MediaDetailDto.getTitle(): String =
         ?: infoLabels.originaltitle
         ?: ""
 
-private fun MediaDetailDto.getPlot(): String =
-    i18nInfoLabels.getPlot("sk")
-        ?: i18nInfoLabels.getPlot("cs")
-        ?: i18nInfoLabels.getPlot("en").orEmpty()
+private fun MediaDetailDto.getPlot(): String = i18nInfoLabels.getPlot()
 
 private fun List<I18nInfoLabelDto>.getTitle(lang: String): String? =
     firstOrNull { it.lang == lang }
@@ -101,6 +107,9 @@ private fun List<I18nInfoLabelDto>.getTitle(lang: String): String? =
             // if it's blank, return null
             if(this.isNullOrBlank()) null else this
         }
+
+private fun List<I18nInfoLabelDto>.getPlot(): String =
+    getPlot("sk") ?: getPlot("cs") ?: getPlot("en").orEmpty()
 
 private fun List<I18nInfoLabelDto>.getPlot(lang: String): String? =
     firstOrNull { it.lang == lang }
@@ -127,3 +136,29 @@ private fun SubtitleDto.toSubtitles(): Subtitles? =
     } catch (e: Exception) {
         null
     }
+
+private fun SourceDto.toTvShowSeason(): TvShowSeason =
+    TvShowSeason(
+        seasonNumber = infoLabels.season,
+        year = infoLabels.year?.toString(),
+        directors = infoLabels.director,
+        writer = infoLabels.writer,
+        cast = cast.map { it.name },
+        genre = infoLabels.genre,
+        plot = i18nInfoLabels.getPlot(),
+        imageUrl = i18nInfoLabels.getPosterImageUrl()
+    )
+
+private fun com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.episodes.SourceDto.toTvShowEpisode(): TvShowEpisode =
+    TvShowEpisode(
+        episodeNumber = infoLabels.episode,
+        seasonNumber = infoLabels.season,
+        year = infoLabels.year?.toString(),
+        directors = infoLabels.director,
+        writer = infoLabels.writer,
+        cast = cast.map { it.name },
+        genre = infoLabels.genre,
+        plot = i18nInfoLabels.getPlot(),
+        imageUrl = i18nInfoLabels.getPosterImageUrl(),
+        duration = streamInfo.video?.duration?.roundToInt() ?: infoLabels.duration
+    )
