@@ -8,3 +8,7 @@ fun requireNotNullOrEmpty(str: String?): String {
 fun Any?.isNullOrEmptyList(): Boolean {
     return this == null || (this is List<*> && isEmpty())
 }
+
+/** Makes `when` statement produce error if not exhaustive */
+val <T> T.exhaustive: T
+    get() = this

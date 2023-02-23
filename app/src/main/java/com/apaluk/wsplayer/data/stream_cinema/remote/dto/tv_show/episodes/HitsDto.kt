@@ -9,7 +9,7 @@ data class HitsDto(
     @Json(name = "hits")
     val hits: List<HitDto>,
     @Json(name = "max_score")
-    val maxScore: Double,
+    val maxScore: Double?,
     @Json(name = "total")
     val total: TotalDto
 )

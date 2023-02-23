@@ -7,13 +7,13 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class VideoDto(
     @Json(name = "aspect")
-    val aspect: Double,
+    val aspect: Double?,
     @Json(name = "codec")
-    val codec: String,
+    val codec: String?,
     @Json(name = "duration")
-    val duration: Double,
+    val duration: Double?,
     @Json(name = "height")
-    val height: Int,
+    val height: Int?,
     @Json(name = "width")
-    val width: Int
+    val width: Int?
 )

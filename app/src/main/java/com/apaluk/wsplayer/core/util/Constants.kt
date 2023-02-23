@@ -10,4 +10,5 @@ object Constants {
     const val SHORT_ANIM_DURATION = 100
 
     const val CHAR_BULLET = '•'
+    const val CHAR_DASH = "\u2014"
 }

@@ -31,7 +31,7 @@ data class InfoLabelsDto(
     @Json(name = "premiered")
     val premiered: String?,
     @Json(name = "season")
-    val season: String?,    // TODO string or int?
+    val season: Int?,
     @Json(name = "sortepisode")
     val sortepisode: Int?,
     @Json(name = "sortseason")

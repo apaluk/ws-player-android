@@ -24,7 +24,7 @@ import coil.request.ImageRequest
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.domain.model.media.SearchResultItem
-import com.apaluk.wsplayer.ui.common.composable.MovieTitle
+import com.apaluk.wsplayer.ui.common.composable.MediaTitle
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 
 @Composable
@@ -106,7 +106,7 @@ fun SearchResult(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
-            MovieTitle(
+            MediaTitle(
                 title = item.title,
                 originalTitle = item.originalTitle
             )

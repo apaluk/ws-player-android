@@ -47,7 +47,7 @@ data class SourceDto(
     @Json(name = "tags")
     val tags: List<Any>,
     @Json(name = "total_children_count")
-    val totalChildrenCount: Int,
+    val totalChildrenCount: Int?,
     @Json(name = "trending")
     val trending: Double,
     @Json(name = "videos")

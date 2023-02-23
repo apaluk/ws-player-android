@@ -9,7 +9,7 @@ data class ServicesDto(
     @Json(name = "csfd")
     val csfd: String?,
     @Json(name = "tmdb")
-    val tmdb: String,
+    val tmdb: String?,
     @Json(name = "trakt")
     val trakt: String?,
     @Json(name = "trakt_with_type")

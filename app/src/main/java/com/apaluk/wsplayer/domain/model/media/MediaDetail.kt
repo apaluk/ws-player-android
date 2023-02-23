@@ -1,21 +1,41 @@
 package com.apaluk.wsplayer.domain.model.media
 
-data class MediaDetail(
+sealed class MediaDetail
+
+data class MediaDetailMovie(
     val id: String,
     val title: String,
     val originalTitle: String?,
+    val imageUrl: String?,
     val year: String?,
     val directors: List<String>,
     val writer: List<String>,
     val cast: List<String>,
     val genre: List<String>,
     val plot: String?,
-    val imageUrl: String?,
     val duration: Int
-)
+): MediaDetail()
+
+data class MediaDetailTvShow(
+    val id: String,
+    val title: String,
+    val originalTitle: String?,
+    val imageUrl: String?,
+    val years: String?,
+    val genre: List<String>,
+    val plot: String?,
+    val cast: List<String>,
+    val numSeasons: Int,
+    val selectedSeasonIndex: Int?,
+    val selectedEpisodeIndex: Int?,
+    val seasons: List<TvShowSeason>?,
+    val selectedSeasonEpisodes: List<TvShowEpisode>?
+): MediaDetail()
 
 data class TvShowSeason(
+    val id: String,
     val seasonNumber: Int,
+    val name: String?,
     val year: String?,
     val directors: List<String>,
     val writer: List<String>,
@@ -26,8 +46,9 @@ data class TvShowSeason(
 )
 
 data class TvShowEpisode(
+    val id: String,
     val episodeNumber: Int,
-    val seasonNumber: Int,
+    val title: String?,
     val year: String?,
     val directors: List<String>,
     val writer: List<String>,
@@ -35,5 +56,6 @@ data class TvShowEpisode(
     val genre: List<String>,
     val plot: String?,
     val imageUrl: String?,
+    val thumbImageUrl: String?,
     val duration: Int
 )

@@ -25,7 +25,9 @@ fun UiStateAnimator(
     modifier: Modifier = Modifier,
     loading: ComposableFun = { FullScreenLoader(modifier) },
     empty: ComposableFun = { DefaultEmptyState(modifier) },
-    error: @Composable (String) -> Unit = { text -> DefaultErrorState(text = text) },
+    error: @Composable (String) -> Unit = { text ->
+        DefaultErrorState(text = text, modifier = modifier)
+    },
     content: ComposableFun
 ) {
     when(uiState) {

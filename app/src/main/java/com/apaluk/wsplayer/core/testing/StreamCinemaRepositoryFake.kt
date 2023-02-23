@@ -70,7 +70,7 @@ class StreamCinemaRepositoryFake: StreamCinemaRepository {
     override fun getMediaDetails(mediaId: String): Flow<Resource<MediaDetail>> = flowOf(
         Resource.Loading(),
         Resource.Success(
-            data = MediaDetail(
+            data = MediaDetailMovie(
                 id = "",
                 title = "Pulp fiction",
                 originalTitle = "Pulp fiction",

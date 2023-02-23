@@ -21,3 +21,17 @@ fun stringResourceSafe(@StringRes id: Int): String =
     } else {
         stringResource(id)
     }
+
+@Composable
+@ReadOnlyComposable
+fun stringResourceSafe(@StringRes id: Int, vararg formatArgs: Any): String =
+    if (BuildConfig.DEBUG) {
+        val resources = LocalContext.current.resources
+        try {
+            resources.getString(id, *formatArgs)
+        } catch (e: Resources.NotFoundException) {
+            "missing res"
+        }
+    } else {
+        stringResource(id, *formatArgs)
+    }

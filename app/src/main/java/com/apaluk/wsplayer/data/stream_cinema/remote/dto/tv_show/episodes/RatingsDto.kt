@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class RatingsDto(
     @Json(name = "tmdb")
-    val tmdb: TmdbDto,
+    val tmdb: TmdbDto?,
     @Json(name = "trakt")
-    val trakt: TraktDto
+    val trakt: TraktDto?
 )

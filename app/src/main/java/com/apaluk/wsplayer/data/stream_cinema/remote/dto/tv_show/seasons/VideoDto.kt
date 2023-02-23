@@ -9,7 +9,7 @@ data class VideoDto(
     @Json(name = "lang")
     val lang: String?,
     @Json(name = "name")
-    val name: String,
+    val name: String?,
     @Json(name = "size")
     val size: Int?,
     @Json(name = "subtitles")

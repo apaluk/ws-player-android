@@ -3,7 +3,7 @@ package com.apaluk.wsplayer.ui
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
-import com.apaluk.wsplayer.domain.model.media.MediaDetail
+import com.apaluk.wsplayer.domain.model.media.MediaDetailMovie
 import com.apaluk.wsplayer.ui.common.util.UiState
 import com.apaluk.wsplayer.ui.media_detail.MediaDetailScreenContent
 import com.apaluk.wsplayer.ui.media_detail.MediaDetailUiState
@@ -28,7 +28,7 @@ class MediaDetailScreenTest {
                 MediaDetailScreenContent(
                     uiState = MediaDetailUiState(
                         uiState = UiState.Content,
-                        mediaDetail = MediaDetail(
+                        mediaDetailMovie = MediaDetailMovie(
                             id = "",
                             title = "Pulp fiction",
                             originalTitle = "Pulp fiction",
@@ -72,7 +72,7 @@ class MediaDetailScreenTest {
                 MediaDetailScreenContent(
                     uiState = MediaDetailUiState(
                         uiState = UiState.Content,
-                        mediaDetail = MediaDetail(
+                        mediaDetailMovie = MediaDetailMovie(
                             id = "",
                             title = "Pulp fiction",
                             originalTitle = "Pulp fiction",

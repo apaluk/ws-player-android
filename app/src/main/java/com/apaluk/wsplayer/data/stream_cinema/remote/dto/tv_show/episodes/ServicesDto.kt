@@ -7,17 +7,17 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ServicesDto(
     @Json(name = "csfd")
-    val csfd: String,
+    val csfd: String?,
     @Json(name = "imdb")
-    val imdb: String,
+    val imdb: String?,
     @Json(name = "tmdb")
-    val tmdb: String,
+    val tmdb: String?,
     @Json(name = "trakt")
-    val trakt: String,
+    val trakt: String?,
     @Json(name = "trakt_with_type")
-    val traktWithType: String,
+    val traktWithType: String?,
     @Json(name = "tvdb")
-    val tvdb: String,
+    val tvdb: String?,
     @Json(name = "tvrage")
     val tvrage: String?
 )

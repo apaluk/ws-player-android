@@ -9,7 +9,7 @@ data class CastDto(
     @Json(name = "name")
     val name: String,
     @Json(name = "order")
-    val order: Int,
+    val order: Int?,
     @Json(name = "role")
     val role: String?,
     @Json(name = "thumbnail")

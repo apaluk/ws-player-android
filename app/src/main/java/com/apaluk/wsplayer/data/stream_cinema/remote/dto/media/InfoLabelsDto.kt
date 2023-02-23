@@ -1,7 +1,6 @@
 package com.apaluk.wsplayer.data.stream_cinema.remote.dto.media
 
 
-import com.apaluk.wsplayer.domain.model.media.MediaType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

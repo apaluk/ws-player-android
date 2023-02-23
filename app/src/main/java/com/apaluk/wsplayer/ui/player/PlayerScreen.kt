@@ -22,6 +22,9 @@ import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.apaluk.wsplayer.ui.common.composable.FullScreenLoader
+import com.apaluk.wsplayer.ui.common.composable.KeepScreenOn
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import okhttp3.OkHttpClient
 
 @Composable
@@ -29,6 +32,14 @@ fun PlayerScreen(
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel = hiltViewModel()
 ) {
+    val systemUiController = rememberSystemUiController()
+    DisposableEffect(systemUiController) {
+        systemUiController.isStatusBarVisible = false
+        systemUiController.isNavigationBarVisible = false
+        systemUiController.isSystemBarsVisible = false
+        onDispose {  }
+    }
+    KeepScreenOn()
     val uiState = viewModel.uiState.collectAsState()
     val url = uiState.value.videoUrl
     if(url == null) {

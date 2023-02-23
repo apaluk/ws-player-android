@@ -11,14 +11,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MovieTitle(
+fun MediaTitle(
     title: String,
     originalTitle: String?,
     modifier: Modifier = Modifier
 ) {
     Row {
         Text(
-            modifier = modifier.alignByBaseline(),
+            modifier = Modifier.alignByBaseline(),
             text = title,
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
@@ -27,7 +27,7 @@ fun MovieTitle(
         )
         if (originalTitle != null && originalTitle != title) {
             Text(
-                modifier = modifier.padding(start = 6.dp).alignByBaseline(),
+                modifier = Modifier.padding(start = 6.dp).alignByBaseline(),
                 text = "($originalTitle)",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground,
