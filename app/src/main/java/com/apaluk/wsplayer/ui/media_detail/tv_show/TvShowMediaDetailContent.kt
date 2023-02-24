@@ -1,43 +1,49 @@
-package com.apaluk.wsplayer.ui.media_detail
+package com.apaluk.wsplayer.ui.media_detail.tv_show
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.Constants
-import com.apaluk.wsplayer.domain.model.media.MediaDetailTvShow
+import com.apaluk.wsplayer.core.util.formatDuration
+import com.apaluk.wsplayer.core.util.withLeadingZeros
 import com.apaluk.wsplayer.domain.model.media.TvShowEpisode
 import com.apaluk.wsplayer.domain.model.media.TvShowSeason
 import com.apaluk.wsplayer.ui.common.composable.MediaTitle
 import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
-import com.apaluk.wsplayer.ui.common.util.UiState
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
+import com.apaluk.wsplayer.ui.media_detail.MediaDetailAction
+import com.apaluk.wsplayer.ui.media_detail.TvShowMediaDetailUiState
+import com.apaluk.wsplayer.ui.media_detail.common.DropDownSelector
+import com.apaluk.wsplayer.ui.media_detail.common.MediaDetailPoster
 import com.apaluk.wsplayer.ui.media_detail.util.generalInfoText
 import com.apaluk.wsplayer.ui.media_detail.util.requireName
 import com.apaluk.wsplayer.ui.media_detail.util.selectedSeasonName
 
 @Composable
-fun MediaDetailTvShowContent(
-    mediaDetailTvShow: MediaDetailTvShow,
-    episodesUiState: UiState,
+fun TvShowMediaDetailContent(
+    tvShowUiState: TvShowMediaDetailUiState,
     onMediaDetailAction: (MediaDetailAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val mediaDetailTvShow = tvShowUiState.tvShow
     val showSeasonSelectorDialog = remember {
         mutableStateOf(false)
     }
@@ -45,10 +51,17 @@ fun MediaDetailTvShowContent(
         modifier = modifier
             .verticalScroll(rememberScrollState())
     ) {
-        MediaDetailPoster(
-            imageUrl = mediaDetailTvShow.imageUrl,
-            onPlay = { onMediaDetailAction(MediaDetailAction.PlayDefault) }
-        )
+        tvShowUiState.posterData?.let { posterData ->
+            MediaDetailPoster(
+                imageUrl = posterData.imageUrl,
+                onPlay = { onMediaDetailAction(MediaDetailAction.PlayDefault) },
+                bottomStartTexts = listOf(
+                    posterData.episodeNumber,
+                    posterData.episodeName
+                ),
+                duration = posterData.duration
+            )
+        }
         Spacer(modifier = Modifier.height(24.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -59,7 +72,7 @@ fun MediaDetailTvShowContent(
                 originalTitle = mediaDetailTvShow.originalTitle
             )
             Spacer(modifier = Modifier.weight(1f))
-            mediaDetailTvShow.selectedSeasonName()?.let { seasonName ->
+            tvShowUiState.selectedSeasonName()?.let { seasonName ->
                 DropDownSelector(
                     text = seasonName,
                     onClick = { showSeasonSelectorDialog.value = true }
@@ -74,14 +87,13 @@ fun MediaDetailTvShowContent(
         )
         Spacer(modifier = Modifier.height(16.dp))
         MediaDetailTvShowEpisodesList(
-            tvShow = mediaDetailTvShow,
-            uiState = episodesUiState,
+            tvShowUiState = tvShowUiState,
             onMediaDetailAction = onMediaDetailAction
         )
         Spacer(modifier = Modifier.height(64.dp))
     }
     if (showSeasonSelectorDialog.value) {
-        mediaDetailTvShow.seasons?.let { seasons ->
+        tvShowUiState.seasons?.let { seasons ->
             SelectSeasonDialog(
                 seasons = seasons,
                 onSeasonIndexSelected = {
@@ -134,15 +146,14 @@ private fun SelectSeasonDialog(
 
 @Composable
 fun MediaDetailTvShowEpisodesList(
-    tvShow: MediaDetailTvShow,
-    uiState: UiState,
+    tvShowUiState: TvShowMediaDetailUiState,
     onMediaDetailAction: (MediaDetailAction) -> Unit
 ) {
     UiStateAnimator(
-        uiState = uiState,
+        uiState = tvShowUiState.tvShowEpisodesUiState,
         modifier = Modifier.heightIn(min = 140.dp)
     ) {
-        val episodes = tvShow.selectedSeasonEpisodes ?: return@UiStateAnimator
+        val episodes = tvShowUiState.selectedSeasonEpisodes ?: return@UiStateAnimator
         Column {
             Divider(
                 color = MaterialTheme.colorScheme.surfaceVariant,
@@ -152,7 +163,7 @@ fun MediaDetailTvShowEpisodesList(
                 MediaDetailTvShowEpisode(
                     episode = episode,
                     onSelected = { onMediaDetailAction(MediaDetailAction.SelectTvShowEpisode(index)) },
-                    isSelected = index == tvShow.selectedEpisodeIndex
+                    isSelected = index == tvShowUiState.selectedEpisodeIndex
                 )
                 Divider(
                     modifier = Modifier.padding(horizontal = 6.dp),
@@ -176,7 +187,8 @@ fun MediaDetailTvShowEpisode(
             .fillMaxWidth()
             .clickable { onSelected() }
             .background(background)
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
@@ -199,21 +211,34 @@ fun MediaDetailTvShowEpisode(
                 )
             }
         }
-        Column(
+        Text(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                modifier = Modifier.padding(vertical = 12.dp),
-                text = episode.title ?: stringResourceSafe(
-                    id = R.string.wsp_tv_show_episode_number,
-                    episode.episodeNumber
-                ),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
+                .padding(start = 16.dp, end = 12.dp)
+                .width(28.dp)
+                .fillMaxHeight(),
+            text = episode.episodeNumber.withLeadingZeros(2),
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.End
+        )
+        Text(
+            modifier = Modifier
+                .weight(1f),
+            text = episode.title ?: stringResourceSafe(
+                id = R.string.wsp_tv_show_episode_number,
+                episode.episodeNumber
+            ),
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Text(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 32.dp)
+                .width(60.dp),
+            text = episode.duration.formatDuration(),
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.End
+        )
     }
 }

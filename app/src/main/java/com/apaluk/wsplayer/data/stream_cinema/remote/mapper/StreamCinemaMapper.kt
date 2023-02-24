@@ -61,10 +61,6 @@ fun MediaDetailDto.toMediaDetail(): MediaDetail =
             genre = infoLabels.genre,
             plot = getPlot(),
             numSeasons = childrenCount,
-            seasons = null,
-            selectedSeasonIndex = null,
-            selectedEpisodeIndex = null,
-            selectedSeasonEpisodes = null
         )
     }
 

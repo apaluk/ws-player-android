@@ -4,13 +4,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.Constants
+import com.apaluk.wsplayer.domain.model.media.MediaDetail
 import com.apaluk.wsplayer.domain.model.media.MediaDetailMovie
 import com.apaluk.wsplayer.domain.model.media.MediaDetailTvShow
 import com.apaluk.wsplayer.domain.model.media.TvShowSeason
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.media_detail.MediaDetailUiState
+import com.apaluk.wsplayer.ui.media_detail.MovieMediaDetailUiState
+import com.apaluk.wsplayer.ui.media_detail.TvShowMediaDetailUiState
 
 private const val MEDIA_INFO_SEPARATOR = "  ${Constants.CHAR_BULLET}  "
+
+fun MediaDetail.toMediaDetailUiState(): MediaDetailUiState =
+    when(this) {
+        is MediaDetailMovie -> MovieMediaDetailUiState(movie = this)
+        is MediaDetailTvShow -> TvShowMediaDetailUiState(tvShow = this)
+    }
 
 fun MediaDetailMovie.generalInfoText(): String {
     with(StringBuilder()) {
@@ -43,8 +52,9 @@ fun TvShowSeason.requireName(): String =
 
 @Composable
 @ReadOnlyComposable
-fun MediaDetailTvShow.selectedSeasonName(): String? {
+fun TvShowMediaDetailUiState.selectedSeasonName(): String? {
     return if (selectedSeasonIndex != null && seasons != null && selectedSeasonIndex in seasons.indices)
         seasons[selectedSeasonIndex].requireName()
     else null
 }
+

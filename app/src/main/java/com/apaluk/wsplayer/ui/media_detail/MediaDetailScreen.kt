@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.apaluk.wsplayer.ui.media_detail
 
 import androidx.compose.foundation.*
@@ -19,9 +21,10 @@ import com.apaluk.wsplayer.domain.model.media.*
 import com.apaluk.wsplayer.ui.common.composable.BackButton
 import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
 import com.apaluk.wsplayer.ui.common.util.UiState
+import com.apaluk.wsplayer.ui.media_detail.movie.MovieMediaDetailContent
+import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowMediaDetailContent
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediaDetailScreen(
     modifier: Modifier = Modifier,
@@ -52,7 +55,7 @@ fun MediaDetailScreen(
 
 @Composable
 fun MediaDetailScreenContent(
-    uiState: MediaDetailUiState,
+    uiState: MediaDetailScreenUiState,
     modifier: Modifier = Modifier,
     onMediaDetailAction: (MediaDetailAction) -> Unit = {}
 ) {
@@ -60,16 +63,15 @@ fun MediaDetailScreenContent(
         modifier = modifier.fillMaxSize(),
         verticalAlignment = Alignment.Top
     ) {
-        uiState.mediaDetail?.let { mediaDetail ->
+        uiState.mediaDetailUiState?.let {
             MediaDetailContent(
-                mediaDetail = mediaDetail,
-                onMediaDetailAction = onMediaDetailAction,
+                mediaDetailUiState = it,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
                     .padding(start = 76.dp, end = 24.dp)
                     .align(Alignment.Top),
-                episodesUiState = uiState.tvShowEpisodesUiState
+                onMediaDetailAction = onMediaDetailAction
             )
         }
         Box(
@@ -96,20 +98,18 @@ fun MediaDetailScreenContent(
 
 @Composable
 fun MediaDetailContent(
-    mediaDetail: MediaDetail,
-    episodesUiState: UiState,
+    mediaDetailUiState: MediaDetailUiState,
     modifier: Modifier = Modifier,
     onMediaDetailAction: (MediaDetailAction) -> Unit = {}
 ) {
-    when(mediaDetail) {
-        is MediaDetailMovie -> MediaDetailMovieContent(
-            mediaDetailMovie = mediaDetail,
+    when(mediaDetailUiState) {
+        is MovieMediaDetailUiState -> MovieMediaDetailContent(
+            movieUiState = mediaDetailUiState,
             onMediaDetailAction = onMediaDetailAction,
             modifier = modifier
         )
-        is MediaDetailTvShow -> MediaDetailTvShowContent(
-            mediaDetailTvShow = mediaDetail,
-            episodesUiState = episodesUiState,
+        is TvShowMediaDetailUiState -> TvShowMediaDetailContent(
+            tvShowUiState = mediaDetailUiState,
             onMediaDetailAction = onMediaDetailAction,
             modifier = modifier
         )
@@ -121,20 +121,22 @@ fun MediaDetailContent(
 fun MediaDetailContentPreview() {
     WsPlayerTheme {
         MediaDetailScreenContent(
-            uiState = MediaDetailUiState(
+            uiState = MediaDetailScreenUiState(
                 uiState = UiState.Content,
-                mediaDetail = MediaDetailMovie(
-                    id = "",
-                    title = "Pulp fiction",
-                    originalTitle = "Pulp fiction",
-                    year = "1994",
-                    directors = listOf("Quentin Tarantino"),
-                    writer = listOf("Quentin Tarantino"),
-                    cast = listOf("Bruce Willis", "John Travolta", "Samuel L. Jackson"),
-                    genre = listOf("Thriller", "Comedy"),
-                    plot = LoremIpsum(50).values.joinToString(" "),
-                    imageUrl = null,
-                    duration = 7444,
+                mediaDetailUiState = MovieMediaDetailUiState(
+                    MediaDetailMovie(
+                        id = "",
+                        title = "Pulp fiction",
+                        originalTitle = "Pulp fiction",
+                        year = "1994",
+                        directors = listOf("Quentin Tarantino"),
+                        writer = listOf("Quentin Tarantino"),
+                        cast = listOf("Bruce Willis", "John Travolta", "Samuel L. Jackson"),
+                        genre = listOf("Thriller", "Comedy"),
+                        plot = LoremIpsum(50).values.joinToString(" "),
+                        imageUrl = null,
+                        duration = 7444,
+                    )
                 ),
                 streams = DUMMY_MEDIA_STREAMS
             ),

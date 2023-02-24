@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.ui.media_detail
+package com.apaluk.wsplayer.ui.media_detail.movie
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,17 +9,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.apaluk.wsplayer.R
-import com.apaluk.wsplayer.domain.model.media.MediaDetailMovie
 import com.apaluk.wsplayer.ui.common.composable.MediaTitle
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
+import com.apaluk.wsplayer.ui.media_detail.common.CrewMembers
+import com.apaluk.wsplayer.ui.media_detail.MediaDetailAction
+import com.apaluk.wsplayer.ui.media_detail.MovieMediaDetailUiState
+import com.apaluk.wsplayer.ui.media_detail.common.MediaDetailPoster
 import com.apaluk.wsplayer.ui.media_detail.util.generalInfoText
 
 @Composable
-fun MediaDetailMovieContent(
-    mediaDetailMovie: MediaDetailMovie,
+fun MovieMediaDetailContent(
+    movieUiState: MovieMediaDetailUiState,
     onMediaDetailAction: (MediaDetailAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val mediaDetailMovie = movieUiState.movie
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -29,8 +33,8 @@ fun MediaDetailMovieContent(
             duration = mediaDetailMovie.duration,
             onPlay = { onMediaDetailAction(MediaDetailAction.PlayDefault) }
         )
+        Spacer(modifier = Modifier.height(24.dp))
         MediaTitle(
-            modifier = Modifier.padding(top = 16.dp),
             title = mediaDetailMovie.title,
             originalTitle = mediaDetailMovie.originalTitle
         )

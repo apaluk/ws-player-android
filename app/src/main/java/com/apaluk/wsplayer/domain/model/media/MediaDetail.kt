@@ -26,10 +26,6 @@ data class MediaDetailTvShow(
     val plot: String?,
     val cast: List<String>,
     val numSeasons: Int,
-    val selectedSeasonIndex: Int?,
-    val selectedEpisodeIndex: Int?,
-    val seasons: List<TvShowSeason>?,
-    val selectedSeasonEpisodes: List<TvShowEpisode>?
 ): MediaDetail()
 
 data class TvShowSeason(

@@ -5,15 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs
-import com.apaluk.wsplayer.domain.model.media.MediaDetail
+import com.apaluk.wsplayer.core.util.Resource
+import com.apaluk.wsplayer.core.util.withLeadingZeros
 import com.apaluk.wsplayer.domain.model.media.MediaDetailTvShow
-import com.apaluk.wsplayer.domain.model.media.MediaStream
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
-import com.apaluk.wsplayer.domain.use_case.media.GetMediaDetailUseCase
 import com.apaluk.wsplayer.domain.use_case.media.GetSelectedEpisodeUseCase
 import com.apaluk.wsplayer.domain.use_case.media.GetSelectedSeasonUseCase
 import com.apaluk.wsplayer.ui.common.util.UiState
 import com.apaluk.wsplayer.ui.common.util.toUiState
+import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
+import com.apaluk.wsplayer.ui.media_detail.util.toMediaDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -22,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MediaDetailViewModel @Inject constructor(
     private val streamCinemaRepository: StreamCinemaRepository,
-    getMediaDetail: GetMediaDetailUseCase,
     getSelectedSeason: GetSelectedSeasonUseCase,
     getSelectedEpisode: GetSelectedEpisodeUseCase,
     savedStateHandle: SavedStateHandle
@@ -30,14 +30,21 @@ class MediaDetailViewModel @Inject constructor(
 
     private val mediaId: String = requireNotNull(savedStateHandle[WsPlayerNavArgs.MEDIA_ID_ARG])
 
-    private val _uiState = MutableStateFlow(MediaDetailUiState())
+    private val _uiState = MutableStateFlow(MediaDetailScreenUiState())
     val uiState = _uiState.asStateFlow()
 
     private val selectedEpisode = combine(
-        _uiState.mapNotNull { it.mediaDetailTvShow?.selectedEpisodeIndex }.distinctUntilChanged(),
-        _uiState.mapNotNull { it.mediaDetailTvShow?.selectedSeasonEpisodes }.distinctUntilChanged()
+        _uiState.mapNotNull { it.tvShowUiState?.selectedEpisodeIndex }.distinctUntilChanged(),
+        _uiState.mapNotNull { it.tvShowUiState?.selectedSeasonEpisodes }.distinctUntilChanged()
     ) { index, episodes ->
         episodes.getOrNull(index)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+
+    private val selectedSeason = combine(
+        _uiState.mapNotNull { it.tvShowUiState?.selectedSeasonIndex }.distinctUntilChanged(),
+        _uiState.mapNotNull { it.tvShowUiState?.seasons }.distinctUntilChanged()
+    ) { index, seasons ->
+        seasons.getOrNull(index)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
     private val mediaIdForStreams: StateFlow<String> = selectedEpisode
@@ -48,12 +55,32 @@ class MediaDetailViewModel @Inject constructor(
     init {
         // get media detail
         viewModelScope.launch {
-            getMediaDetail(mediaId).collect { mediaDetailResource ->
+            streamCinemaRepository.getMediaDetails(mediaId).collect { mediaDetailResource ->
                 _uiState.update {
                     it.copy(
                         uiState = mediaDetailResource.toUiState(),
-                        mediaDetail = mediaDetailResource.data,
+                        mediaDetailUiState = mediaDetailResource.data?.toMediaDetailUiState(),
                     )
+                }
+                // get TV show seasons
+                if(mediaDetailResource is Resource.Success && mediaDetailResource.data is MediaDetailTvShow) {
+                    _uiState.updateTvShowUiState {
+                        it.copy(posterData = TvShowPosterData(imageUrl = mediaDetailResource.data.imageUrl))
+                    }
+                    val seasonsResource = streamCinemaRepository.getTvShowSeasons(mediaId).last()
+                    if(seasonsResource is Resource.Success) {
+                        seasonsResource.data?.let { seasons ->
+                            val selectedSeasonIndex = getSelectedSeason(mediaId, seasons)
+                            _uiState.updateTvShowUiState {
+                                it.copy(
+                                    seasons = seasons,
+                                    selectedSeasonIndex = selectedSeasonIndex
+                                )
+                            }
+                        }
+                    } else if(seasonsResource is Resource.Error) {
+                        _uiState.update { it.copy(uiState = seasonsResource.toUiState()) }
+                    }
                 }
             }
         }
@@ -66,55 +93,45 @@ class MediaDetailViewModel @Inject constructor(
                 }
             }
         }
-        // set default selected season when seasons are fetched
-        viewModelScope.launch {
-            _uiState
-                .mapNotNull { it.mediaDetail }
-                .filterIsInstance<MediaDetailTvShow>()
-                .mapNotNull { it.seasons }
-                .distinctUntilChanged()
-                .collect {
-                    val selectedSeasonIndex = getSelectedSeason(mediaId, it)
-                    _uiState.updateTvShow { tvShow ->
-                        tvShow.copy(selectedSeasonIndex = selectedSeasonIndex)
-                    }
-                }
-        }
         // get episodes on season select
         viewModelScope.launch {
-            combine(
-                _uiState.mapNotNull { it.mediaDetailTvShow?.seasons }.distinctUntilChanged(),
-                _uiState.mapNotNull { it.mediaDetailTvShow?.selectedSeasonIndex }.distinctUntilChanged()
-            ) { seasons, seasonIndex ->
-                if (seasonIndex in seasons.indices) {
+            selectedSeason
+                .filterNotNull()
+                .collect { season ->
                     streamCinemaRepository
-                        .getTvShowSeasonEpisodes(seasons[seasonIndex].id)
+                        .getTvShowSeasonEpisodes(season.id)
                         .collect { episodesResource ->
-                            val selectedEpisode = if(episodesResource.data != null) {
-                                getSelectedEpisode(mediaId, seasonIndex).run {
+                            val selectedEpisode = if (episodesResource.data != null) {
+                                getSelectedEpisode(mediaId, season.id).run {
                                     if (this !in episodesResource.data.indices) null else this
                                 }
                             } else null
 
-                            _uiState.update { it.copy(tvShowEpisodesUiState = episodesResource.toUiState()) }
-                            _uiState.updateTvShow { it.copy(
-                                selectedSeasonEpisodes = episodesResource.data,
-                                selectedEpisodeIndex = selectedEpisode
-                            ) }
+                            _uiState.updateTvShowUiState {
+                                it.copy(
+                                    selectedSeasonEpisodes = episodesResource.data,
+                                    selectedEpisodeIndex = selectedEpisode,
+                                    tvShowEpisodesUiState = episodesResource.toUiState()
+                                )
+                            }
                         }
-                } else {
-                    _uiState.update { it.copy(tvShowEpisodesUiState = UiState.Error(textId = R.string.wsp_default_error_state)) }
-                    _uiState.updateTvShow { it.copy(selectedSeasonEpisodes = null) }
                 }
-            }.collect()
         }
-        // update poster image according to selected episode
+        // update poster data according to selected episode
         viewModelScope.launch {
-            selectedEpisode
-                .mapNotNull { it?.imageUrl }
-                .collect { imageUrl ->
-                    _uiState.updateTvShow { it.copy(imageUrl = imageUrl) }
-                }
+            combine(
+                selectedSeason.filterNotNull(),
+                selectedEpisode.filterNotNull()
+            ) { season, episode ->
+                TvShowPosterData(
+                    episodeNumber = "S${season.seasonNumber.withLeadingZeros(2)}E${episode.episodeNumber.withLeadingZeros(2)}",
+                    episodeName = episode.title,
+                    duration = episode.duration,
+                    imageUrl = episode.imageUrl ?: season.imageUrl
+                )
+            }.collect { posterData ->
+                _uiState.updateTvShowUiState { it.copy(posterData = posterData) }
+            }
         }
     }
 
@@ -128,25 +145,17 @@ class MediaDetailViewModel @Inject constructor(
                 _uiState.update { it.copy(selectedStreamIdent = null) }
             }
             is MediaDetailAction.SelectTvShowSeason -> {
-                _uiState.updateTvShow { it.copy(selectedSeasonIndex = action.seasonIndex) }
+                _uiState.updateTvShowUiState { it.copy(selectedSeasonIndex = action.seasonIndex) }
             }
             is MediaDetailAction.SelectTvShowEpisode -> {
-                if(action.episodeIndex != _uiState.value.mediaDetailTvShow?.selectedEpisodeIndex) {
+                if(action.episodeIndex != _uiState.value.tvShowUiState?.selectedEpisodeIndex) {
                     _uiState.update { it.copy(streams = null) }
-                    _uiState.updateTvShow { it.copy(selectedEpisodeIndex = action.episodeIndex) }
+                    _uiState.updateTvShowUiState { it.copy(selectedEpisodeIndex = action.episodeIndex) }
                 }
             }
         }
     }
 }
-
-data class MediaDetailUiState(
-    val uiState: UiState = UiState.Loading,
-    val mediaDetail: MediaDetail? = null,
-    val streams: List<MediaStream>? = null,
-    val tvShowEpisodesUiState: UiState = UiState.Idle,
-    val selectedStreamIdent: String? = null
-)
 
 sealed class MediaDetailAction {
     object PlayDefault: MediaDetailAction()
@@ -156,13 +165,13 @@ sealed class MediaDetailAction {
     data class SelectTvShowEpisode(val episodeIndex: Int): MediaDetailAction()
 }
 
-private val MediaDetailUiState.mediaDetailTvShow: MediaDetailTvShow?
-    get() = (mediaDetail as? MediaDetailTvShow)
+private val MediaDetailScreenUiState.tvShowUiState: TvShowMediaDetailUiState?
+    get() = (mediaDetailUiState as? TvShowMediaDetailUiState)
 
-fun MutableStateFlow<MediaDetailUiState>.updateTvShow(updateTvShow: (MediaDetailTvShow) -> MediaDetailTvShow) {
-    value.mediaDetailTvShow?.let {
+fun MutableStateFlow<MediaDetailScreenUiState>.updateTvShowUiState(updateTvShowUiState: (TvShowMediaDetailUiState) -> TvShowMediaDetailUiState) {
+    value.tvShowUiState?.let {
         update { mediaDetailUiState ->
-            mediaDetailUiState.copy(mediaDetail = updateTvShow(it))
+            mediaDetailUiState.copy(mediaDetailUiState = updateTvShowUiState(it))
         }
     }
 }

@@ -6,7 +6,7 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.apaluk.wsplayer.domain.model.media.MediaDetailMovie
 import com.apaluk.wsplayer.ui.common.util.UiState
 import com.apaluk.wsplayer.ui.media_detail.MediaDetailScreenContent
-import com.apaluk.wsplayer.ui.media_detail.MediaDetailUiState
+import com.apaluk.wsplayer.ui.media_detail.MediaDetailScreenUiState
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.formatFileSize
@@ -26,7 +26,7 @@ class MediaDetailScreenTest {
         composeRule.setContent {
             WsPlayerTheme {
                 MediaDetailScreenContent(
-                    uiState = MediaDetailUiState(
+                    uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
                         mediaDetailMovie = MediaDetailMovie(
                             id = "",
@@ -70,7 +70,7 @@ class MediaDetailScreenTest {
         composeRule.setContent {
             WsPlayerTheme {
                 MediaDetailScreenContent(
-                    uiState = MediaDetailUiState(
+                    uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
                         mediaDetailMovie = MediaDetailMovie(
                             id = "",
@@ -99,7 +99,7 @@ class MediaDetailScreenTest {
         composeRule.setContent {
             WsPlayerTheme {
                 MediaDetailScreenContent(
-                    uiState = MediaDetailUiState(
+                    uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
                         streams = listOf(
                             MediaStream(
