@@ -13,6 +13,7 @@ import com.apaluk.wsplayer.core.util.formatFileSize
 import com.apaluk.wsplayer.domain.model.media.MediaStream
 import com.apaluk.wsplayer.domain.model.media.Subtitles
 import com.apaluk.wsplayer.domain.model.media.VideoDefinition
+import com.apaluk.wsplayer.ui.media_detail.MovieMediaDetailUiState
 import org.junit.Rule
 import org.junit.Test
 
@@ -28,18 +29,20 @@ class MediaDetailScreenTest {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
-                        mediaDetailMovie = MediaDetailMovie(
-                            id = "",
-                            title = "Pulp fiction",
-                            originalTitle = "Pulp fiction",
-                            year = "1994",
-                            directors = listOf("Quentin Tarantino"),
-                            writer = listOf("Quentin Tarantino"),
-                            cast = listOf("Bruce Willis", "John Travolta", "Samuel L. Jackson"),
-                            genre = listOf("Thriller", "Comedy"),
-                            plot = LoremIpsum(50).values.joinToString(" "),
-                            imageUrl = null,
-                            duration = 2 * 3600 + 3 * 60 + 31
+                        mediaDetailUiState = MovieMediaDetailUiState(
+                            MediaDetailMovie(
+                                id = "",
+                                title = "Pulp fiction",
+                                originalTitle = "Pulp fiction",
+                                year = "1994",
+                                directors = listOf("Quentin Tarantino"),
+                                writer = listOf("Quentin Tarantino"),
+                                cast = listOf("Bruce Willis", "John Travolta", "Samuel L. Jackson"),
+                                genre = listOf("Thriller", "Comedy"),
+                                plot = LoremIpsum(50).values.joinToString(" "),
+                                imageUrl = null,
+                                duration = 2 * 3600 + 3 * 60 + 31
+                            )
                         )
                     )
                 )
@@ -72,18 +75,20 @@ class MediaDetailScreenTest {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
-                        mediaDetailMovie = MediaDetailMovie(
-                            id = "",
-                            title = "Pulp fiction",
-                            originalTitle = "Pulp fiction",
-                            year = "1994",
-                            directors = listOf("Quentin Tarantino"),
-                            writer = listOf("Quentin Tarantino"),
-                            cast = listOf("Bruce Willis", "John Travolta", "Samuel L. Jackson"),
-                            genre = listOf("Thriller", "Comedy"),
-                            plot = LoremIpsum(50).values.joinToString(" "),
-                            imageUrl = null,
-                            duration = 2 * 3600 + 3 * 60 + 31
+                        mediaDetailUiState = MovieMediaDetailUiState(
+                            MediaDetailMovie(
+                                id = "",
+                                title = "Pulp fiction",
+                                originalTitle = "Pulp fiction",
+                                year = "1994",
+                                directors = listOf("Quentin Tarantino"),
+                                writer = listOf("Quentin Tarantino"),
+                                cast = listOf("Bruce Willis", "John Travolta", "Samuel L. Jackson"),
+                                genre = listOf("Thriller", "Comedy"),
+                                plot = LoremIpsum(50).values.joinToString(" "),
+                                imageUrl = null,
+                                duration = 2 * 3600 + 3 * 60 + 31
+                            )
                         )
                     )
                 )

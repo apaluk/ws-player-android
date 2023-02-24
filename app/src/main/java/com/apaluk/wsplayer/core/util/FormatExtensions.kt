@@ -22,5 +22,8 @@ fun Int.formatDuration(): String {
     val seconds = this % 60
     val minutes = (this / 60) % 60
     val hours = (this / (60 * 60))
-    return "${"%d".format(hours)}:${"%02d".format(minutes)}:${"%02d".format(seconds)}"
+    return if(hours > 0)
+        "${"%d".format(hours)}:${"%02d".format(minutes)}:${"%02d".format(seconds)}"
+    else
+        "${"%02d".format(minutes)}:${"%02d".format(seconds)}"
 }
