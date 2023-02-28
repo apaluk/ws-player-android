@@ -1,5 +1,6 @@
 package com.apaluk.wsplayer.ui.search
 
+import com.apaluk.wsplayer.core.testing.SearchHistoryRepositoryFake
 import com.apaluk.wsplayer.core.testing.StreamCinemaRepositoryFake
 import com.apaluk.wsplayer.core.util.MainDispatcherRule
 import com.apaluk.wsplayer.ui.common.util.UiState
@@ -20,17 +21,20 @@ class SearchViewModelTest {
 
     @Before
     fun setup() {
-        viewModel = SearchViewModel(StreamCinemaRepositoryFake())
+        viewModel = SearchViewModel(
+            StreamCinemaRepositoryFake(),
+            SearchHistoryRepositoryFake()
+        )
     }
 
     @Test
     fun `successful search updates the ui state`() = runTest {
-        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Idle)
+        assertThat(viewModel.uiState.value.uiState).isEqualTo(UiState.Idle)
         viewModel.onSearchScreenAction(SearchScreenAction.SearchTextChanged("ac"))
         assertThat(viewModel.uiState.value.searchText).isEqualTo("ac")
         viewModel.onSearchScreenAction(SearchScreenAction.TriggerSearch)
         advanceUntilIdle()
-        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Content)
+        assertThat(viewModel.uiState.value.uiState).isEqualTo(UiState.Content)
         assertThat(viewModel.uiState.value.searchResults).isNotEmpty()
         assertThat(viewModel.uiState.value.scrollListToTop).isFalse()
         assertThat(viewModel.uiState.value.errorToast).isNull()
@@ -41,10 +45,10 @@ class SearchViewModelTest {
         viewModel.onSearchScreenAction(SearchScreenAction.SearchTextChanged("ac"))
         viewModel.onSearchScreenAction(SearchScreenAction.TriggerSearch)
         advanceUntilIdle()
-        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Content)
+        assertThat(viewModel.uiState.value.uiState).isEqualTo(UiState.Content)
         viewModel.onSearchScreenAction(SearchScreenAction.ClearSearch)
         advanceUntilIdle()
-        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Idle)
+        assertThat(viewModel.uiState.value.uiState).isEqualTo(UiState.Idle)
         assertThat(viewModel.uiState.value.searchText).isEmpty()
         assertThat(viewModel.uiState.value.searchResults).isEmpty()
     }
@@ -63,6 +67,6 @@ class SearchViewModelTest {
         viewModel.onSearchScreenAction(SearchScreenAction.SearchTextChanged("xxxxx"))
         viewModel.onSearchScreenAction(SearchScreenAction.TriggerSearch)
         advanceUntilIdle()
-        assertThat(viewModel.uiState.value.searchState).isEqualTo(UiState.Empty)
+        assertThat(viewModel.uiState.value.uiState).isEqualTo(UiState.Empty)
     }
 }

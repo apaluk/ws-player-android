@@ -1,16 +1,24 @@
 package com.apaluk.wsplayer.data.di
 
+import android.content.Context
+import androidx.room.Room
 import com.apaluk.wsplayer.BuildConfig
 import com.apaluk.wsplayer.core.util.Constants
+import com.apaluk.wsplayer.data.database.WspDatabase
+import com.apaluk.wsplayer.data.database.dao.SearchHistoryDao
+import com.apaluk.wsplayer.data.database.repository.SearchHistoryRepositoryImpl
 import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepositoryImpl
 import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
 import com.apaluk.wsplayer.data.stream_cinema.remote.adapter.MediaTypeAdapter
 import com.apaluk.wsplayer.data.webshare.remote.WebShareApi
+import com.apaluk.wsplayer.domain.repository.SearchHistoryRepository
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.squareup.moshi.Moshi
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -74,11 +82,25 @@ object DataModule {
     }
 
     @Provides
+    fun provideWspDatabase(
+        @ApplicationContext context: Context
+    ): WspDatabase =
+        Room.databaseBuilder(context, WspDatabase::class.java, "wsPlayerDatabase").build()
+
+    @Provides
+    fun provideSearchHistoryDao(
+        wspDatabase: WspDatabase
+    ): SearchHistoryDao = wspDatabase.searchHistoryDao()
+
+    @Provides
     fun provideStreamCinemaRepository(
         streamCinemaApi: StreamCinemaApi
-    ): StreamCinemaRepository {
-        return StreamCinemaRepositoryImpl(streamCinemaApi)
-    }
+    ): StreamCinemaRepository = StreamCinemaRepositoryImpl(streamCinemaApi)
+
+    @Provides
+    fun provideSearchHistoryRepository(
+        searchHistoryDao: SearchHistoryDao
+    ): SearchHistoryRepository = SearchHistoryRepositoryImpl(searchHistoryDao)
 }
 
 @Qualifier

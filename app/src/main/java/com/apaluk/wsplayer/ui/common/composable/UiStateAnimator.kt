@@ -28,10 +28,11 @@ fun UiStateAnimator(
     error: @Composable (String) -> Unit = { text ->
         DefaultErrorState(text = text, modifier = modifier)
     },
+    idle: ComposableFun = {},
     content: ComposableFun
 ) {
     when(uiState) {
-        UiState.Idle -> {}
+        UiState.Idle -> idle()
         UiState.Loading -> loading()
         UiState.Content -> content()
         UiState.Empty -> empty()

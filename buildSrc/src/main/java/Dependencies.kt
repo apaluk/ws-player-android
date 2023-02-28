@@ -11,7 +11,7 @@ object Dependencies {
         const val ui = "androidx.compose.ui:ui:${Versions.compose}"
         const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview:${Versions.compose}"
         const val material = "androidx.compose.material3:material3:${Versions.material}"
-        const val navigation = "androidx.navigation:navigation-compose:${Versions.compose}"
+        const val navigation = "androidx.navigation:navigation-compose:${Versions.navigationCompose}"
     }
 
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
@@ -58,6 +58,12 @@ object Dependencies {
         const val exoPlayer = "androidx.media3:media3-exoplayer:${Versions.exoPlayer}"
         const val ui = "androidx.media3:media3-ui:${Versions.exoPlayer}"
         const val okHttpDataSource = "androidx.media3:media3-datasource-okhttp:${Versions.exoPlayer}"
+    }
+
+    object Room {
+        const val kotlinCompiler = "androidx.room:room-compiler:${Versions.room}"
+        const val runtime = "androidx.room:room-runtime:${Versions.room}"
+        const val ktx = "androidx.room:room-ktx:${Versions.room}"
     }
 
     const val datastore = "androidx.datastore:datastore-preferences:${Versions.datastore}"

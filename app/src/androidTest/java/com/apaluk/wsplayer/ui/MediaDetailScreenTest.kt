@@ -1,5 +1,6 @@
 package com.apaluk.wsplayer.ui
 
+import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
@@ -24,7 +25,7 @@ class MediaDetailScreenTest {
 
     @Test
     fun mediaDetailsSet_movieDataDisplayed() {
-        composeRule.setContent {
+        composeRule.activity.setContent {
             WsPlayerTheme {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
@@ -70,7 +71,7 @@ class MediaDetailScreenTest {
 
     @Test
     fun streamsNotSet_streamsNotVisible() {
-        composeRule.setContent {
+        composeRule.activity.setContent {
             WsPlayerTheme {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
@@ -101,7 +102,7 @@ class MediaDetailScreenTest {
 
     @Test
     fun streamsSet_streamsVisible() {
-        composeRule.setContent {
+        composeRule.activity.setContent {
             WsPlayerTheme {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(

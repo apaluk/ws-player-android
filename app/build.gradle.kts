@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
 }
 
@@ -15,8 +16,8 @@ android {
         targetSdk = Config.compileSdkVersion
         versionCode = Config.versionCode
         versionName = Config.versionName
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -39,7 +40,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.compose
+        kotlinCompilerExtensionVersion = Versions.composeCompiler
     }
     packagingOptions {
         resources {
@@ -83,6 +84,10 @@ dependencies {
     implementation(Dependencies.ExoPlayer.ui)
     implementation(Dependencies.ExoPlayer.okHttpDataSource)
 
+    ksp(Dependencies.Room.kotlinCompiler)
+    implementation(Dependencies.Room.runtime)
+    annotationProcessor(Dependencies.Room.kotlinCompiler)
+    implementation(Dependencies.Room.ktx)
 
     testImplementation(Dependencies.Test.jUnit)
     testImplementation(Dependencies.Test.mockk)

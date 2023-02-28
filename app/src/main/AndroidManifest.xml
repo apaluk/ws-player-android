@@ -21,7 +21,8 @@
             android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.WsPlayer">
+            android:theme="@style/Theme.WsPlayer"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

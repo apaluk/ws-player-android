@@ -1,5 +1,6 @@
 package com.apaluk.wsplayer.ui
 
+import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.apaluk.wsplayer.R
@@ -18,7 +19,7 @@ class LoginScreenTest {
 
     @Test
     fun loadingState_showsLoadingSpinner() {
-        composeRule.setContent {
+        composeRule.activity.setContent {
             LoginScreenContent(
                 uiState = LoginUiState(uiState = UiState.Loading)
             )
@@ -30,7 +31,7 @@ class LoginScreenTest {
 
     @Test
     fun errorState_errorIsDisplayed() {
-        composeRule.setContent {
+        composeRule.activity.setContent {
             LoginScreenContent(
                 uiState = LoginUiState(
                     uiState = UiState.Content,
@@ -45,7 +46,7 @@ class LoginScreenTest {
 
     @Test
     fun userNameSet_textFieldIsFilled() {
-        composeRule.setContent {
+        composeRule.activity.setContent {
             LoginScreenContent(
                 uiState = LoginUiState(
                     uiState = UiState.Content,
@@ -61,7 +62,7 @@ class LoginScreenTest {
     @Test
     fun sendForm_loginWasTriggered() {
         var loginTriggered = false
-        composeRule.setContent {
+        composeRule.activity.setContent {
             LoginScreenContent(
                 uiState = LoginUiState(
                     uiState = UiState.Content

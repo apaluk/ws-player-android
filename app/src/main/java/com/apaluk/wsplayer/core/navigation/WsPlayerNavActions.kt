@@ -8,7 +8,6 @@ import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.LOGIN_SCREEN
 import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.MEDIA_DETAIL_SCREEN
 import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.SEARCH_SCREEN
 import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.VIDEO_PLAYER_SCREEN
-import com.apaluk.wsplayer.core.util.base64Encode
 
 object WsPlayerScreens {
     const val LOGIN_SCREEN = "login"
@@ -50,7 +49,7 @@ class WsPlayerNavActions(
         navController.navigate(route = "$VIDEO_PLAYER_SCREEN/$webshareIdent")
     }
 
-    fun navigateToMediaId(mediaId: String) {
+    fun navigateToMediaDetail(mediaId: String) {
         navController.navigate(route = "$MEDIA_DETAIL_SCREEN/$mediaId")
     }
 

@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -18,7 +15,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,13 +30,14 @@ import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
 import com.apaluk.wsplayer.ui.common.composable.WspButton
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SearchScreen(
+    navActions: WsPlayerNavActions,
     modifier: Modifier = Modifier,
-    navActions: WsPlayerNavActions
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
-    val viewModel: SearchViewModel = hiltViewModel()
     val uiState = viewModel.uiState.collectAsState()
     SearchScreenContent(
         modifier = modifier,
@@ -47,7 +47,7 @@ fun SearchScreen(
     )
     LaunchedEffect(uiState.value.selectedMediaId) {
         uiState.value.selectedMediaId?.let {
-            navActions.navigateToMediaId(it)
+            navActions.navigateToMediaDetail(it)
         }
         viewModel.onSearchScreenAction(SearchScreenAction.MediaSelected(null))
     }
@@ -87,8 +87,19 @@ private fun SearchScreenContent(
                 modifier = modifier
                     .padding(paddingValues)
                     .fillMaxSize(),
-                uiState = uiState.searchState,
-                empty = { DefaultEmptyState(text = stringResourceSafe(id = R.string.wsp_search_empty_results))}
+                uiState = uiState.uiState,
+                empty = { DefaultEmptyState(text = stringResourceSafe(id = R.string.wsp_search_empty_results))},
+                idle = {
+                    uiState.searchSuggestions?.let {
+                        SearchHistoryList(
+                            searchHistoryList = it,
+                            onSearchScreenAction = onSearchScreenAction,
+                            modifier = modifier
+                                .padding(paddingValues)
+                                .fillMaxSize()
+                        )
+                    }
+                }
             ) {
                 SearchResults(
                     modifier = modifier.padding(paddingValues),
@@ -109,27 +120,47 @@ fun SearchBar(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
-    var keyboardShown = remember { false }
+    var textFieldValue by remember {
+        mutableStateOf(TextFieldValue(text = uiState.searchText))
+    }
+    LaunchedEffect(Unit) {
+        uiState.moveSearchFieldCursorToTheEndEvent.flow.collectLatest {
+            textFieldValue = TextFieldValue(
+                selection = TextRange(it.length),
+                text = it
+            )
+        }
+    }
+    LaunchedEffect(Unit) {
+        uiState.showKeyboardEvent.flow.collectLatest { show ->
+            if(show)
+                focusRequester.requestFocus()
+            else
+                keyboardController?.hide()
+        }
+    }
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp),
+            .padding(bottom = 16.dp, top = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         TextField(
             modifier = modifier
                 .weight(1f)
-                .padding(top = 8.dp)
                 .padding(horizontal = 8.dp)
                 .fillMaxHeight()
                 .focusRequester(focusRequester),
-            value = uiState.searchText,
+            value = textFieldValue,
             textStyle = MaterialTheme.typography.titleLarge,
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = MaterialTheme.colorScheme.background
             ),
-            onValueChange = { onSearchScreenAction(SearchScreenAction.SearchTextChanged(it)) },
+            onValueChange = {
+                onSearchScreenAction(SearchScreenAction.SearchTextChanged(it.text))
+                textFieldValue = it
+            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_search_24),
@@ -142,6 +173,7 @@ fun SearchBar(
                         modifier = modifier
                             .clickable {
                                 keyboardController?.show()
+                                focusRequester.requestFocus()
                                 onSearchScreenAction(SearchScreenAction.ClearSearch)
                             },
                         painter = painterResource(id = R.drawable.ic_clear_24),
@@ -151,6 +183,7 @@ fun SearchBar(
             },
             placeholder = {
                 Text(
+                    modifier = Modifier.padding(top = 4.dp),
                     text = stringResourceSafe(id = R.string.wsp_search_hint),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -159,7 +192,6 @@ fun SearchBar(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    keyboardController?.hide()
                     onSearchScreenAction(SearchScreenAction.TriggerSearch)
                 }
             ),
@@ -168,18 +200,11 @@ fun SearchBar(
         WspButton(
             text = stringResourceSafe(id = R.string.wsp_search_button),
             onClick = {
-                keyboardController?.hide()
                 onSearchScreenAction(SearchScreenAction.TriggerSearch)
             },
             enabled = uiState.searchText.isNotBlank(),
-            textStyle = MaterialTheme.typography.bodyMedium
+            textStyle = MaterialTheme.typography.bodyLarge
         )
-    }
-    LaunchedEffect(uiState.showKeyboard) {
-        if(uiState.showKeyboard) {
-            focusRequester.requestFocus()
-            onSearchScreenAction(SearchScreenAction.KeyboardShown)
-        }
     }
 }
 
