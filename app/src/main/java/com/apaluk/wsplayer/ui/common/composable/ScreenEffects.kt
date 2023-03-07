@@ -3,8 +3,15 @@ package com.apaluk.wsplayer.ui.common.composable
 import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import com.apaluk.wsplayer.core.util.findActivity
+import com.apaluk.wsplayer.core.util.hideSystemUi
+import com.apaluk.wsplayer.core.util.showSystemUi
 
 @Composable
 fun LockScreenOrientation(orientation: Int) {
@@ -32,3 +39,31 @@ fun KeepScreenOn() {
     }
 }
 
+@Composable
+fun OnLifecycleEvent(onEvent: (owner: LifecycleOwner, event: Lifecycle.Event) -> Unit) {
+    val eventHandler = rememberUpdatedState(onEvent)
+    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+
+    DisposableEffect(lifecycleOwner.value) {
+        val lifecycle = lifecycleOwner.value.lifecycle
+        val observer = LifecycleEventObserver { owner, event ->
+            eventHandler.value(owner, event)
+        }
+
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
+}
+
+@Composable
+fun FullScreen() {
+    val context = LocalContext.current
+    DisposableEffect(context) {
+        context.findActivity()?.hideSystemUi()
+        onDispose {
+            context.findActivity()?.showSystemUi()
+        }
+    }
+}

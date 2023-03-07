@@ -75,7 +75,9 @@ fun WsPlayerNavGraph(
                 navArgument(WEBSHARE_IDENT_ARG) { type = NavType.StringType}
             )
         ) {
-            PlayerScreen(modifier = modifier)
+            PlayerScreen(
+                navActions = navActions,
+            )
         }
     }
 }
