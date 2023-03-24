@@ -29,7 +29,7 @@ class SearchHistoryRepositoryImpl @Inject constructor(
             input = lowerCaseInput,
             date = System.currentTimeMillis()
         )
-        searchHistoryDao.insert(entry)
+        searchHistoryDao.upsert(entry)
     }
 
     override suspend fun deleteFromHistory(input: String) =

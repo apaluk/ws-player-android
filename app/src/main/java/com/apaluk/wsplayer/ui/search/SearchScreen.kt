@@ -60,22 +60,21 @@ private fun SearchScreenContent(
     onSearchScreenAction: (SearchScreenAction) -> Unit,
     onBack: () -> Unit
 ) {
-    val toolbarHeight = 82.dp
+    val toolbarHeight by remember { mutableStateOf(82.dp) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                modifier = modifier
-                    .height(toolbarHeight),
+                modifier = Modifier.height(toolbarHeight),
                 navigationIcon = {
                     BackButton(
-                        modifier = modifier.height(toolbarHeight),
+                        modifier = Modifier.height(toolbarHeight),
                         onBack = { onBack() }
                     )
                 },
                 title = {
                     SearchBar(
-                        modifier = modifier,
+                        modifier = Modifier.height(toolbarHeight),
                         uiState = uiState,
                         onSearchScreenAction = onSearchScreenAction
                     )
@@ -84,7 +83,7 @@ private fun SearchScreenContent(
         },
         content = { paddingValues ->
             UiStateAnimator(
-                modifier = modifier
+                modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize(),
                 uiState = uiState.uiState,
@@ -94,7 +93,7 @@ private fun SearchScreenContent(
                         SearchHistoryList(
                             searchHistoryList = it,
                             onSearchScreenAction = onSearchScreenAction,
-                            modifier = modifier
+                            modifier = Modifier
                                 .padding(paddingValues)
                                 .fillMaxSize()
                         )
@@ -102,7 +101,7 @@ private fun SearchScreenContent(
                 }
             ) {
                 SearchResults(
-                    modifier = modifier.padding(paddingValues),
+                    modifier = Modifier.padding(paddingValues),
                     results = uiState.searchResults,
                     onResultClicked = { onSearchScreenAction(SearchScreenAction.MediaSelected(it)) },
                     scrollToTop = uiState.scrollListToTop
@@ -114,9 +113,9 @@ private fun SearchScreenContent(
 
 @Composable
 fun SearchBar(
-    modifier: Modifier = Modifier,
     uiState: SearchUiState,
-    onSearchScreenAction: (SearchScreenAction) -> Unit
+    onSearchScreenAction: (SearchScreenAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -147,7 +146,7 @@ fun SearchBar(
         horizontalArrangement = Arrangement.Center
     ) {
         TextField(
-            modifier = modifier
+            modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp)
                 .fillMaxHeight()
@@ -170,7 +169,7 @@ fun SearchBar(
             trailingIcon = {
                 if(uiState.searchText.isNotEmpty()) {
                     Icon(
-                        modifier = modifier
+                        modifier = Modifier
                             .clickable {
                                 keyboardController?.show()
                                 focusRequester.requestFocus()

@@ -1,19 +1,26 @@
-package com.apaluk.wsplayer.ui.common.composable
+package com.apaluk.wsplayer.ui.media_detail.streams
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.ColorUtils
+import com.apaluk.wsplayer.R
+import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.core.util.formatFileSize
 import com.apaluk.wsplayer.core.util.formatTransferSpeed
 import com.apaluk.wsplayer.domain.model.media.*
@@ -24,14 +31,40 @@ import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 fun MediaStreamChip(
     mediaStream: MediaStream,
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit = {}
+    onClick: () -> Unit = {},
+    isSelected: Boolean = false
 ) {
+    val backgroundColor by
+        if (isSelected) {
+            val colorTransition = rememberInfiniteTransition()
+            val defaultColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.04f)
+                .compositeOver(MaterialTheme.colorScheme.background)
+            val highlightColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.15f)
+                .compositeOver(MaterialTheme.colorScheme.background)
+            colorTransition.animateColor(
+                initialValue = defaultColor,
+                targetValue = highlightColor,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(
+                        durationMillis = Constants.VERY_LONG_ANIM_DURATION,
+                        easing = LinearEasing
+                    ),
+                    repeatMode = RepeatMode.Reverse
+                )
+            )
+        }
+        else {
+            val defaultColor = MaterialTheme.colorScheme.background
+            remember {
+                mutableStateOf(defaultColor)
+            }
+        }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.background)
-            .clickable { onClick(mediaStream.ident) }
+            .background(backgroundColor)
+            .clickable { onClick() }
             .padding(4.dp)
     ) {
         Box(
@@ -70,12 +103,12 @@ fun MediaStreamChip(
                 .width(80.dp)
         ) {
             LanguageInfo(
-                icon = com.apaluk.wsplayer.R.drawable.ic_chat_bubble_24,
+                icon = R.drawable.ic_chat_bubble_24,
                 langs = mediaStream.audios,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             LanguageInfo(
-                icon = com.apaluk.wsplayer.R.drawable.ic_subtitles_24,
+                icon = R.drawable.ic_subtitles_24,
                 langs = mediaStream.subtitles.map { it.lang }.distinct(),
             )
         }

@@ -1,17 +1,27 @@
 package com.apaluk.wsplayer.domain.use_case.media
 
 import com.apaluk.wsplayer.domain.model.media.TvShowSeason
+import com.apaluk.wsplayer.domain.repository.WatchHistoryRepository
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class GetSelectedSeasonUseCase @Inject constructor(
+    private val watchHistoryRepository: WatchHistoryRepository
 ) {
 
     suspend operator fun invoke(mediaId: String, seasons: List<TvShowSeason>): Int {
-        // select 1st regular season
-        seasons.forEachIndexed { index, tvShowSeason ->
-            if(tvShowSeason.seasonNumber == 1)
-                return index
+        val latestSeasonWatched = watchHistoryRepository.getMediaWatchHistory(mediaId).first()
+            .firstOrNull { it.seasonId != null }
+            ?.seasonId
+
+        latestSeasonWatched?.let { seasonId ->
+            val seasonIndex = seasons.indexOfFirst { it.id == seasonId }
+            if(seasonIndex >= 0)
+                return seasonIndex
         }
-        return 0
+
+        // find 1st regular season
+        val firstSeason = seasons.indexOfFirst { it.seasonNumber == 1 }
+        return firstSeason.coerceAtLeast(0)
     }
 }

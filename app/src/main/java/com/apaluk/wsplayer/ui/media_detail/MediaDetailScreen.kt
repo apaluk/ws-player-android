@@ -2,13 +2,12 @@
 
 package com.apaluk.wsplayer.ui.media_detail
 
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,9 +18,11 @@ import com.apaluk.wsplayer.core.navigation.WsPlayerNavActions
 import com.apaluk.wsplayer.core.util.exhaustive
 import com.apaluk.wsplayer.domain.model.media.*
 import com.apaluk.wsplayer.ui.common.composable.BackButton
+import com.apaluk.wsplayer.ui.common.composable.SingleEventHandler
 import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
 import com.apaluk.wsplayer.ui.common.util.UiState
 import com.apaluk.wsplayer.ui.media_detail.movie.MovieMediaDetailContent
+import com.apaluk.wsplayer.ui.media_detail.streams.MediaDetailStreams
 import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowMediaDetailContent
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 
@@ -31,25 +32,22 @@ fun MediaDetailScreen(
     navActions: WsPlayerNavActions,
     viewModel: MediaDetailViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     TopAppBar(
         navigationIcon = {
             BackButton(onBack = { navActions.navigateUp() })
         },
         title = {}
     )
-    UiStateAnimator(uiState = uiState.value.uiState) {
+    UiStateAnimator(uiState = uiState.uiState) {
         MediaDetailScreenContent(
             modifier = modifier,
-            uiState = uiState.value,
+            uiState = uiState,
             onMediaDetailAction = viewModel::onMediaDetailAction
         )
     }
-    LaunchedEffect(uiState.value.selectedStreamIdent) {
-        uiState.value.selectedStreamIdent?.let {
-            navActions.navigateToPlayer(it)
-            viewModel.onMediaDetailAction(MediaDetailAction.PlayerLaunched)
-        }
+    SingleEventHandler(uiState.playStreamEvent) { params ->
+        navActions.navigateToPlayer(params.ident, params.watchHistoryId)
     }
 }
 
@@ -65,6 +63,7 @@ fun MediaDetailScreenContent(
     ) {
         uiState.mediaDetailUiState?.let {
             MediaDetailContent(
+                screenUiState = uiState,
                 mediaDetailUiState = it,
                 modifier = Modifier
                     .weight(1f)
@@ -81,10 +80,10 @@ fun MediaDetailScreenContent(
                 .fillMaxHeight(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            uiState.streams?.let {
-                if(it.isNotEmpty()) {
+            uiState.streamsUiState?.let { streamsUiState ->
+                if(streamsUiState.streams.isNotEmpty()) {
                     MediaDetailStreams(
-                        streams = it,
+                        streamsUiState = streamsUiState,
                         modifier = modifier.fillMaxWidth(),
                         onStreamSelected = { stream ->
                             onMediaDetailAction(MediaDetailAction.PlayStream(stream))
@@ -98,12 +97,14 @@ fun MediaDetailScreenContent(
 
 @Composable
 fun MediaDetailContent(
+    screenUiState: MediaDetailScreenUiState,
     mediaDetailUiState: MediaDetailUiState,
     modifier: Modifier = Modifier,
     onMediaDetailAction: (MediaDetailAction) -> Unit = {}
 ) {
     when(mediaDetailUiState) {
         is MovieMediaDetailUiState -> MovieMediaDetailContent(
+            screenUiState = screenUiState,
             movieUiState = mediaDetailUiState,
             onMediaDetailAction = onMediaDetailAction,
             modifier = modifier
@@ -138,7 +139,7 @@ fun MediaDetailContentPreview() {
                         duration = 7444,
                     )
                 ),
-                streams = DUMMY_MEDIA_STREAMS
+                streamsUiState = StreamsUiState(DUMMY_MEDIA_STREAMS)
             ),
             onMediaDetailAction = {}
         )

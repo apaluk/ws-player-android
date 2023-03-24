@@ -107,7 +107,7 @@ class MediaDetailScreenTest {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
-                        streams = listOf(
+                        streamsUiState = listOf(
                             MediaStream(
                                 ident = "",
                                 size = 12345689000L,

@@ -15,6 +15,7 @@ import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.MEDIA_DETAIL_ROU
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.SEARCH_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerDestinations.VIDEO_PLAYER_ROUTE
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.MEDIA_ID_ARG
+import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.WATCH_HISTORY_ID_ARG
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.WEBSHARE_IDENT_ARG
 import com.apaluk.wsplayer.core.util.base64Decode
 import com.apaluk.wsplayer.ui.dashboard.DashboardScreen
@@ -72,7 +73,8 @@ fun WsPlayerNavGraph(
         composable(
             route = VIDEO_PLAYER_ROUTE,
             arguments = listOf(
-                navArgument(WEBSHARE_IDENT_ARG) { type = NavType.StringType}
+                navArgument(WEBSHARE_IDENT_ARG) { type = NavType.StringType},
+                navArgument(WATCH_HISTORY_ID_ARG) { type = NavType.LongType }
             )
         ) {
             PlayerScreen(

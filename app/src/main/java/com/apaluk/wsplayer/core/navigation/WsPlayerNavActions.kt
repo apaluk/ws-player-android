@@ -2,6 +2,7 @@ package com.apaluk.wsplayer.core.navigation
 
 import androidx.navigation.NavController
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.MEDIA_ID_ARG
+import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.WATCH_HISTORY_ID_ARG
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs.WEBSHARE_IDENT_ARG
 import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.DASHBOARD_SCREEN
 import com.apaluk.wsplayer.core.navigation.WsPlayerScreens.LOGIN_SCREEN
@@ -20,6 +21,7 @@ object WsPlayerScreens {
 object WsPlayerNavArgs {
     const val MEDIA_ID_ARG = "mediaId"
     const val WEBSHARE_IDENT_ARG = "ident"
+    const val WATCH_HISTORY_ID_ARG = "watchHistoryId"
 }
 
 object WsPlayerDestinations {
@@ -27,7 +29,7 @@ object WsPlayerDestinations {
     const val DASHBOARD_ROUTE = DASHBOARD_SCREEN
     const val SEARCH_ROUTE = SEARCH_SCREEN
     const val MEDIA_DETAIL_ROUTE = "$MEDIA_DETAIL_SCREEN/{$MEDIA_ID_ARG}"
-    const val VIDEO_PLAYER_ROUTE = "$VIDEO_PLAYER_SCREEN/{$WEBSHARE_IDENT_ARG}"
+    const val VIDEO_PLAYER_ROUTE = "$VIDEO_PLAYER_SCREEN/{$WEBSHARE_IDENT_ARG}/{$WATCH_HISTORY_ID_ARG}"
 }
 
 class WsPlayerNavActions(
@@ -45,8 +47,8 @@ class WsPlayerNavActions(
         navController.navigate(route = WsPlayerDestinations.SEARCH_ROUTE)
     }
 
-    fun navigateToPlayer(webshareIdent: String) {
-        navController.navigate(route = "$VIDEO_PLAYER_SCREEN/$webshareIdent")
+    fun navigateToPlayer(webshareIdent: String, watchHistoryId: Long) {
+        navController.navigate(route = "$VIDEO_PLAYER_SCREEN/$webshareIdent/$watchHistoryId")
     }
 
     fun navigateToMediaDetail(mediaId: String) {

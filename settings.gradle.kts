@@ -16,5 +16,5 @@ dependencyResolutionManagement {
         maven { url = URI.create("https://plugins.gradle.org/m2/") }
     }
 }
-rootProject.name = "WsPlayer"
+rootProject.name = "stream-theater"
 include(":app")
