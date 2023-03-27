@@ -2,8 +2,7 @@ package com.apaluk.wsplayer.domain.use_case.media
 
 import com.apaluk.wsplayer.core.util.Resource
 import com.apaluk.wsplayer.core.util.convertNonSuccess
-import com.apaluk.wsplayer.domain.model.media.MediaProgress
-import com.apaluk.wsplayer.domain.model.media.toMediaProgress
+import com.apaluk.wsplayer.domain.model.media.util.toMediaProgress
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.domain.repository.WatchHistoryRepository
 import com.apaluk.wsplayer.ui.common.util.toUiState
@@ -68,8 +67,6 @@ class GetMediaDetailUiStateUseCase @Inject constructor(
                         )
                     }
                 }
-            }
-            if (mediaDetailUiState is TvShowMediaDetailUiState) {
             }
         }
     }

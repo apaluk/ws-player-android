@@ -3,7 +3,7 @@ package com.apaluk.wsplayer.domain.use_case.media
 import com.apaluk.wsplayer.core.util.Resource
 import com.apaluk.wsplayer.core.util.convertNonSuccess
 import com.apaluk.wsplayer.domain.model.media.TvShowSeasonEpisodes
-import com.apaluk.wsplayer.domain.model.media.toMediaProgress
+import com.apaluk.wsplayer.domain.model.media.util.toMediaProgress
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.domain.repository.WatchHistoryRepository
 import kotlinx.coroutines.flow.Flow
