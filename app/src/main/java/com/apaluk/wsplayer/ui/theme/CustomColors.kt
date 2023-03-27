@@ -8,7 +8,3 @@ import androidx.compose.ui.graphics.Color
 val ColorScheme.success: Color
     @Composable
     get() = if (isSystemInDarkTheme()) md_theme_dark_success else md_theme_light_success
-
-val ColorScheme.primaryNeutral: Color
-    @Composable
-    get() = if (isSystemInDarkTheme()) md_theme_dark_primary_neutral else md_theme_light_primary_neutral

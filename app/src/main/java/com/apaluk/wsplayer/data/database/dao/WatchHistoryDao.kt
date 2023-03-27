@@ -15,6 +15,13 @@ interface WatchHistoryDao {
         """)
     fun getMediaWatchHistory(mediaId: String): Flow<List<WatchHistory>>
 
+    @Query("""
+        SELECT * FROM watchHistory 
+        WHERE episodeId=:episodeId 
+        ORDER BY lastUpdate DESC
+        """)
+    fun getTvShowEpisodeWatchHistory(episodeId: String): Flow<List<WatchHistory>>
+
     @Query("SELECT * FROM watchHistory WHERE id=:watchHistoryId")
     suspend fun getWatchHistoryById(watchHistoryId: Long): WatchHistory?
 

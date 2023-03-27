@@ -6,10 +6,7 @@ import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.domain.model.media.*
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
-import com.apaluk.wsplayer.ui.media_detail.MediaDetailScreenUiState
-import com.apaluk.wsplayer.ui.media_detail.MediaDetailUiState
-import com.apaluk.wsplayer.ui.media_detail.MovieMediaDetailUiState
-import com.apaluk.wsplayer.ui.media_detail.TvShowMediaDetailUiState
+import com.apaluk.wsplayer.ui.media_detail.*
 import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -61,6 +58,13 @@ fun TvShowMediaDetailUiState.selectedSeason(): TvShowSeason? =
         seasons[selectedSeasonIndex]
     else null
 
+val TvShowEpisode.relativeProgress: Float?
+    get() = progress?.let { (it.progressSeconds.toFloat() / duration.toFloat()).coerceIn(0f, 1f) }
+
+val StreamsUiState.selectedIndex: Int?
+    get() = selectedStreamId?.let { streamId ->
+        streams.indexOfFirst { it.ident == streamId }
+    }
 
 @Composable
 @ReadOnlyComposable

@@ -71,7 +71,10 @@ fun MediaStreamsResponseItemDto.toMediaStream(): MediaStream {
         size = size,
         duration = duration,
         speed = if (duration == 0) 0.0 else size.toDouble() / duration.toDouble(),
-        audios = audio.map { it.language }.filter { it.isNotBlank() }.distinct(),
+        audios = audio
+            .map { it.language.orEmpty() }
+            .filter { it.isNotBlank() }
+            .distinct(),
         video = video.firstOrNull()?.toVideoDefinition() ?: VideoDefinition.SD,
         subtitles = subtitles.mapNotNull { it.toSubtitles() }
     )

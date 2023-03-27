@@ -1,5 +1,6 @@
 package com.apaluk.wsplayer.domain.use_case.media
 
+import com.apaluk.wsplayer.domain.model.media.StreamsMediaType
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.domain.repository.WatchHistoryRepository
 import com.apaluk.wsplayer.ui.media_detail.StreamsUiState
@@ -10,14 +11,18 @@ class GetStreamsUiStateUseCase @Inject constructor(
     private val streamCinemaRepository: StreamCinemaRepository,
     private val watchHistoryRepository: WatchHistoryRepository
 ) {
-    operator fun invoke(mediaId: String): Flow<StreamsUiState?> = flow {
+    operator fun invoke(mediaId: String, streamsMediaType: StreamsMediaType): Flow<StreamsUiState?> = flow {
         val streams = streamCinemaRepository.getMediaStreams(mediaId).last().data?.sortedBy { stream -> stream.size }
             ?: run {
                 emit(null)
                 return@flow
             }
+        val watchHistoryFlow = when (streamsMediaType) {
+            StreamsMediaType.Movie -> watchHistoryRepository.getMediaWatchHistory(mediaId)
+            StreamsMediaType.TvShowEpisode -> watchHistoryRepository.getTvShowEpisodeWatchHistory(mediaId)
+        }
         emitAll(
-            watchHistoryRepository.getMediaWatchHistory(mediaId)
+            watchHistoryFlow
                 .map { it.firstOrNull() }
                 .distinctUntilChanged()
                 .map {

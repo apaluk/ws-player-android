@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs
 import com.apaluk.wsplayer.core.util.withLeadingZeros
 import com.apaluk.wsplayer.domain.model.media.MediaStream
+import com.apaluk.wsplayer.domain.model.media.StreamsMediaType
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.domain.use_case.media.GetMediaDetailUiStateUseCase
 import com.apaluk.wsplayer.domain.use_case.media.GetSeasonEpisodesUseCase
@@ -13,6 +14,7 @@ import com.apaluk.wsplayer.domain.use_case.media.GetStreamsUiStateUseCase
 import com.apaluk.wsplayer.domain.use_case.media.UpdateWatchHistoryOnStartStreamUseCase
 import com.apaluk.wsplayer.ui.common.util.toUiState
 import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
+import com.apaluk.wsplayer.ui.media_detail.util.relativeProgress
 import com.apaluk.wsplayer.ui.media_detail.util.tvShowUiState
 import com.apaluk.wsplayer.ui.media_detail.util.updateTvShowUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MediaDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getTvShowSeasonEpisodes: GetSeasonEpisodesUseCase,
     getMediaDetailUiState: GetMediaDetailUiStateUseCase,
+    getTvShowSeasonEpisodes: GetSeasonEpisodesUseCase,
     private val updateWatchHistoryOnStartStream: UpdateWatchHistoryOnStartStreamUseCase,
     getStreamsUiState: GetStreamsUiStateUseCase
 ): ViewModel() {
@@ -53,6 +55,9 @@ class MediaDetailViewModel @Inject constructor(
         .map { it.id }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), mediaId)
 
+    private val streamsMediaType: StreamsMediaType
+    get() = if(selectedEpisode.value != null) StreamsMediaType.TvShowEpisode else StreamsMediaType.Movie
+
     init {
         // get media detail UI state
         viewModelScope.launch {
@@ -68,7 +73,7 @@ class MediaDetailViewModel @Inject constructor(
         // get streams
         viewModelScope.launch {
             mediaIdForStreams.collectLatest { mediaId ->
-                getStreamsUiState(mediaId).collect { streamsUiState ->
+                getStreamsUiState(mediaId, streamsMediaType).collect { streamsUiState ->
                     _uiState.update {
                         it.copy(streamsUiState = streamsUiState)
                     }
@@ -93,13 +98,16 @@ class MediaDetailViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 selectedSeason.filterNotNull(),
-                selectedEpisode.filterNotNull()
-            ) { season, episode ->
+                selectedEpisode.filterNotNull(),
+                uiState.map { it.streamsUiState?.selectedStreamId }
+            ) { season, episode, selectedStream ->
                 TvShowPosterData(
                     episodeNumber = "S${season.seasonNumber.withLeadingZeros(2)}E${episode.episodeNumber.withLeadingZeros(2)}",
                     episodeName = episode.title,
                     duration = episode.duration,
-                    imageUrl = episode.imageUrl ?: season.imageUrl
+                    imageUrl = episode.imageUrl ?: season.imageUrl,
+                    progress = episode.relativeProgress ?: 0f,
+                    showPlayButton = selectedStream != null,
                 )
             }.collect { posterData ->
                 _uiState.updateTvShowUiState { it.copy(posterData = posterData) }

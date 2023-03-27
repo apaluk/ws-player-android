@@ -20,10 +20,10 @@ import com.apaluk.wsplayer.ui.media_detail.MediaDetailAction
 import com.apaluk.wsplayer.ui.media_detail.MediaDetailScreenUiState
 import com.apaluk.wsplayer.ui.media_detail.MovieMediaDetailUiState
 import com.apaluk.wsplayer.ui.media_detail.common.MediaDetailPoster
+import com.apaluk.wsplayer.ui.media_detail.common.WspColors
 import com.apaluk.wsplayer.ui.media_detail.util.generalInfoText
 import com.apaluk.wsplayer.ui.media_detail.util.isInProgress
 import com.apaluk.wsplayer.ui.media_detail.util.relativeProgress
-import com.apaluk.wsplayer.ui.theme.primaryNeutral
 import com.apaluk.wsplayer.ui.theme.success
 
 @Composable
@@ -56,14 +56,14 @@ fun MovieMediaDetailContent(
                     modifier = Modifier.padding(end = 8.dp).size(18.dp),
                     painter = painterResource(id = R.drawable.ic_check_circle_24),
                     contentDescription = "Is watched",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.success.copy(alpha = 0.8f))
+                    colorFilter = ColorFilter.tint(WspColors.watchedMedia)
                 )
             } else if(mediaDetailMovie.progress?.isInProgress == true) {
                 Image(
                     modifier = Modifier.padding(end = 8.dp).size(18.dp),
                     painter = painterResource(id = R.drawable.ic_pause_circle_24),
                     contentDescription = "Is in progress",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primaryNeutral)
+                    colorFilter = ColorFilter.tint(WspColors.pausedMedia)
                 )
             }
             Text(

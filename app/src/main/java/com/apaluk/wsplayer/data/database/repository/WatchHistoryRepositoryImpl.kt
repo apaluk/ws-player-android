@@ -20,6 +20,10 @@ class WatchHistoryRepositoryImpl(
         watchHistoryDao.getMediaWatchHistory(mediaId)
             .mapList { it.toWatchHistoryEntry() }
 
+    override fun getTvShowEpisodeWatchHistory(mediaId: String): Flow<List<WatchHistoryEntry>> =
+        watchHistoryDao.getTvShowEpisodeWatchHistory(mediaId)
+            .mapList { it.toWatchHistoryEntry() }
+
     override suspend fun ensureStream(mediaStream: MediaStream): Long =
         watchHistoryDao.getStreamId(mediaStream.ident)
             ?: watchHistoryDao.insertStream(mediaStream.toStream())

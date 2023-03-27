@@ -37,7 +37,7 @@ sealed class MediaDetailAction {
 
 data class StreamsUiState(
     val streams: List<MediaStream>,
-    val selectedStreamId: String? = null
+    val selectedStreamId: String? = null,
 )
 
 data class PlayStreamParams(

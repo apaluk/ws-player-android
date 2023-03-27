@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface WatchHistoryRepository {
 
     fun getMediaWatchHistory(mediaId: String): Flow<List<WatchHistoryEntry>>
+    fun getTvShowEpisodeWatchHistory(mediaId: String): Flow<List<WatchHistoryEntry>>
     suspend fun getWatchHistoryById(watchHistoryId: Long): WatchHistoryEntry?
     suspend fun ensureStream(mediaStream: MediaStream): Long
     suspend fun ensureWatchHistoryEntry(mediaId: String, season: String?, episode: String?, streamId: Long): Long

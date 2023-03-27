@@ -11,5 +11,5 @@ data class AudioDtoX(
     @Json(name = "codec")
     val codec: String,
     @Json(name = "language")
-    val language: String
+    val language: String?
 )

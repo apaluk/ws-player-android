@@ -25,7 +25,7 @@ data class SourceDto(
     @Json(name = "languages")
     val languages: List<String>,
     @Json(name = "last_children_date_added")
-    val lastChildrenDateAdded: List<LastChildrenDateAddedDto>?,
+    val lastChildrenDateAdded: List<LastChildrenDateAddedDto?>?,
     @Json(name = "networks")
     val networks: List<String>,
     @Json(name = "original_language")

@@ -1,20 +1,19 @@
 package com.apaluk.wsplayer.ui.media_detail.tv_show
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -33,9 +32,9 @@ import com.apaluk.wsplayer.ui.media_detail.MediaDetailAction
 import com.apaluk.wsplayer.ui.media_detail.TvShowMediaDetailUiState
 import com.apaluk.wsplayer.ui.media_detail.common.DropDownSelector
 import com.apaluk.wsplayer.ui.media_detail.common.MediaDetailPoster
-import com.apaluk.wsplayer.ui.media_detail.util.generalInfoText
-import com.apaluk.wsplayer.ui.media_detail.util.requireName
-import com.apaluk.wsplayer.ui.media_detail.util.selectedSeasonName
+import com.apaluk.wsplayer.ui.media_detail.common.WspColors
+import com.apaluk.wsplayer.ui.media_detail.util.*
+import com.apaluk.wsplayer.ui.theme.success
 
 @Composable
 fun TvShowMediaDetailContent(
@@ -59,7 +58,9 @@ fun TvShowMediaDetailContent(
                     posterData.episodeNumber,
                     posterData.episodeName
                 ),
-                duration = posterData.duration
+                duration = posterData.duration,
+                progress = posterData.progress,
+                showPlayButton = posterData.showPlayButton
             )
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -187,29 +188,46 @@ fun MediaDetailTvShowEpisode(
             .fillMaxWidth()
             .clickable { onSelected() }
             .background(background)
-            .padding(vertical = 4.dp),
+            .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .width(120.dp)
-                .height(80.dp)
-                .background(color = MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center,
-        ) {
-            if (!episode.imageUrl.isNullOrEmpty()) {
-                AsyncImage(
-                    modifier = Modifier
-                        .background(background)
-                        .padding(start = 4.dp),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(episode.imageUrl)
-                        .crossfade(durationMillis = Constants.SHORT_ANIM_DURATION)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
+        Column(modifier = Modifier.width(120.dp)) {
+            Box(
+                modifier = Modifier
+                    .height(80.dp)
+                    .background(color = MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (!episode.imageUrl.isNullOrEmpty()) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .background(background),
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(episode.imageUrl)
+                            .crossfade(durationMillis = Constants.SHORT_ANIM_DURATION)
+                            .build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
+            episode.relativeProgress?.let { progress ->
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(progress)
+                            .height(2.dp)
+                            .background(MaterialTheme.colorScheme.primary)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(2.dp)
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+                    )
+                }
+            }
+
         }
         Text(
             modifier = Modifier
@@ -240,5 +258,31 @@ fun MediaDetailTvShowEpisode(
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.End
         )
+        Box(
+            modifier = Modifier.width(32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            episode.progress?.let { progress ->
+                if (progress.isWatched) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_check_circle_24),
+                        contentDescription = "Watched",
+                        colorFilter = ColorFilter.tint(WspColors.watchedMedia),
+                        modifier = Modifier
+                            .size(18.dp)
+                            .align(Alignment.CenterStart)
+                    )
+                } else if(progress.isInProgress) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_pause_circle_24),
+                        contentDescription = "In progress",
+                        colorFilter = ColorFilter.tint(WspColors.pausedMedia),
+                        modifier = Modifier
+                            .size(18.dp)
+                            .align(Alignment.CenterStart)
+                    )
+                }
+            }
+        }
     }
 }
