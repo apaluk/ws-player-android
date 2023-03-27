@@ -13,7 +13,7 @@ data class VideoDtoX(
     @Json(name = "size")
     val size: Int?,
     @Json(name = "subtitles")
-    val subtitles: List<SubtitleDto>?,
+    val subtitles: List<SubtitleDto?>?,
     @Json(name = "type")
     val type: String,
     @Json(name = "url")

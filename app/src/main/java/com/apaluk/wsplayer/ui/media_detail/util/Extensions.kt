@@ -4,21 +4,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.Constants
-import com.apaluk.wsplayer.domain.model.media.MediaDetail
-import com.apaluk.wsplayer.domain.model.media.MediaDetailMovie
-import com.apaluk.wsplayer.domain.model.media.MediaDetailTvShow
-import com.apaluk.wsplayer.domain.model.media.TvShowSeason
+import com.apaluk.wsplayer.domain.model.media.*
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
-import com.apaluk.wsplayer.ui.media_detail.MediaDetailUiState
-import com.apaluk.wsplayer.ui.media_detail.MovieMediaDetailUiState
-import com.apaluk.wsplayer.ui.media_detail.TvShowMediaDetailUiState
+import com.apaluk.wsplayer.ui.media_detail.*
+import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 private const val MEDIA_INFO_SEPARATOR = "  ${Constants.CHAR_BULLET}  "
 
 fun MediaDetail.toMediaDetailUiState(): MediaDetailUiState =
     when(this) {
         is MediaDetailMovie -> MovieMediaDetailUiState(movie = this)
-        is MediaDetailTvShow -> TvShowMediaDetailUiState(tvShow = this)
+        is MediaDetailTvShow -> TvShowMediaDetailUiState(
+            tvShow = this,
+            posterData = TvShowPosterData(imageUrl = imageUrl)
+        )
     }
 
 fun MediaDetailMovie.generalInfoText(): String {
@@ -32,6 +33,38 @@ fun MediaDetailMovie.generalInfoText(): String {
         return toString()
     }
 }
+
+val MediaDetailMovie.relativeProgress: Float?
+    get() = progress?.let { (it.progressSeconds.toFloat() / duration.toFloat()).coerceIn(0f, 1f) } ?: null
+
+val MediaProgress.isInProgress: Boolean
+    get() = progressSeconds > 0
+
+val MediaDetailScreenUiState.tvShowUiState: TvShowMediaDetailUiState?
+    get() = (mediaDetailUiState as? TvShowMediaDetailUiState)
+
+fun MutableStateFlow<MediaDetailScreenUiState>.updateTvShowUiState(updateTvShowUiState: (TvShowMediaDetailUiState) -> TvShowMediaDetailUiState) {
+    value.tvShowUiState?.let {
+        update { mediaDetailUiState ->
+            mediaDetailUiState.copy(mediaDetailUiState = updateTvShowUiState(it))
+        }
+    }
+}
+
+fun TvShowMediaDetailUiState.selectedSeason(): TvShowSeason? =
+    if (selectedSeasonIndex != null
+        && seasons != null
+        && selectedSeasonIndex in seasons.indices)
+        seasons[selectedSeasonIndex]
+    else null
+
+val TvShowEpisode.relativeProgress: Float?
+    get() = progress?.let { (it.progressSeconds.toFloat() / duration.toFloat()).coerceIn(0f, 1f) }
+
+val StreamsUiState.selectedIndex: Int?
+    get() = selectedStreamId?.let { streamId ->
+        streams.indexOfFirst { it.ident == streamId }
+    }
 
 @Composable
 @ReadOnlyComposable
@@ -52,9 +85,6 @@ fun TvShowSeason.requireName(): String =
 
 @Composable
 @ReadOnlyComposable
-fun TvShowMediaDetailUiState.selectedSeasonName(): String? {
-    return if (selectedSeasonIndex != null && seasons != null && selectedSeasonIndex in seasons.indices)
-        seasons[selectedSeasonIndex].requireName()
-    else null
-}
+fun TvShowMediaDetailUiState.selectedSeasonName(): String? = selectedSeason()?.requireName()
+
 

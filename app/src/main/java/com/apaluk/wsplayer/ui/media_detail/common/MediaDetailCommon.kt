@@ -31,61 +31,81 @@ fun MediaDetailPoster(
     imageUrl: String?,
     duration: Int? = null,
     bottomStartTexts: List<String?> = emptyList(),
-    onPlay: () -> Unit
+    onPlay: () -> Unit,
+    progress: Float? = null,
+    showPlayButton: Boolean = false
 ) {
-    Box(
-        modifier = Modifier
-            .aspectRatio(if (imageUrl == null) 3f else 2f)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
-    ) {
-        imageUrl?.let { url ->
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(url)
-                    .crossfade(durationMillis = Constants.SHORT_ANIM_DURATION)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        Image(
-            painter = painterResource(id = R.drawable.ic_play_filled_circle_64),
-            contentDescription = stringResourceSafe(id = R.string.wsp_media_play),
+    Column {
+        Box(
             modifier = Modifier
-                .clip(MaterialTheme.shapes.extraLarge)
-                .background(
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.45f),
-                    shape = MaterialTheme.shapes.extraLarge
-                )
-                .clickable { onPlay() }
-                .align(Alignment.Center)
-                .alpha(0.7f),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.inverseSurface)
-        )
-        duration?.let { duration ->
-            TextOnImage(
-                text = duration.formatDuration(),
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-            )
-        }
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(8.dp)
+                .aspectRatio(if (imageUrl == null) 3f else 2f)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
         ) {
-            bottomStartTexts
-                .filterNotNull()
-                .filter { it.isNotBlank() }
-                .forEach {
-                    TextOnImage(
-                        text = it,
-                        modifier = Modifier.padding(4.dp)
-                    )
-                }
+            imageUrl?.let { url ->
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(url)
+                        .crossfade(durationMillis = Constants.SHORT_ANIM_DURATION)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            if(showPlayButton) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_play_filled_circle_64),
+                    contentDescription = stringResourceSafe(id = R.string.wsp_media_play),
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraLarge)
+                        .background(
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.45f),
+                            shape = MaterialTheme.shapes.extraLarge
+                        )
+                        .clickable { onPlay() }
+                        .align(Alignment.Center)
+                        .alpha(0.7f),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.inverseSurface)
+                )
+            }
+            duration?.let { duration ->
+                TextOnImage(
+                    text = duration.formatDuration(),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(12.dp)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(8.dp)
+            ) {
+                bottomStartTexts
+                    .filterNotNull()
+                    .filter { it.isNotBlank() }
+                    .forEach {
+                        TextOnImage(
+                            text = it,
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    }
+            }
+        }
+        Row {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(progress ?: 0f)
+                    .height(3.dp)
+                    .background(MaterialTheme.colorScheme.primary)
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(3.dp)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+            )
         }
     }
 }

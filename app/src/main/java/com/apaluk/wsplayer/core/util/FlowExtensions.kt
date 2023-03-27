@@ -6,6 +6,7 @@ import com.apaluk.wsplayer.data.webshare.remote.mapper.toStatusDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import okhttp3.ResponseBody
 import org.simpleframework.xml.core.Persister
 import retrofit2.Response
@@ -65,6 +66,10 @@ fun <D, R> repositoryFlow(
         Timber.w(e)
     }
 }
+
+
+inline fun <T, R : Any> Flow<Iterable<T>>.mapList(crossinline transform: suspend (value: T) -> R): Flow<List<R>> =
+    map { list -> list.map { transform(it) } }
 
 private suspend fun <T> FlowCollector<Resource<T>>.emitError(message: String) {
     Timber.w(message)

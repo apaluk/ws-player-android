@@ -2,12 +2,12 @@ package com.apaluk.wsplayer.domain.model.media
 
 data class MediaStream(
     val ident: String,
-    val size: Long,
-    val duration: Int,
-    val speed: Double,
-    val video: VideoDefinition,
-    val audios: List<String>,
-    val subtitles: List<Subtitles>
+    val size: Long = 0L,
+    val duration: Int = 0,
+    val speed: Double = 0.0,
+    val video: VideoDefinition = VideoDefinition.SD,
+    val audios: List<String> = emptyList(),
+    val subtitles: List<Subtitles> = emptyList()
 )
 
 data class Subtitles(

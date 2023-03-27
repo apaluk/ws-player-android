@@ -1,13 +1,15 @@
-package com.apaluk.wsplayer.ui.media_detail
+package com.apaluk.wsplayer.ui.media_detail.streams
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -16,16 +18,18 @@ import androidx.compose.ui.unit.dp
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.domain.model.media.DUMMY_MEDIA_STREAMS
 import com.apaluk.wsplayer.domain.model.media.MediaStream
-import com.apaluk.wsplayer.ui.common.composable.MediaStreamChip
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
+import com.apaluk.wsplayer.ui.media_detail.StreamsUiState
+import com.apaluk.wsplayer.ui.media_detail.util.selectedIndex
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 
 @Composable
 fun MediaDetailStreams(
-    streams: List<MediaStream>,
+    streamsUiState: StreamsUiState,
     modifier: Modifier = Modifier,
-    onStreamSelected: (String) -> Unit = {}
+    onStreamSelected: (MediaStream) -> Unit = {},
 ) {
+    val listState = rememberLazyListState()
     Card(
         modifier = modifier
             .padding(8.dp),
@@ -45,22 +49,28 @@ fun MediaDetailStreams(
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
             LazyColumn(
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
+                state = listState
             ) {
-                itemsIndexed(streams) { index, stream ->
+                itemsIndexed(streamsUiState.streams) { index, stream ->
                     MediaStreamChip(
                         mediaStream = stream,
                         modifier = modifier
                             .padding(horizontal = 16.dp, vertical = 4.dp)
                             .fillMaxWidth(),
-                        onClick = { onStreamSelected(it) }
+                        onClick = { onStreamSelected(stream) },
+                        isSelected = stream.ident == streamsUiState.selectedStreamId
                     )
-                    if(index == streams.lastIndex) {
+                    if(index == streamsUiState.streams.lastIndex) {
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }
-            
+        }
+    }
+    LaunchedEffect(streamsUiState.selectedIndex) {
+        streamsUiState.selectedIndex?.let {
+            listState.scrollToItem(it)
         }
     }
 }
@@ -69,6 +79,6 @@ fun MediaDetailStreams(
 @Composable
 fun MediaDetailStreamsPreview() {
     WsPlayerTheme {
-        MediaDetailStreams(streams = DUMMY_MEDIA_STREAMS)
+        MediaDetailStreams(streamsUiState = StreamsUiState(DUMMY_MEDIA_STREAMS))
     }
 }

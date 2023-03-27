@@ -13,5 +13,5 @@ data class AudioDto(
     @Json(name = "_id")
     val id: String?,
     @Json(name = "language")
-    val language: String
+    val language: String?
 )
