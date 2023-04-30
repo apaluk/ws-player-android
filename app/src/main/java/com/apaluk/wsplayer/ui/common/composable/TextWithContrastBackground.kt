@@ -1,6 +1,5 @@
 package com.apaluk.wsplayer.ui.common.composable
 
-import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TextOnImage(
+fun TextWithContrastBackground(
     text: String,
     modifier: Modifier = Modifier,
 ) {

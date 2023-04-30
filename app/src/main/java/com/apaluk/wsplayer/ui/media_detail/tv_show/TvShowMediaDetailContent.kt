@@ -1,10 +1,28 @@
 package com.apaluk.wsplayer.ui.media_detail.tv_show
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
@@ -23,24 +42,31 @@ import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.core.util.formatDuration
 import com.apaluk.wsplayer.core.util.withLeadingZeros
+import com.apaluk.wsplayer.domain.model.media.MediaDetailTvShow
+import com.apaluk.wsplayer.domain.model.media.MediaProgress
 import com.apaluk.wsplayer.domain.model.media.TvShowEpisode
 import com.apaluk.wsplayer.domain.model.media.TvShowSeason
 import com.apaluk.wsplayer.ui.common.composable.MediaTitle
 import com.apaluk.wsplayer.ui.common.composable.UiStateAnimator
+import com.apaluk.wsplayer.ui.common.util.UiState
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.media_detail.MediaDetailAction
 import com.apaluk.wsplayer.ui.media_detail.TvShowMediaDetailUiState
 import com.apaluk.wsplayer.ui.media_detail.common.DropDownSelector
 import com.apaluk.wsplayer.ui.media_detail.common.MediaDetailPoster
 import com.apaluk.wsplayer.ui.media_detail.common.WspColors
-import com.apaluk.wsplayer.ui.media_detail.util.*
-import com.apaluk.wsplayer.ui.theme.success
+import com.apaluk.wsplayer.ui.media_detail.util.generalInfoText
+import com.apaluk.wsplayer.ui.media_detail.util.isInProgress
+import com.apaluk.wsplayer.ui.media_detail.util.relativeProgress
+import com.apaluk.wsplayer.ui.media_detail.util.requireName
+import com.apaluk.wsplayer.ui.media_detail.util.selectedSeasonName
+import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 
 @Composable
 fun TvShowMediaDetailContent(
     tvShowUiState: TvShowMediaDetailUiState,
-    onMediaDetailAction: (MediaDetailAction) -> Unit,
     modifier: Modifier = Modifier,
+    onMediaDetailAction: (MediaDetailAction) -> Unit = {},
 ) {
     val mediaDetailTvShow = tvShowUiState.tvShow
     val showSeasonSelectorDialog = remember {
@@ -70,9 +96,11 @@ fun TvShowMediaDetailContent(
         ) {
             MediaTitle(
                 title = mediaDetailTvShow.title,
-                originalTitle = mediaDetailTvShow.originalTitle
+                originalTitle = mediaDetailTvShow.originalTitle,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp)
             )
-            Spacer(modifier = Modifier.weight(1f))
             tvShowUiState.selectedSeasonName()?.let { seasonName ->
                 DropDownSelector(
                     text = seasonName,
@@ -285,4 +313,45 @@ fun MediaDetailTvShowEpisode(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun TvShowMediaDetailContentPreview() {
+    WsPlayerTheme {
+        TvShowMediaDetailContent(
+            tvShowUiState = TvShowMediaDetailUiState(
+                tvShow = MediaDetailTvShow(
+                    id = "",
+                    title = "Nezname dejiny Spojenych statu americkych",
+                    originalTitle = "The Mandalorian",
+                    imageUrl = null,
+                    years = null,
+                    genre = emptyList(),
+                    plot = null,
+                    cast = emptyList(),
+                    numSeasons = 2,
+                    duration = 0,
+                    progress = MediaProgress(0, false)
+                ),
+                tvShowEpisodesUiState = UiState.Content,
+                seasons = listOf(
+                    TvShowSeason(
+                        id = "",
+                        seasonNumber = 1,
+                        name = "Season 1",
+                        year = null,
+                        directors = emptyList(),
+                        writer = emptyList(),
+                        cast = emptyList(),
+                        genre = emptyList(),
+                        plot = null,
+                        imageUrl = null,
+                    )
+                ),
+                selectedSeasonIndex = 0
+            )
+        )
+    }
+
 }

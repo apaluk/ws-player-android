@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Stream Theater</string>
 
+    <string name="wsp_yes">Yes</string>
+    <string name="wsp_no">No</string>
+
     <string name="wsp_login_username">User name</string>
     <string name="wsp_login_password">Password</string>
     <string name="wsp_login_positive_button">Login</string>
@@ -22,5 +25,8 @@
     <string name="wsp_tv_show_count_of_seasons">%d Seasons</string>
     <string name="wsp_tv_show_season_number">Season %d</string>
     <string name="wsp_tv_show_episode_number">Episode %d</string>
+
+    <string name="wsp_dashboard_continue_watching">Continue watching</string>
+    <string name="wsp_dashboard_remove_media_from_history">Remove from history?</string>
 
 </resources>

@@ -16,14 +16,15 @@ fun MediaTitle(
     originalTitle: String?,
     modifier: Modifier = Modifier
 ) {
-    Row {
+    Row(modifier = modifier) {
         Text(
             modifier = Modifier.alignByBaseline(),
             text = title,
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.SemiBold,
-            maxLines = 1
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         if (originalTitle != null && originalTitle != title) {
             Text(

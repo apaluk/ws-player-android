@@ -22,7 +22,7 @@ import coil.request.ImageRequest
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.core.util.formatDuration
-import com.apaluk.wsplayer.ui.common.composable.TextOnImage
+import com.apaluk.wsplayer.ui.common.composable.TextWithContrastBackground
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 
 
@@ -70,7 +70,7 @@ fun MediaDetailPoster(
                 )
             }
             duration?.let { duration ->
-                TextOnImage(
+                TextWithContrastBackground(
                     text = duration.formatDuration(),
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
@@ -86,7 +86,7 @@ fun MediaDetailPoster(
                     .filterNotNull()
                     .filter { it.isNotBlank() }
                     .forEach {
-                        TextOnImage(
+                        TextWithContrastBackground(
                             text = it,
                             modifier = Modifier.padding(4.dp)
                         )

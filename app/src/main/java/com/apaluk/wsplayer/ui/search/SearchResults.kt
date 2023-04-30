@@ -23,7 +23,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.apaluk.wsplayer.R
 import com.apaluk.wsplayer.core.util.Constants
-import com.apaluk.wsplayer.domain.model.media.SearchResultItem
+import com.apaluk.wsplayer.domain.model.search.SearchResultItem
 import com.apaluk.wsplayer.ui.common.composable.MediaTitle
 import com.apaluk.wsplayer.ui.theme.WsPlayerTheme
 

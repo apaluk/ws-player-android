@@ -3,6 +3,7 @@ package com.apaluk.wsplayer.core.testing
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.apaluk.wsplayer.core.util.Resource
 import com.apaluk.wsplayer.domain.model.media.*
+import com.apaluk.wsplayer.domain.model.search.SearchResultItem
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow

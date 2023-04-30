@@ -27,6 +27,7 @@ data class MediaDetailTvShow(
     val plot: String?,
     val cast: List<String>,
     val numSeasons: Int,
+    val duration: Int,
     val progress: MediaProgress? = null
 ): MediaDetail()
 

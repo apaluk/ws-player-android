@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.domain.model.media
+package com.apaluk.wsplayer.domain.model.search
 
 data class SearchResultItem(
     val id: String,

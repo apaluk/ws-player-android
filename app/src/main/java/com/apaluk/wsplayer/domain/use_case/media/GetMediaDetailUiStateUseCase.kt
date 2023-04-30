@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class GetMediaDetailUiStateUseCase @Inject constructor(
+    private val getMediaDetailsUseCase: GetMediaDetailsUseCase,
     private val streamCinemaRepository: StreamCinemaRepository,
     private val watchHistoryRepository: WatchHistoryRepository,
     private val getSelectedSeasonUseCase: GetSelectedSeasonUseCase,
@@ -21,7 +22,7 @@ class GetMediaDetailUiStateUseCase @Inject constructor(
 ) {
     operator fun invoke(mediaId: String): Flow<Resource<MediaDetailUiState>> = flow {
         emit(Resource.Loading())
-        val mediaDetailResource = streamCinemaRepository.getMediaDetails(mediaId).last()
+        val mediaDetailResource = getMediaDetailsUseCase(mediaId)
         if (mediaDetailResource !is Resource.Success) {
             emit(mediaDetailResource.convertNonSuccess())
         } else if (mediaDetailResource.data == null) {

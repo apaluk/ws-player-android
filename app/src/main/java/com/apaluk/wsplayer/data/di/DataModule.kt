@@ -5,14 +5,17 @@ import androidx.room.Room
 import com.apaluk.wsplayer.BuildConfig
 import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.data.database.WspDatabase
+import com.apaluk.wsplayer.data.database.dao.MediaInfoDao
 import com.apaluk.wsplayer.data.database.dao.SearchHistoryDao
 import com.apaluk.wsplayer.data.database.dao.WatchHistoryDao
+import com.apaluk.wsplayer.data.database.repository.MediaInfoRepositoryImpl
 import com.apaluk.wsplayer.data.database.repository.SearchHistoryRepositoryImpl
 import com.apaluk.wsplayer.data.database.repository.WatchHistoryRepositoryImpl
 import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepositoryImpl
 import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
 import com.apaluk.wsplayer.data.stream_cinema.remote.adapter.MediaTypeAdapter
 import com.apaluk.wsplayer.data.webshare.remote.WebShareApi
+import com.apaluk.wsplayer.domain.repository.MediaInfoRepository
 import com.apaluk.wsplayer.domain.repository.SearchHistoryRepository
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.domain.repository.WatchHistoryRepository
@@ -108,6 +111,11 @@ object DataModule {
     ): WatchHistoryRepository = WatchHistoryRepositoryImpl(watchHistoryDao)
 
     @Provides
+    fun provideMediaInfoRepository(
+        mediaInfoDao: MediaInfoDao
+    ): MediaInfoRepository = MediaInfoRepositoryImpl(mediaInfoDao)
+
+    @Provides
     fun provideSearchHistoryDao(
         wspDatabase: WspDatabase
     ): SearchHistoryDao = wspDatabase.searchHistoryDao()
@@ -116,6 +124,11 @@ object DataModule {
     fun provideWatchHistoryDao(
         wspDatabase: WspDatabase
     ): WatchHistoryDao = wspDatabase.watchHistoryDao()
+
+    @Provides
+    fun provideMediaInfoDao(
+        wspDatabase: WspDatabase
+    ): MediaInfoDao = wspDatabase.mediaInfoDao()
 }
 
 @Qualifier

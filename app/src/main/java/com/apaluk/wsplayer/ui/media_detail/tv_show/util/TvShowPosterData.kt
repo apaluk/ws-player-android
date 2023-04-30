@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.ui.media_detail.tv_show
+package com.apaluk.wsplayer.ui.media_detail.tv_show.util
 
 data class TvShowPosterData(
     val episodeNumber: String? = null,

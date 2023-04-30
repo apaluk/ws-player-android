@@ -2,6 +2,7 @@ package com.apaluk.wsplayer.domain.repository
 
 import com.apaluk.wsplayer.core.util.Resource
 import com.apaluk.wsplayer.domain.model.media.*
+import com.apaluk.wsplayer.domain.model.search.SearchResultItem
 import kotlinx.coroutines.flow.Flow
 
 interface StreamCinemaRepository {

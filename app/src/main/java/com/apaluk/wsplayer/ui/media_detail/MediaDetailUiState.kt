@@ -3,7 +3,7 @@ package com.apaluk.wsplayer.ui.media_detail
 import com.apaluk.wsplayer.core.util.SingleEvent
 import com.apaluk.wsplayer.domain.model.media.*
 import com.apaluk.wsplayer.ui.common.util.UiState
-import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
+import com.apaluk.wsplayer.ui.media_detail.tv_show.util.TvShowPosterData
 
 data class MediaDetailScreenUiState(
     val uiState: UiState = UiState.Loading,

@@ -15,6 +15,7 @@ import com.apaluk.wsplayer.domain.model.media.MediaStream
 import com.apaluk.wsplayer.domain.model.media.Subtitles
 import com.apaluk.wsplayer.domain.model.media.VideoDefinition
 import com.apaluk.wsplayer.ui.media_detail.MovieMediaDetailUiState
+import com.apaluk.wsplayer.ui.media_detail.StreamsUiState
 import org.junit.Rule
 import org.junit.Test
 
@@ -107,24 +108,26 @@ class MediaDetailScreenTest {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
-                        streamsUiState = listOf(
-                            MediaStream(
-                                ident = "",
-                                size = 12345689000L,
-                                duration = 5420,
-                                speed = 1204.5,
-                                video = VideoDefinition.HD,
-                                audios = listOf("CZ"),
-                                subtitles = listOf(Subtitles("EN", true))
-                            ),
-                            MediaStream(
-                                ident = "",
-                                size = 34545689000L,
-                                duration = 5420,
-                                speed = 1204.5,
-                                video = VideoDefinition.FHD,
-                                audios = emptyList(),
-                                subtitles = listOf(Subtitles("EN", true), Subtitles("SK", false))
+                        streamsUiState = StreamsUiState(
+                            listOf(
+                                MediaStream(
+                                    ident = "",
+                                    size = 12345689000L,
+                                    duration = 5420,
+                                    speed = 1204.5,
+                                    video = VideoDefinition.HD,
+                                    audios = listOf("CZ"),
+                                    subtitles = listOf(Subtitles("EN", true))
+                                ),
+                                MediaStream(
+                                    ident = "",
+                                    size = 34545689000L,
+                                    duration = 5420,
+                                    speed = 1204.5,
+                                    video = VideoDefinition.FHD,
+                                    audios = emptyList(),
+                                    subtitles = listOf(Subtitles("EN", true), Subtitles("SK", false))
+                                )
                             )
                         )
                     ),

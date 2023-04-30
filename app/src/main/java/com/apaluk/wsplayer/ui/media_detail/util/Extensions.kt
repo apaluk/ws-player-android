@@ -7,7 +7,7 @@ import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.domain.model.media.*
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.media_detail.*
-import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
+import com.apaluk.wsplayer.ui.media_detail.tv_show.util.TvShowPosterData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 

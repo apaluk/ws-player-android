@@ -3,11 +3,11 @@ package com.apaluk.wsplayer.data.database.repository
 import com.apaluk.wsplayer.core.util.mapList
 import com.apaluk.wsplayer.core.util.nowInMillis
 import com.apaluk.wsplayer.data.database.dao.WatchHistoryDao
-import com.apaluk.wsplayer.data.database.mapper.toStream
-import com.apaluk.wsplayer.data.database.mapper.toWatchHistoryEntry
 import com.apaluk.wsplayer.data.database.model.WatchHistory
 import com.apaluk.wsplayer.domain.model.media.MediaStream
 import com.apaluk.wsplayer.domain.model.media.WatchHistoryEntry
+import com.apaluk.wsplayer.domain.model.media.util.toStream
+import com.apaluk.wsplayer.domain.model.media.util.toWatchHistoryEntry
 import com.apaluk.wsplayer.domain.repository.WatchHistoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -76,4 +76,16 @@ class WatchHistoryRepositoryImpl(
 
     override suspend fun getWatchHistoryById(watchHistoryId: Long): WatchHistoryEntry? =
         watchHistoryDao.getWatchHistoryById(watchHistoryId)?.toWatchHistoryEntry()
+
+    override fun getLastInProgressMedia(): Flow<List<WatchHistoryEntry>> =
+        watchHistoryDao.getLastInProgressMediaIds()
+            .map { list ->
+                list.mapNotNull { mediaId ->
+                    watchHistoryDao.getLatestWatchHistoryEntry(mediaId)
+                }.map { it.toWatchHistoryEntry() }
+            }
+
+    override suspend fun removeWatchHistoryEntry(mediaId: String) {
+        watchHistoryDao.removeFromWatchHistory(mediaId)
+    }
 }

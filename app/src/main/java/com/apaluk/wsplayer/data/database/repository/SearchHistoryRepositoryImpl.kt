@@ -1,9 +1,9 @@
 package com.apaluk.wsplayer.data.database.repository
 
 import com.apaluk.wsplayer.data.database.dao.SearchHistoryDao
-import com.apaluk.wsplayer.data.database.mapper.toSearchHistoryItem
 import com.apaluk.wsplayer.data.database.model.SearchHistory
 import com.apaluk.wsplayer.domain.model.search.SearchHistoryItem
+import com.apaluk.wsplayer.domain.model.search.util.toSearchHistoryItem
 import com.apaluk.wsplayer.domain.repository.SearchHistoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

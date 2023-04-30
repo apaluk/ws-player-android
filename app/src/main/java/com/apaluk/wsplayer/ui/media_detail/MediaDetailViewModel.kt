@@ -7,13 +7,12 @@ import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs
 import com.apaluk.wsplayer.core.util.withLeadingZeros
 import com.apaluk.wsplayer.domain.model.media.MediaStream
 import com.apaluk.wsplayer.domain.model.media.StreamsMediaType
-import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.domain.use_case.media.GetMediaDetailUiStateUseCase
 import com.apaluk.wsplayer.domain.use_case.media.GetSeasonEpisodesUseCase
 import com.apaluk.wsplayer.domain.use_case.media.GetStreamsUiStateUseCase
 import com.apaluk.wsplayer.domain.use_case.media.UpdateWatchHistoryOnStartStreamUseCase
 import com.apaluk.wsplayer.ui.common.util.toUiState
-import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
+import com.apaluk.wsplayer.ui.media_detail.tv_show.util.TvShowPosterData
 import com.apaluk.wsplayer.ui.media_detail.util.relativeProgress
 import com.apaluk.wsplayer.ui.media_detail.util.tvShowUiState
 import com.apaluk.wsplayer.ui.media_detail.util.updateTvShowUiState

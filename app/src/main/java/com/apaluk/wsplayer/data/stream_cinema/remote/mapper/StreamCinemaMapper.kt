@@ -13,6 +13,7 @@ import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.VideoDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.episodes.TvShowSeasonEpisodesResponseDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.seasons.TvShowSeasonsResponseDto
 import com.apaluk.wsplayer.domain.model.media.*
+import com.apaluk.wsplayer.domain.model.search.SearchResultItem
 import kotlin.math.roundToInt
 
 fun SearchResponseDto.toSearchResultItems(): List<SearchResultItem> =
@@ -61,6 +62,7 @@ fun MediaDetailDto.toMediaDetail(): MediaDetail =
             genre = infoLabels.genre,
             plot = getPlot(),
             numSeasons = childrenCount,
+            duration = streamInfo.video?.duration?.roundToInt() ?: infoLabels.duration,
         )
     }
 

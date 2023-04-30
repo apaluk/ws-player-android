@@ -1,4 +1,4 @@
-package com.apaluk.wsplayer.data.database.mapper
+package com.apaluk.wsplayer.domain.model.search.util
 
 import com.apaluk.wsplayer.data.database.model.SearchHistory
 import com.apaluk.wsplayer.domain.model.search.SearchHistoryItem

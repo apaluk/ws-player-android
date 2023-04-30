@@ -5,7 +5,7 @@ package com.apaluk.wsplayer.ui.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apaluk.wsplayer.core.util.SingleEvent
-import com.apaluk.wsplayer.domain.model.media.SearchResultItem
+import com.apaluk.wsplayer.domain.model.search.SearchResultItem
 import com.apaluk.wsplayer.domain.repository.SearchHistoryRepository
 import com.apaluk.wsplayer.domain.repository.StreamCinemaRepository
 import com.apaluk.wsplayer.ui.common.util.UiState
