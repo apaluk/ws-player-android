@@ -60,8 +60,8 @@ class GetMediaDetailUiStateUseCase @Inject constructor(
                                 mediaDetailUiState.copy(
                                     seasons = seasons.data,
                                     selectedSeasonIndex = selectedSeasonIndex,
-                                    tvShowEpisodesUiState = seasonEpisodes.toUiState(),
-                                    selectedSeasonEpisodes = seasonEpisodes.data?.episodes,
+                                    episodesUiState = seasonEpisodes.toUiState(),
+                                    episodes = seasonEpisodes.data?.episodes,
                                     selectedEpisodeIndex = seasonEpisodes.data?.selectedEpisodeIndex
                                 )
                             )

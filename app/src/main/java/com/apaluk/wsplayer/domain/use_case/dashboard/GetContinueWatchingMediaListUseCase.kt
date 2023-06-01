@@ -19,12 +19,12 @@ class GetContinueWatchingMediaListUseCase @Inject constructor(
 
     operator fun invoke(): Flow<Resource<List<DashboardMedia>>> = flow {
         emit(Resource.Loading())
-        val lastInProgressMedia = watchHistoryRepository.getLastInProgressMedia().first()
+        val lastInProgressMedia = watchHistoryRepository.getLastWatchedMedia().first()
         val continueWatchingLocal = lastInProgressMedia.map {
             mediaInfoRepository.getMediaInfo(it.mediaId)?.toDashboardMedia() ?: DashboardMedia()
         }
         emit(Resource.Success(continueWatchingLocal))
-        emitAll(watchHistoryRepository.getLastInProgressMedia()
+        emitAll(watchHistoryRepository.getLastWatchedMedia()
             .map { list ->
                 list.map mapList@{
                     val mediaDetail = streamCinemaRepository.getMediaDetails(it.mediaId).last().data

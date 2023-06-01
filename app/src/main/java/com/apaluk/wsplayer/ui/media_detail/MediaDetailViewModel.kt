@@ -12,7 +12,7 @@ import com.apaluk.wsplayer.domain.use_case.media.GetSeasonEpisodesUseCase
 import com.apaluk.wsplayer.domain.use_case.media.GetStreamsUiStateUseCase
 import com.apaluk.wsplayer.domain.use_case.media.UpdateWatchHistoryOnStartStreamUseCase
 import com.apaluk.wsplayer.ui.common.util.toUiState
-import com.apaluk.wsplayer.ui.media_detail.tv_show.util.TvShowPosterData
+import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
 import com.apaluk.wsplayer.ui.media_detail.util.relativeProgress
 import com.apaluk.wsplayer.ui.media_detail.util.tvShowUiState
 import com.apaluk.wsplayer.ui.media_detail.util.updateTvShowUiState
@@ -37,7 +37,7 @@ class MediaDetailViewModel @Inject constructor(
 
     private val selectedEpisode = combine(
         _uiState.mapNotNull { it.tvShowUiState?.selectedEpisodeIndex }.distinctUntilChanged(),
-        _uiState.mapNotNull { it.tvShowUiState?.selectedSeasonEpisodes }.distinctUntilChanged()
+        _uiState.mapNotNull { it.tvShowUiState?.episodes }.distinctUntilChanged()
     ) { index, episodes ->
         episodes.getOrNull(index)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
@@ -85,9 +85,9 @@ class MediaDetailViewModel @Inject constructor(
                 getTvShowSeasonEpisodes(mediaId, season.id).collect { seasonEpisodes ->
                     _uiState.updateTvShowUiState {
                         it.copy(
-                            selectedSeasonEpisodes = seasonEpisodes.data?.episodes,
+                            episodes = seasonEpisodes.data?.episodes,
                             selectedEpisodeIndex = seasonEpisodes.data?.selectedEpisodeIndex,
-                            tvShowEpisodesUiState = seasonEpisodes.toUiState()
+                            episodesUiState = seasonEpisodes.toUiState()
                         )
                     }
                 }

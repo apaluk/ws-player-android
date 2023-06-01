@@ -6,16 +6,14 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class VideoDto(
-    @Json(name = "lang")
-    val lang: String?,
-    @Json(name = "name")
-    val name: String?,
-    @Json(name = "size")
-    val size: Int?,
-    @Json(name = "subtitles")
-    val subtitles: List<Any>?,
-    @Json(name = "type")
-    val type: String,
-    @Json(name = "url")
-    val url: String
+    @Json(name = "aspect")
+    val aspect: Double?,
+    @Json(name = "codec")
+    val codec: String?,
+    @Json(name = "duration")
+    val duration: Double?,
+    @Json(name = "height")
+    val height: Int?,
+    @Json(name = "width")
+    val width: Int?
 )

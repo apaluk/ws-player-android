@@ -66,7 +66,7 @@ class WatchHistoryRepositoryImpl(
 
     override fun getSeasonEpisodesWatchHistory(
         mediaId: String,
-        season: String
+        season: String?
     ): Flow<List<WatchHistoryEntry>> =
         watchHistoryDao.getSeasonEpisodesWatchHistoryEntries(mediaId, season)
             .mapList { it.toWatchHistoryEntry() }
@@ -77,8 +77,8 @@ class WatchHistoryRepositoryImpl(
     override suspend fun getWatchHistoryById(watchHistoryId: Long): WatchHistoryEntry? =
         watchHistoryDao.getWatchHistoryById(watchHistoryId)?.toWatchHistoryEntry()
 
-    override fun getLastInProgressMedia(): Flow<List<WatchHistoryEntry>> =
-        watchHistoryDao.getLastInProgressMediaIds()
+    override fun getLastWatchedMedia(): Flow<List<WatchHistoryEntry>> =
+        watchHistoryDao.getLastWatchedMediaIds()
             .map { list ->
                 list.mapNotNull { mediaId ->
                     watchHistoryDao.getLatestWatchHistoryEntry(mediaId)

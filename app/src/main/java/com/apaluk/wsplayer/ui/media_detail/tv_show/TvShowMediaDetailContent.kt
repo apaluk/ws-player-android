@@ -179,10 +179,10 @@ fun MediaDetailTvShowEpisodesList(
     onMediaDetailAction: (MediaDetailAction) -> Unit
 ) {
     UiStateAnimator(
-        uiState = tvShowUiState.tvShowEpisodesUiState,
+        uiState = tvShowUiState.episodesUiState,
         modifier = Modifier.heightIn(min = 140.dp)
     ) {
-        val episodes = tvShowUiState.selectedSeasonEpisodes ?: return@UiStateAnimator
+        val episodes = tvShowUiState.episodes ?: return@UiStateAnimator
         Column {
             Divider(
                 color = MaterialTheme.colorScheme.surfaceVariant,
@@ -334,7 +334,7 @@ fun TvShowMediaDetailContentPreview() {
                     duration = 0,
                     progress = MediaProgress(0, false)
                 ),
-                tvShowEpisodesUiState = UiState.Content,
+                episodesUiState = UiState.Content,
                 seasons = listOf(
                     TvShowSeason(
                         id = "",

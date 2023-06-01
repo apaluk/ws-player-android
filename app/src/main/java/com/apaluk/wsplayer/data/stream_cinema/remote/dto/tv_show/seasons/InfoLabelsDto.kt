@@ -16,6 +16,8 @@ data class InfoLabelsDto(
     val director: List<String>,
     @Json(name = "duration")
     val duration: Int?,
+    @Json(name = "episode")
+    val episode: Int?,
     @Json(name = "genre")
     val genre: List<String>,
     @Json(name = "mediatype")

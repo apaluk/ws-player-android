@@ -47,7 +47,7 @@ interface WatchHistoryDao {
 
     @Query("""
         SELECT * FROM watchHistory
-        WHERE mediaId=:mediaId AND seasonId=:season
+        WHERE mediaId=:mediaId AND (seasonId=:season OR (seasonId is NULL AND :season is NULL))
         ORDER BY lastUpdate DESC
     """)
     fun getSeasonEpisodesWatchHistoryEntries(mediaId: String, season: String?): Flow<List<WatchHistory>>
@@ -55,13 +55,12 @@ interface WatchHistoryDao {
     @Query("SELECT ident FROM streams WHERE id=:streamId")
     suspend fun getStreamIdent(streamId: Long): String?
 
-    // query that selects latest distinct mediaId
     @Query("""
         SELECT DISTINCT mediaId FROM watchHistory
-        ORDER BY isWatched ASC, lastUpdate DESC
+        ORDER BY lastUpdate DESC
     """
     )
-    fun getLastInProgressMediaIds(): Flow<List<String>>
+    fun getLastWatchedMediaIds(): Flow<List<String>>
 
     @Query("""
         SELECT * FROM watchHistory

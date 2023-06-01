@@ -12,8 +12,8 @@ interface WatchHistoryRepository {
     suspend fun ensureStream(mediaStream: MediaStream): Long
     suspend fun ensureWatchHistoryEntry(mediaId: String, season: String?, episode: String?, streamId: Long): Long
     suspend fun updateWatchHistoryProgress(watchHistoryId: Long, progress: Int, isWatched: Boolean)
-    fun getSeasonEpisodesWatchHistory(mediaId: String, season: String): Flow<List<WatchHistoryEntry>>
+    fun getSeasonEpisodesWatchHistory(mediaId: String, season: String?): Flow<List<WatchHistoryEntry>>
     suspend fun getStreamIdent(streamId: Long): String?
-    fun getLastInProgressMedia(): Flow<List<WatchHistoryEntry>>
+    fun getLastWatchedMedia(): Flow<List<WatchHistoryEntry>>
     suspend fun removeWatchHistoryEntry(mediaId: String)
 }

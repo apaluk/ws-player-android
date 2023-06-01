@@ -7,7 +7,7 @@ import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.domain.model.media.*
 import com.apaluk.wsplayer.ui.common.util.stringResourceSafe
 import com.apaluk.wsplayer.ui.media_detail.*
-import com.apaluk.wsplayer.ui.media_detail.tv_show.util.TvShowPosterData
+import com.apaluk.wsplayer.ui.media_detail.tv_show.TvShowPosterData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -35,7 +35,7 @@ fun MediaDetailMovie.generalInfoText(): String {
 }
 
 val MediaDetailMovie.relativeProgress: Float?
-    get() = progress?.let { (it.progressSeconds.toFloat() / duration.toFloat()).coerceIn(0f, 1f) } ?: null
+    get() = progress?.let { (it.progressSeconds.toFloat() / duration.toFloat()).coerceIn(0f, 1f) }
 
 val MediaProgress.isInProgress: Boolean
     get() = progressSeconds > 0
