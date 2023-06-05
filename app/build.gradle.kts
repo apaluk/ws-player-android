@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.apaluk.wsplayer"
+    namespace = "com.apaluk.streamtheater"
     compileSdk = Config.compileSdkVersion
 
     defaultConfig {
-        applicationId = "com.apaluk.wsplayer"
+        applicationId = "com.apaluk.streamtheater"
         minSdk = Config.minSdkVersion
         targetSdk = Config.compileSdkVersion
         versionCode = Config.versionCode
