@@ -31,10 +31,12 @@ data class MediaDetailTvShow(
     val progress: MediaProgress? = null
 ): MediaDetail()
 
+sealed class TvShowChild
+
 data class TvShowSeason(
     val id: String,
-    val seasonNumber: Int,
-    val name: String?,
+    val orderNumber: Int,
+    val title: String?,
     val year: String?,
     val directors: List<String>,
     val writer: List<String>,
@@ -42,11 +44,11 @@ data class TvShowSeason(
     val genre: List<String>,
     val plot: String?,
     val imageUrl: String?,
-)
+): TvShowChild()
 
 data class TvShowEpisode(
     val id: String,
-    val episodeNumber: Int,
+    val orderNumber: Int,
     val title: String?,
     val year: String?,
     val directors: List<String>,
@@ -58,7 +60,7 @@ data class TvShowEpisode(
     val thumbImageUrl: String?,
     val duration: Int,
     val progress: MediaProgress? = null
-)
+): TvShowChild()
 
 data class MediaProgress(
     val progressSeconds: Int,

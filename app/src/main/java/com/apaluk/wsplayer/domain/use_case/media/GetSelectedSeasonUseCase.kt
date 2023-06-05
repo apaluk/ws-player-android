@@ -21,7 +21,7 @@ class GetSelectedSeasonUseCase @Inject constructor(
         }
 
         // find 1st regular season
-        val firstSeason = seasons.indexOfFirst { it.seasonNumber == 1 }
+        val firstSeason = seasons.indexOfFirst { it.orderNumber == 1 }
         return firstSeason.coerceAtLeast(0)
     }
 }

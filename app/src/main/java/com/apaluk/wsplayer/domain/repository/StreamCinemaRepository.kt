@@ -10,6 +10,6 @@ interface StreamCinemaRepository {
     fun getMediaStreams(mediaId: String): Flow<Resource<List<MediaStream>>>
     fun search(text: String): Flow<Resource<List<SearchResultItem>>>
     fun getMediaDetails(mediaId: String): Flow<Resource<MediaDetail>>
-    fun getTvShowSeasons(mediaId: String): Flow<Resource<List<TvShowSeason>>>
-    fun getTvShowSeasonEpisodes(mediaId: String): Flow<Resource<List<TvShowEpisode>>>
+    /** Provides seasons or episodes, depending on API, since we don't know what will come from the API. */
+    fun getTvShowChildren(mediaId: String): Flow<Resource<List<TvShowChild>>>
 }

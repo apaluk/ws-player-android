@@ -14,6 +14,7 @@ import com.apaluk.wsplayer.data.database.repository.WatchHistoryRepositoryImpl
 import com.apaluk.wsplayer.data.stream_cinema.StreamCinemaRepositoryImpl
 import com.apaluk.wsplayer.data.stream_cinema.remote.StreamCinemaApi
 import com.apaluk.wsplayer.data.stream_cinema.remote.adapter.MediaTypeAdapter
+import com.apaluk.wsplayer.data.stream_cinema.remote.adapter.TvShowChildTypeAdapter
 import com.apaluk.wsplayer.data.webshare.remote.WebShareApi
 import com.apaluk.wsplayer.domain.repository.MediaInfoRepository
 import com.apaluk.wsplayer.domain.repository.SearchHistoryRepository
@@ -71,6 +72,7 @@ object DataModule {
     fun provideStreamCinemaMoshi(): Moshi {
         return Moshi.Builder()
             .add(MediaTypeAdapter())
+            .add(TvShowChildTypeAdapter())
             .build()
     }
     

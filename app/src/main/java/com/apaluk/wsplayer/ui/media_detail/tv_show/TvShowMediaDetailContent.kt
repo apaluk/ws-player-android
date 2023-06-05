@@ -262,7 +262,7 @@ fun MediaDetailTvShowEpisode(
                 .padding(start = 16.dp, end = 12.dp)
                 .width(28.dp)
                 .fillMaxHeight(),
-            text = episode.episodeNumber.withLeadingZeros(2),
+            text = episode.orderNumber.withLeadingZeros(2),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.End
@@ -272,7 +272,7 @@ fun MediaDetailTvShowEpisode(
                 .weight(1f),
             text = episode.title ?: stringResourceSafe(
                 id = R.string.wsp_tv_show_episode_number,
-                episode.episodeNumber
+                episode.orderNumber
             ),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyLarge
@@ -338,8 +338,8 @@ fun TvShowMediaDetailContentPreview() {
                 seasons = listOf(
                     TvShowSeason(
                         id = "",
-                        seasonNumber = 1,
-                        name = "Season 1",
+                        orderNumber = 1,
+                        title = "Season 1",
                         year = null,
                         directors = emptyList(),
                         writer = emptyList(),

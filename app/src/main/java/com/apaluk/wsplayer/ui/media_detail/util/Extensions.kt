@@ -81,7 +81,7 @@ fun MediaDetailTvShow.generalInfoText(): String {
 @Composable
 @ReadOnlyComposable
 fun TvShowSeason.requireName(): String =
-    name ?: stringResourceSafe(id = R.string.wsp_tv_show_season_number, seasonNumber)
+    title ?: stringResourceSafe(id = R.string.wsp_tv_show_season_number, orderNumber)
 
 @Composable
 @ReadOnlyComposable

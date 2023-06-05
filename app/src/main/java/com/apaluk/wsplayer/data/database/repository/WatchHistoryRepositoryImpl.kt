@@ -64,7 +64,7 @@ class WatchHistoryRepositoryImpl(
         watchHistoryDao.upsertWatchHistoryEntry(updated)
     }
 
-    override fun getSeasonEpisodesWatchHistory(
+    override fun getEpisodesWatchHistory(
         mediaId: String,
         season: String?
     ): Flow<List<WatchHistoryEntry>> =

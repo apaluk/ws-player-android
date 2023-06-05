@@ -87,11 +87,7 @@ class StreamCinemaRepositoryFake: StreamCinemaRepository {
         )
     )
 
-    override fun getTvShowSeasons(mediaId: String): Flow<Resource<List<TvShowSeason>>> {
-        return emptyFlow()  // TODO
-    }
-
-    override fun getTvShowSeasonEpisodes(mediaId: String): Flow<Resource<List<TvShowEpisode>>> {
-        return emptyFlow()  // TODO
+    override fun getTvShowChildren(mediaId: String): Flow<Resource<List<TvShowChild>>> {
+        TODO("Not yet implemented")
     }
 }

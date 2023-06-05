@@ -4,15 +4,16 @@ import com.apaluk.wsplayer.core.util.Constants
 import com.apaluk.wsplayer.core.util.requireNotNullOrEmpty
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.media.MediaDetailDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.media.MediaTypeDto
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.media.TvShowChildType
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.search.HitDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.search.I18nInfoLabelDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.search.SearchResponseDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.MediaStreamsResponseItemDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.SubtitleDto
 import com.apaluk.wsplayer.data.stream_cinema.remote.dto.streams.VideoDto
-import com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.episodes.TvShowSeasonEpisodesResponseDto
-import com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.seasons.TvShowSeasonsResponseDto
+import com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.children.MediaChildrenResponseDto
 import com.apaluk.wsplayer.domain.model.media.*
+import com.apaluk.wsplayer.domain.model.media.util.orderNumber
 import com.apaluk.wsplayer.domain.model.search.SearchResultItem
 import kotlin.math.roundToInt
 
@@ -82,11 +83,14 @@ fun MediaStreamsResponseItemDto.toMediaStream(): MediaStream {
     )
 }
 
-fun TvShowSeasonsResponseDto.toListOfSeasons(): List<TvShowSeason> =
-    hits.hits.mapIndexed { index, hit -> hit.toTvShowSeason(index) }.sortedBy { it.seasonNumber }
+fun MediaChildrenResponseDto.toListOfTvShowChildren(): List<TvShowChild> =
+    hits.hits.mapIndexed { index, hit ->
+        when(hit.source.infoLabels.mediatype) {
+            TvShowChildType.Season -> hit.toTvShowSeason(index)
+            TvShowChildType.Episode -> hit.toTvShowEpisode(index)
+        }
+    }.sortedBy { it.orderNumber() }
 
-fun TvShowSeasonEpisodesResponseDto.toListOfEpisodes(): List<TvShowEpisode> =
-    hits.hits.map { it.toTvShowEpisode() }.sortedBy { it.episodeNumber }
 
 private fun HitDto.getImageUrl(): String? = source.i18nInfoLabels.getPosterImageUrl()
 
@@ -159,24 +163,24 @@ private fun SubtitleDto.toSubtitles(): Subtitles? =
         null
     }
 
-private fun com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.seasons.HitDto.toTvShowSeason(index: Int): TvShowSeason =
+private fun com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.children.HitDto.toTvShowSeason(index: Int): TvShowSeason =
     TvShowSeason(
         id = id,
-        seasonNumber = source.infoLabels.season ?: index,
-        name = source.infoLabels.originaltitle,
+        orderNumber = source.infoLabels.season ?: index,
+        title = source.infoLabels.originaltitle,
         year = source.infoLabels.year?.toString(),
         directors = source.infoLabels.director,
         writer = source.infoLabels.writer,
         cast = source.cast.map { it.name },
         genre = source.infoLabels.genre,
         plot = source.i18nInfoLabels.getPlot(),
-        imageUrl = source.i18nInfoLabels.getPosterImageUrl(),
+        imageUrl = source.i18nInfoLabels.getFanArtImageUrl(),
     )
 
-private fun com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.episodes.HitDto.toTvShowEpisode(): TvShowEpisode =
+private fun com.apaluk.wsplayer.data.stream_cinema.remote.dto.tv_show.children.HitDto.toTvShowEpisode(index: Int): TvShowEpisode =
     TvShowEpisode(
         id = id,
-        episodeNumber = source.infoLabels.episode,
+        orderNumber = source.infoLabels.episode ?: index,
         title = source.i18nInfoLabels.getTitle(),
         year = source.infoLabels.year?.toString(),
         directors = source.infoLabels.director,

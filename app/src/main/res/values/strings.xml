@@ -25,6 +25,8 @@
     <string name="wsp_tv_show_count_of_seasons">%d Seasons</string>
     <string name="wsp_tv_show_season_number">Season %d</string>
     <string name="wsp_tv_show_episode_number">Episode %d</string>
+    <string name="wsp_media_error_no_seasons_or_episodes">Could not get seasons nor episodes for this TV show.</string>
+    <string name="wsp_media_error_no_episodes">Could not get episodes for this TV show.</string>
 
     <string name="wsp_dashboard_continue_watching">Continue watching</string>
     <string name="wsp_dashboard_remove_media_from_history">Remove from history?</string>

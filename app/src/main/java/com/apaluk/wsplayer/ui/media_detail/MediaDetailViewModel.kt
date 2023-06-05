@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apaluk.wsplayer.core.navigation.WsPlayerNavArgs
+import com.apaluk.wsplayer.core.util.mapList
 import com.apaluk.wsplayer.core.util.withLeadingZeros
 import com.apaluk.wsplayer.domain.model.media.MediaStream
 import com.apaluk.wsplayer.domain.model.media.StreamsMediaType
@@ -17,7 +18,21 @@ import com.apaluk.wsplayer.ui.media_detail.util.relativeProgress
 import com.apaluk.wsplayer.ui.media_detail.util.tvShowUiState
 import com.apaluk.wsplayer.ui.media_detail.util.updateTvShowUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -96,21 +111,46 @@ class MediaDetailViewModel @Inject constructor(
         // update poster data according to selected episode
         viewModelScope.launch {
             combine(
-                selectedSeason.filterNotNull(),
+                selectedSeason,
                 selectedEpisode.filterNotNull(),
-                uiState.map { it.streamsUiState?.selectedStreamId }
-            ) { season, episode, selectedStream ->
+                uiState.map { it.streamsUiState?.selectedStreamId },
+                uiState.map { it.tvShowUiState?.tvShow?.imageUrl}
+            ) { season, episode, selectedStream, tvShowImage ->
+                val episodeNumber =
+                    if(season != null)
+                        "S${season.orderNumber.withLeadingZeros(2)}E${episode.orderNumber.withLeadingZeros(2)}"
+                    else
+                        "E${episode.orderNumber.withLeadingZeros(2)}"
                 TvShowPosterData(
-                    episodeNumber = "S${season.seasonNumber.withLeadingZeros(2)}E${episode.episodeNumber.withLeadingZeros(2)}",
+                    episodeNumber = episodeNumber,
                     episodeName = episode.title,
                     duration = episode.duration,
-                    imageUrl = episode.imageUrl ?: season.imageUrl,
+                    imageUrl = episode.imageUrl ?: season?.imageUrl ?: tvShowImage,
                     progress = episode.relativeProgress ?: 0f,
                     showPlayButton = selectedStream != null,
                 )
             }.collect { posterData ->
                 _uiState.updateTvShowUiState { it.copy(posterData = posterData) }
             }
+        }
+        // fix episodes with no image
+        viewModelScope.launch {
+            _uiState
+                .map { it.mediaDetailUiState}
+                .filterIsInstance<TvShowMediaDetailUiState>()
+                .mapNotNull { it.episodes }
+                .filter { it.any { episode -> episode.imageUrl.isNullOrEmpty() } }
+                .mapList { episode ->
+                    if(episode.imageUrl == null)
+                        episode.copy(imageUrl = _uiState.value.tvShowUiState?.posterData?.imageUrl)
+                    else episode
+                }
+                .filterNot { // don't continue if any imageUrl is still null
+                    it.any { episode -> episode.imageUrl.isNullOrEmpty() }
+                }
+                .collect { episodes ->
+                    _uiState.updateTvShowUiState { it.copy(episodes = episodes) }
+                }
         }
     }
 

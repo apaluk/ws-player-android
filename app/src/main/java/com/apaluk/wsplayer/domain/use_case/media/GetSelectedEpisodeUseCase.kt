@@ -9,7 +9,7 @@ class GetSelectedEpisodeUseCase @Inject constructor(
     private val watchHistoryRepository: WatchHistoryRepository
 ) {
     suspend operator fun invoke(mediaId: String, seasonId: String?, episodes: List<TvShowEpisode>): Int? {
-        val episodesHistory = watchHistoryRepository.getSeasonEpisodesWatchHistory(mediaId, seasonId).first()
+        val episodesHistory = watchHistoryRepository.getEpisodesWatchHistory(mediaId, seasonId).first()
         val lastWatchedEpisode = episodesHistory.firstOrNull { it.episodeId != null } ?: return 0
         val lastWatchedEpisodeIndex = episodes.indexOfFirst { it.id == lastWatchedEpisode.episodeId }
         val newIndex = if (lastWatchedEpisode.isWatched) lastWatchedEpisodeIndex + 1 else lastWatchedEpisodeIndex
