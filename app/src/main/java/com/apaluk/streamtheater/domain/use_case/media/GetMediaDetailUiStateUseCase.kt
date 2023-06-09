@@ -86,7 +86,7 @@ class GetMediaDetailUiStateUseCase @Inject constructor(
                                 if(episodes !is Resource.Success) {
                                     emit(Resource.Success(mediaDetailUiState.copy(episodesUiState = episodes.toUiState())))
                                 } else if(episodes.data == null) {
-                                    emit(Resource.Error(context.getString(R.string.wsp_media_error_no_episodes)))
+                                    emit(Resource.Error(context.getString(R.string.st_media_error_no_episodes)))
                                 } else {
                                     // episodes found, update UI state
                                     val selectedEpisodeIndex = getSelectedEpisodeUseCase(mediaId, null, episodes.data)

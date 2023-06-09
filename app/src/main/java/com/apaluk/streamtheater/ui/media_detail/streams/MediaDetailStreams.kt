@@ -20,7 +20,7 @@ import com.apaluk.streamtheater.domain.model.media.MediaStream
 import com.apaluk.streamtheater.ui.common.util.stringResourceSafe
 import com.apaluk.streamtheater.ui.media_detail.StreamsUiState
 import com.apaluk.streamtheater.ui.media_detail.util.selectedIndex
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 import com.apaluk.streamtheater.R
 
 @Composable
@@ -43,7 +43,7 @@ fun MediaDetailStreams(
         ) {
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = stringResourceSafe(id = R.string.wsp_media_select_stream),
+                text = stringResourceSafe(id = R.string.st_media_select_stream),
                 fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -78,7 +78,7 @@ fun MediaDetailStreams(
 @Preview
 @Composable
 fun MediaDetailStreamsPreview() {
-    WsPlayerTheme {
+    StTheme {
         MediaDetailStreams(streamsUiState = StreamsUiState(DUMMY_MEDIA_STREAMS))
     }
 }

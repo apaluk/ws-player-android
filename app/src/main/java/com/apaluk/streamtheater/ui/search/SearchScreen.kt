@@ -23,18 +23,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.apaluk.streamtheater.R
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavActions
+import com.apaluk.streamtheater.core.navigation.StNavActions
 import com.apaluk.streamtheater.ui.common.composable.BackButton
 import com.apaluk.streamtheater.ui.common.composable.DefaultEmptyState
 import com.apaluk.streamtheater.ui.common.composable.UiStateAnimator
-import com.apaluk.streamtheater.ui.common.composable.WspButton
+import com.apaluk.streamtheater.ui.common.composable.StButton
 import com.apaluk.streamtheater.ui.common.util.stringResourceSafe
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SearchScreen(
-    navActions: WsPlayerNavActions,
+    navActions: StNavActions,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
@@ -87,7 +87,7 @@ private fun SearchScreenContent(
                     .padding(paddingValues)
                     .fillMaxSize(),
                 uiState = uiState.uiState,
-                empty = { DefaultEmptyState(text = stringResourceSafe(id = R.string.wsp_search_empty_results))},
+                empty = { DefaultEmptyState(text = stringResourceSafe(id = R.string.st_search_empty_results))},
                 idle = {
                     uiState.searchSuggestions?.let {
                         SearchHistoryList(
@@ -183,7 +183,7 @@ fun SearchBar(
             placeholder = {
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = stringResourceSafe(id = R.string.wsp_search_hint),
+                    text = stringResourceSafe(id = R.string.st_search_hint),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -196,8 +196,8 @@ fun SearchBar(
             ),
             maxLines = 1
         )
-        WspButton(
-            text = stringResourceSafe(id = R.string.wsp_search_button),
+        StButton(
+            text = stringResourceSafe(id = R.string.st_search_button),
             onClick = {
                 onSearchScreenAction(SearchScreenAction.TriggerSearch)
             },
@@ -210,7 +210,7 @@ fun SearchBar(
 @Preview
 @Composable
 fun SearchScreenPreview() {
-    WsPlayerTheme {
+    StTheme {
         SearchScreenContent(
             uiState = SearchUiState(),
             onSearchScreenAction = {},

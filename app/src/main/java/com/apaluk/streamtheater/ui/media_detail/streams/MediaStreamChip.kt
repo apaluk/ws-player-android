@@ -23,7 +23,7 @@ import com.apaluk.streamtheater.core.util.formatFileSize
 import com.apaluk.streamtheater.core.util.formatTransferSpeed
 import com.apaluk.streamtheater.domain.model.media.*
 import com.apaluk.streamtheater.ui.common.util.color
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 
 @Composable
 fun MediaStreamChip(
@@ -145,7 +145,7 @@ fun LanguageInfo(
 @Preview
 @Composable
 fun MediaStreamChipPreview() {
-    WsPlayerTheme {
+    StTheme {
         MediaStreamChip(
             mediaStream = DUMMY_MEDIA_STREAMS[1]
         )

@@ -13,4 +13,4 @@ fun <T> Resource<T>.toUiState(): UiState =
     }
 
 @Composable fun UiState.Error.text(): String =
-    text ?:stringResourceSafe(id = textId ?: R.string.wsp_default_error_state)
+    text ?:stringResourceSafe(id = textId ?: R.string.st_default_error_state)

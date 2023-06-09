@@ -74,7 +74,7 @@ class LoginScreenTest {
             )
         }
         composeRule
-            .onNodeWithText(composeRule.activity.getString(R.string.wsp_login_positive_button))
+            .onNodeWithText(composeRule.activity.getString(R.string.st_login_positive_button))
             .performClick()
 
         assertThat(loginTriggered).isTrue()

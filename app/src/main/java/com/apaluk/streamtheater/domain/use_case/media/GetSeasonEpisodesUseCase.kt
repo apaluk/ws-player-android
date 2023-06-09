@@ -26,7 +26,7 @@ class GetSeasonEpisodesUseCase @Inject constructor(
             emit(episodes.convertNonSuccess())
             return@flow
         } else if(episodes.data == null) {
-            emit(Resource.Error(context.getString(R.string.wsp_media_error_no_episodes)))
+            emit(Resource.Error(context.getString(R.string.st_media_error_no_episodes)))
         } else {
             getEpisodesWithWatchHistoryUpdates(mediaId, seasonId, episodes.data).collect {
                 emit(

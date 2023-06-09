@@ -8,7 +8,7 @@ import com.apaluk.streamtheater.domain.model.media.MediaDetailMovie
 import com.apaluk.streamtheater.ui.common.util.UiState
 import com.apaluk.streamtheater.ui.media_detail.MediaDetailScreenContent
 import com.apaluk.streamtheater.ui.media_detail.MediaDetailScreenUiState
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 import com.apaluk.streamtheater.R
 import com.apaluk.streamtheater.core.util.formatFileSize
 import com.apaluk.streamtheater.domain.model.media.MediaStream
@@ -27,7 +27,7 @@ class MediaDetailScreenTest {
     @Test
     fun mediaDetailsSet_movieDataDisplayed() {
         composeRule.activity.setContent {
-            WsPlayerTheme {
+            StTheme {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
@@ -73,7 +73,7 @@ class MediaDetailScreenTest {
     @Test
     fun streamsNotSet_streamsNotVisible() {
         composeRule.activity.setContent {
-            WsPlayerTheme {
+            StTheme {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,
@@ -97,14 +97,14 @@ class MediaDetailScreenTest {
             }
         }
         composeRule
-            .onNodeWithText(composeRule.activity.getString(R.string.wsp_media_select_stream))
+            .onNodeWithText(composeRule.activity.getString(R.string.st_media_select_stream))
             .assertDoesNotExist()
     }
 
     @Test
     fun streamsSet_streamsVisible() {
         composeRule.activity.setContent {
-            WsPlayerTheme {
+            StTheme {
                 MediaDetailScreenContent(
                     uiState = MediaDetailScreenUiState(
                         uiState = UiState.Content,

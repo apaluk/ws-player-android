@@ -36,10 +36,10 @@ import com.apaluk.streamtheater.core.util.Constants
 import com.apaluk.streamtheater.domain.model.dashboard.DashboardMedia
 import com.apaluk.streamtheater.domain.model.dashboard.util.isEmpty
 import com.apaluk.streamtheater.ui.common.composable.FullScreenLoader
-import com.apaluk.streamtheater.ui.common.composable.WspOutlinedButton
-import com.apaluk.streamtheater.ui.common.composable.WspOutlinedButtonStyle
+import com.apaluk.streamtheater.ui.common.composable.StOutlinedButton
+import com.apaluk.streamtheater.ui.common.composable.StOutlinedButtonStyle
 import com.apaluk.streamtheater.ui.common.util.stringResourceSafe
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 import com.apaluk.streamtheater.R
 
 @Composable
@@ -146,7 +146,7 @@ private fun DashboardMediaItemLongClickedLayer(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResourceSafe(id = R.string.wsp_dashboard_remove_media_from_history).uppercase(),
+                text = stringResourceSafe(id = R.string.st_dashboard_remove_media_from_history).uppercase(),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
                 letterSpacing = TextUnit(1.4f, TextUnitType.Sp),
@@ -157,16 +157,16 @@ private fun DashboardMediaItemLongClickedLayer(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                WspOutlinedButton(
-                    text = stringResourceSafe(id = R.string.wsp_no),
+                StOutlinedButton(
+                    text = stringResourceSafe(id = R.string.st_no),
                     onClick = onDiscard,
-                    style = WspOutlinedButtonStyle.Light
+                    style = StOutlinedButtonStyle.Light
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                WspOutlinedButton(
-                    text = stringResourceSafe(id = R.string.wsp_yes),
+                StOutlinedButton(
+                    text = stringResourceSafe(id = R.string.st_yes),
                     onClick = onRemoveFromList,
-                    style = WspOutlinedButtonStyle.Highlighted
+                    style = StOutlinedButtonStyle.Highlighted
                 )
             }
         }
@@ -176,7 +176,7 @@ private fun DashboardMediaItemLongClickedLayer(
 @Preview
 @Composable
 fun DashboardMediaItemPreview() {
-    WsPlayerTheme {
+    StTheme {
         DashboardMediaItem(
             dashboardMedia = DashboardMedia(
                 mediaId = "1",

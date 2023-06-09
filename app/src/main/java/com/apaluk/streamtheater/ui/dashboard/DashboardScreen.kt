@@ -15,16 +15,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.apaluk.streamtheater.R
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavActions
+import com.apaluk.streamtheater.core.navigation.StNavActions
 import com.apaluk.streamtheater.ui.common.composable.SingleEventHandler
 import com.apaluk.streamtheater.ui.common.composable.TopAppBarAction
 import com.apaluk.streamtheater.ui.common.util.stringResourceSafe
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier,
-    navActions: WsPlayerNavActions
+    navActions: StNavActions
 ) {
     val viewModel: DashboardViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -66,7 +66,7 @@ private fun DashboardContent(
         uiState.continueWatchingMediaList?.let { continueWatchingMediaList ->
             if (continueWatchingMediaList.isNotEmpty()) {
                 Text(
-                    text = stringResourceSafe(id = R.string.wsp_dashboard_continue_watching),
+                    text = stringResourceSafe(id = R.string.st_dashboard_continue_watching),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.SemiBold,
@@ -94,7 +94,7 @@ private fun DashboardContent(
 @Preview
 @Composable
 fun DashboardPreview() {
-    WsPlayerTheme {
+    StTheme {
         DashboardContent(
             uiState = DashboardUiState(),
         )

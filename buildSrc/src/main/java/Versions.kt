@@ -1,6 +1,6 @@
 object Versions {
     const val androidLibrary = "7.3.1"
-    const val kotlin = "1.6.10"
+    const val kotlin = "1.8.0"
     const val ksp = "1.8.0-1.0.9"
     const val compose = "1.3.1"
     const val navigationCompose = "2.5.3"

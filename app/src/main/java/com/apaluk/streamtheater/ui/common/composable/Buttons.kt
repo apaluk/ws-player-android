@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun WspButton(
+fun StButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
@@ -40,14 +40,14 @@ fun WspButton(
 }
 
 @Composable
-fun WspOutlinedButton(
+fun StOutlinedButton(
     text: String,
     onClick: () -> Unit,
-    style: WspOutlinedButtonStyle
+    style: StOutlinedButtonStyle
 ) {
     val outlineColor = when(style) {
-        WspOutlinedButtonStyle.Light -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
-        WspOutlinedButtonStyle.Highlighted -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
+        StOutlinedButtonStyle.Light -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
+        StOutlinedButtonStyle.Highlighted -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
     }
     OutlinedButton(
         shape = MaterialTheme.shapes.extraSmall,
@@ -67,6 +67,6 @@ fun WspOutlinedButton(
     }
 }
     
-enum class WspOutlinedButtonStyle {
+enum class StOutlinedButtonStyle {
     Light, Highlighted
 }

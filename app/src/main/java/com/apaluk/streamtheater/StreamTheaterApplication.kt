@@ -5,7 +5,7 @@ import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 @HiltAndroidApp
-class WsPlayerApplication: Application() {
+class StreamTheaterApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()

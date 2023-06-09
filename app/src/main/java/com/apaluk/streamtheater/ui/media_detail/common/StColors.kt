@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.apaluk.streamtheater.ui.theme.success
 
-object WspColors {
+object StColors {
     val pausedMedia: Color
         @Composable
         get() = if (isSystemInDarkTheme()) Color(0x9985A7E3) else Color(0x9985A7E3)

@@ -3,7 +3,7 @@ package com.apaluk.streamtheater.ui.media_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavArgs
+import com.apaluk.streamtheater.core.navigation.StNavArgs
 import com.apaluk.streamtheater.core.util.mapList
 import com.apaluk.streamtheater.core.util.withLeadingZeros
 import com.apaluk.streamtheater.domain.model.media.MediaStream
@@ -45,7 +45,7 @@ class MediaDetailViewModel @Inject constructor(
     getStreamsUiState: GetStreamsUiStateUseCase
 ): ViewModel() {
 
-    private val mediaId: String = requireNotNull(savedStateHandle[WsPlayerNavArgs.MEDIA_ID_ARG])
+    private val mediaId: String = requireNotNull(savedStateHandle[StNavArgs.MEDIA_ID_ARG])
 
     private val _uiState = MutableStateFlow(MediaDetailScreenUiState())
     val uiState = _uiState.asStateFlow()

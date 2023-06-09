@@ -24,7 +24,7 @@ import coil.request.ImageRequest
 import com.apaluk.streamtheater.core.util.Constants
 import com.apaluk.streamtheater.domain.model.search.SearchResultItem
 import com.apaluk.streamtheater.ui.common.composable.MediaTitle
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 import com.apaluk.streamtheater.R
 
 @Composable
@@ -128,7 +128,7 @@ fun SearchResult(
 @Preview
 @Composable
 fun SearchResultsPreview() {
-    WsPlayerTheme {
+    StTheme {
         SearchResult(
             item = SearchResultItem(
                 id = "",

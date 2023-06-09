@@ -54,13 +54,13 @@ import com.apaluk.streamtheater.ui.media_detail.MediaDetailAction
 import com.apaluk.streamtheater.ui.media_detail.TvShowMediaDetailUiState
 import com.apaluk.streamtheater.ui.media_detail.common.DropDownSelector
 import com.apaluk.streamtheater.ui.media_detail.common.MediaDetailPoster
-import com.apaluk.streamtheater.ui.media_detail.common.WspColors
+import com.apaluk.streamtheater.ui.media_detail.common.StColors
 import com.apaluk.streamtheater.ui.media_detail.util.generalInfoText
 import com.apaluk.streamtheater.ui.media_detail.util.isInProgress
 import com.apaluk.streamtheater.ui.media_detail.util.relativeProgress
 import com.apaluk.streamtheater.ui.media_detail.util.requireName
 import com.apaluk.streamtheater.ui.media_detail.util.selectedSeasonName
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 
 @Composable
 fun TvShowMediaDetailContent(
@@ -271,7 +271,7 @@ fun MediaDetailTvShowEpisode(
             modifier = Modifier
                 .weight(1f),
             text = episode.title ?: stringResourceSafe(
-                id = R.string.wsp_tv_show_episode_number,
+                id = R.string.st_tv_show_episode_number,
                 episode.orderNumber
             ),
             color = MaterialTheme.colorScheme.onBackground,
@@ -295,7 +295,7 @@ fun MediaDetailTvShowEpisode(
                     Image(
                         painter = painterResource(id = R.drawable.ic_check_circle_24),
                         contentDescription = "Watched",
-                        colorFilter = ColorFilter.tint(WspColors.watchedMedia),
+                        colorFilter = ColorFilter.tint(StColors.watchedMedia),
                         modifier = Modifier
                             .size(18.dp)
                             .align(Alignment.CenterStart)
@@ -304,7 +304,7 @@ fun MediaDetailTvShowEpisode(
                     Image(
                         painter = painterResource(id = R.drawable.ic_pause_circle_24),
                         contentDescription = "In progress",
-                        colorFilter = ColorFilter.tint(WspColors.pausedMedia),
+                        colorFilter = ColorFilter.tint(StColors.pausedMedia),
                         modifier = Modifier
                             .size(18.dp)
                             .align(Alignment.CenterStart)
@@ -318,7 +318,7 @@ fun MediaDetailTvShowEpisode(
 @Preview
 @Composable
 fun TvShowMediaDetailContentPreview() {
-    WsPlayerTheme {
+    StTheme {
         TvShowMediaDetailContent(
             tvShowUiState = TvShowMediaDetailUiState(
                 tvShow = MediaDetailTvShow(

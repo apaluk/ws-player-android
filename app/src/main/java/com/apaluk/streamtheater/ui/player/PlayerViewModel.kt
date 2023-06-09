@@ -3,7 +3,7 @@ package com.apaluk.streamtheater.ui.player
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavArgs
+import com.apaluk.streamtheater.core.navigation.StNavArgs
 import com.apaluk.streamtheater.core.util.SingleEvent
 import com.apaluk.streamtheater.domain.use_case.media.GetStartFromPositionUseCase
 import com.apaluk.streamtheater.domain.use_case.media.UpdateWatchHistoryOnVideoProgressUseCase
@@ -23,8 +23,8 @@ class PlayerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-    private val webshareIdent: String = requireNotNull(savedStateHandle[WsPlayerNavArgs.WEBSHARE_IDENT_ARG])
-    private val watchHistoryId: Long = requireNotNull(savedStateHandle[WsPlayerNavArgs.WATCH_HISTORY_ID_ARG])
+    private val webshareIdent: String = requireNotNull(savedStateHandle[StNavArgs.WEBSHARE_IDENT_ARG])
+    private val watchHistoryId: Long = requireNotNull(savedStateHandle[StNavArgs.WATCH_HISTORY_ID_ARG])
 
     private val _uiState = MutableStateFlow(PlayerScreenState())
     val uiState = _uiState.asStateFlow()

@@ -71,7 +71,7 @@ val StreamsUiState.selectedIndex: Int?
 fun MediaDetailTvShow.generalInfoText(): String {
     val infos = mutableListOf<String>()
     years?.let { infos.add(it) }
-    infos.add(stringResourceSafe(id = R.string.wsp_tv_show_count_of_seasons, numSeasons))
+    infos.add(stringResourceSafe(id = R.string.st_tv_show_count_of_seasons, numSeasons))
     if(genre.isNotEmpty()) {
         infos.add(genre.joinToString(separator = " / "))
     }
@@ -81,7 +81,7 @@ fun MediaDetailTvShow.generalInfoText(): String {
 @Composable
 @ReadOnlyComposable
 fun TvShowSeason.requireName(): String =
-    title ?: stringResourceSafe(id = R.string.wsp_tv_show_season_number, orderNumber)
+    title ?: stringResourceSafe(id = R.string.st_tv_show_season_number, orderNumber)
 
 @Composable
 @ReadOnlyComposable

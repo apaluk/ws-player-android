@@ -9,14 +9,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.apaluk.streamtheater.core.navigation.WsPlayerDestinations.DASHBOARD_ROUTE
-import com.apaluk.streamtheater.core.navigation.WsPlayerDestinations.LOGIN_ROUTE
-import com.apaluk.streamtheater.core.navigation.WsPlayerDestinations.MEDIA_DETAIL_ROUTE
-import com.apaluk.streamtheater.core.navigation.WsPlayerDestinations.SEARCH_ROUTE
-import com.apaluk.streamtheater.core.navigation.WsPlayerDestinations.VIDEO_PLAYER_ROUTE
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavArgs.MEDIA_ID_ARG
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavArgs.WATCH_HISTORY_ID_ARG
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavArgs.WEBSHARE_IDENT_ARG
+import com.apaluk.streamtheater.core.navigation.StDestinations.DASHBOARD_ROUTE
+import com.apaluk.streamtheater.core.navigation.StDestinations.LOGIN_ROUTE
+import com.apaluk.streamtheater.core.navigation.StDestinations.MEDIA_DETAIL_ROUTE
+import com.apaluk.streamtheater.core.navigation.StDestinations.SEARCH_ROUTE
+import com.apaluk.streamtheater.core.navigation.StDestinations.VIDEO_PLAYER_ROUTE
+import com.apaluk.streamtheater.core.navigation.StNavArgs.MEDIA_ID_ARG
+import com.apaluk.streamtheater.core.navigation.StNavArgs.WATCH_HISTORY_ID_ARG
+import com.apaluk.streamtheater.core.navigation.StNavArgs.WEBSHARE_IDENT_ARG
 import com.apaluk.streamtheater.ui.dashboard.DashboardScreen
 import com.apaluk.streamtheater.ui.login.LoginScreen
 import com.apaluk.streamtheater.ui.media_detail.MediaDetailScreen
@@ -24,10 +24,10 @@ import com.apaluk.streamtheater.ui.player.PlayerScreen
 import com.apaluk.streamtheater.ui.search.SearchScreen
 
 @Composable
-fun WsPlayerNavGraph(
+fun StNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    navActions: WsPlayerNavActions = remember { WsPlayerNavActions(navController) }
+    navActions: StNavActions = remember { StNavActions(navController) }
 ) {
     NavHost(
         navController = navController,

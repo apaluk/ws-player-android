@@ -55,7 +55,7 @@ fun MediaDetailPoster(
             if(showPlayButton) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_play_filled_circle_64),
-                    contentDescription = stringResourceSafe(id = R.string.wsp_media_play),
+                    contentDescription = stringResourceSafe(id = R.string.st_media_play),
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraLarge)
                         .background(

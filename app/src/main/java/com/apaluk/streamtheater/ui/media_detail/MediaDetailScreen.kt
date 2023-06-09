@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavActions
+import com.apaluk.streamtheater.core.navigation.StNavActions
 import com.apaluk.streamtheater.core.util.exhaustive
 import com.apaluk.streamtheater.domain.model.media.*
 import com.apaluk.streamtheater.ui.common.composable.BackButton
@@ -24,12 +24,12 @@ import com.apaluk.streamtheater.ui.common.util.UiState
 import com.apaluk.streamtheater.ui.media_detail.movie.MovieMediaDetailContent
 import com.apaluk.streamtheater.ui.media_detail.streams.MediaDetailStreams
 import com.apaluk.streamtheater.ui.media_detail.tv_show.TvShowMediaDetailContent
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 
 @Composable
 fun MediaDetailScreen(
     modifier: Modifier = Modifier,
-    navActions: WsPlayerNavActions,
+    navActions: StNavActions,
     viewModel: MediaDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -120,7 +120,7 @@ fun MediaDetailContent(
 @Preview(device = "spec:width=1600dp,height=800dp,orientation=landscape")
 @Composable
 fun MediaDetailContentPreview() {
-    WsPlayerTheme {
+    StTheme {
         MediaDetailScreenContent(
             uiState = MediaDetailScreenUiState(
                 uiState = UiState.Content,

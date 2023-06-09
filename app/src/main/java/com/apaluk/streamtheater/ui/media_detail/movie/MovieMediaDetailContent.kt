@@ -19,7 +19,7 @@ import com.apaluk.streamtheater.ui.media_detail.MediaDetailAction
 import com.apaluk.streamtheater.ui.media_detail.MediaDetailScreenUiState
 import com.apaluk.streamtheater.ui.media_detail.MovieMediaDetailUiState
 import com.apaluk.streamtheater.ui.media_detail.common.MediaDetailPoster
-import com.apaluk.streamtheater.ui.media_detail.common.WspColors
+import com.apaluk.streamtheater.ui.media_detail.common.StColors
 import com.apaluk.streamtheater.ui.media_detail.util.generalInfoText
 import com.apaluk.streamtheater.ui.media_detail.util.isInProgress
 import com.apaluk.streamtheater.ui.media_detail.util.relativeProgress
@@ -55,14 +55,14 @@ fun MovieMediaDetailContent(
                     modifier = Modifier.padding(end = 8.dp).size(18.dp),
                     painter = painterResource(id = R.drawable.ic_check_circle_24),
                     contentDescription = "Is watched",
-                    colorFilter = ColorFilter.tint(WspColors.watchedMedia)
+                    colorFilter = ColorFilter.tint(StColors.watchedMedia)
                 )
             } else if(mediaDetailMovie.progress?.isInProgress == true) {
                 Image(
                     modifier = Modifier.padding(end = 8.dp).size(18.dp),
                     painter = painterResource(id = R.drawable.ic_pause_circle_24),
                     contentDescription = "Is in progress",
-                    colorFilter = ColorFilter.tint(WspColors.pausedMedia)
+                    colorFilter = ColorFilter.tint(StColors.pausedMedia)
                 )
             }
             Text(
@@ -72,18 +72,18 @@ fun MovieMediaDetailContent(
             )
         }
         CrewMembers(
-            role = stringResourceSafe(id = R.string.wsp_media_director),
+            role = stringResourceSafe(id = R.string.st_media_director),
             members = mediaDetailMovie.directors,
             modifier = Modifier.padding(top = 16.dp)
         )
         CrewMembers(
             modifier = Modifier.padding(top = 8.dp),
-            role = stringResourceSafe(id = R.string.wsp_media_writer),
+            role = stringResourceSafe(id = R.string.st_media_writer),
             members = mediaDetailMovie.writer
         )
         CrewMembers(
             modifier = Modifier.padding(top = 8.dp),
-            role = stringResourceSafe(id = R.string.wsp_media_cast),
+            role = stringResourceSafe(id = R.string.st_media_cast),
             members = mediaDetailMovie.cast
         )
         mediaDetailMovie.plot?.let { plot ->

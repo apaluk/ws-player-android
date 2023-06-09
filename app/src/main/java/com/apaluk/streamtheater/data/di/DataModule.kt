@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.apaluk.streamtheater.BuildConfig
 import com.apaluk.streamtheater.core.util.Constants
-import com.apaluk.streamtheater.data.database.WspDatabase
+import com.apaluk.streamtheater.data.database.StDatabase
 import com.apaluk.streamtheater.data.database.dao.MediaInfoDao
 import com.apaluk.streamtheater.data.database.dao.SearchHistoryDao
 import com.apaluk.streamtheater.data.database.dao.WatchHistoryDao
@@ -90,10 +90,10 @@ object DataModule {
     }
 
     @Provides
-    fun provideWspDatabase(
+    fun provideStDatabase(
         @ApplicationContext context: Context
-    ): WspDatabase =
-        Room.databaseBuilder(context, WspDatabase::class.java, "wsPlayerDatabase").build()
+    ): StDatabase =
+        Room.databaseBuilder(context, StDatabase::class.java, "stDatabase").build()
 
     @Provides
     fun provideStreamCinemaRepository(
@@ -118,18 +118,18 @@ object DataModule {
 
     @Provides
     fun provideSearchHistoryDao(
-        wspDatabase: WspDatabase
-    ): SearchHistoryDao = wspDatabase.searchHistoryDao()
+        stDatabase: StDatabase
+    ): SearchHistoryDao = stDatabase.searchHistoryDao()
 
     @Provides
     fun provideWatchHistoryDao(
-        wspDatabase: WspDatabase
-    ): WatchHistoryDao = wspDatabase.watchHistoryDao()
+        stDatabase: StDatabase
+    ): WatchHistoryDao = stDatabase.watchHistoryDao()
 
     @Provides
     fun provideMediaInfoDao(
-        wspDatabase: WspDatabase
-    ): MediaInfoDao = wspDatabase.mediaInfoDao()
+        stDatabase: StDatabase
+    ): MediaInfoDao = stDatabase.mediaInfoDao()
 }
 
 @Qualifier

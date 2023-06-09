@@ -57,7 +57,7 @@ fun FullScreenLoader(
 @Composable
 fun DefaultEmptyState(
     modifier: Modifier = Modifier,
-    text: String = stringResourceSafe(id = R.string.wsp_default_empty_state),
+    text: String = stringResourceSafe(id = R.string.st_default_empty_state),
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -79,7 +79,7 @@ fun DefaultEmptyState(
 @Composable
 fun DefaultErrorState(
     modifier: Modifier = Modifier,
-    text: String = stringResourceSafe(id = R.string.wsp_default_error_state),
+    text: String = stringResourceSafe(id = R.string.st_default_error_state),
 ) {
     Box(
         modifier = modifier.fillMaxSize(),

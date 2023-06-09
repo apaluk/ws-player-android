@@ -30,17 +30,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.apaluk.streamtheater.R
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavActions
+import com.apaluk.streamtheater.core.navigation.StNavActions
 import com.apaluk.streamtheater.ui.common.composable.TextFieldWithHeader
 import com.apaluk.streamtheater.ui.common.composable.UiStateAnimator
-import com.apaluk.streamtheater.ui.common.composable.WspButton
+import com.apaluk.streamtheater.ui.common.composable.StButton
 import com.apaluk.streamtheater.ui.common.util.stringResourceSafe
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    navActions: WsPlayerNavActions,
+    navActions: StNavActions,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -96,7 +96,7 @@ fun LoginScreenForm(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp, vertical = 24.dp),
-                text = stringResourceSafe(id = R.string.wsp_login_welcome),
+                text = stringResourceSafe(id = R.string.st_login_welcome),
                 style = MaterialTheme.typography.displayLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -106,14 +106,14 @@ fun LoginScreenForm(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp, vertical = 32.dp),
-                text = stringResourceSafe(id = R.string.wsp_login_instructions),
+                text = stringResourceSafe(id = R.string.st_login_instructions),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground
             )
             TextFieldWithHeader(
                 modifier = Modifier.testTag("login:username"),
-                header = stringResourceSafe(id = R.string.wsp_login_username),
+                header = stringResourceSafe(id = R.string.st_login_username),
                 editText = uiState.userName,
                 onTextChanged = {
                     onLoginScreenAction(LoginScreenAction.UpdateUsername(it))
@@ -122,7 +122,7 @@ fun LoginScreenForm(
             )
             Spacer(modifier = modifier.height(16.dp))
             TextFieldWithHeader(
-                header = stringResourceSafe(id = com.apaluk.streamtheater.R.string.wsp_login_password),
+                header = stringResourceSafe(id = com.apaluk.streamtheater.R.string.st_login_password),
                 editText = uiState.password,
                 onTextChanged =  {
                     onLoginScreenAction(LoginScreenAction.UpdatePassword(it))
@@ -144,9 +144,9 @@ fun LoginScreenForm(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                WspButton(
+                StButton(
                     onClick = { onLoginScreenAction(LoginScreenAction.TriggerLogin) },
-                    text = stringResourceSafe(id = com.apaluk.streamtheater.R.string.wsp_login_positive_button)
+                    text = stringResourceSafe(id = com.apaluk.streamtheater.R.string.st_login_positive_button)
                 )
                 if(uiState.loggingIn) {
                     Spacer(modifier = Modifier.width(32.dp))
@@ -180,7 +180,7 @@ fun LoginScreenForm(
 @Preview
 @Composable
 private fun BasicPreview() {
-    WsPlayerTheme {
+    StTheme {
         LoginScreenForm(
             modifier = Modifier,
             uiState = LoginUiState(

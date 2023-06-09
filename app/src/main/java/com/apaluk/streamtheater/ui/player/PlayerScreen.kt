@@ -17,7 +17,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
-import com.apaluk.streamtheater.core.navigation.WsPlayerNavActions
+import com.apaluk.streamtheater.core.navigation.StNavActions
 import com.apaluk.streamtheater.core.util.millisToSeconds
 import com.apaluk.streamtheater.ui.common.composable.*
 import kotlinx.coroutines.delay
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun PlayerScreen(
-    navActions: WsPlayerNavActions,
+    navActions: StNavActions,
     viewModel: PlayerViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()

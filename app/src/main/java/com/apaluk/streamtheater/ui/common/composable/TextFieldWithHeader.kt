@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.apaluk.streamtheater.ui.theme.WsPlayerTheme
+import com.apaluk.streamtheater.ui.theme.StTheme
 
 // TODO remove from common?
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +59,7 @@ fun TextFieldWithHeader(
 @Preview
 @Composable
 fun TextWithHeaderPreview() {
-    WsPlayerTheme {
+    StTheme {
         TextFieldWithHeader(
             header = "Username",
             editText = "hello",

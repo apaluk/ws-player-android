@@ -18,7 +18,7 @@ import com.apaluk.streamtheater.data.database.model.*
     version = 1,
     exportSchema = false
 )
-abstract class WspDatabase: RoomDatabase() {
+abstract class StDatabase: RoomDatabase() {
     abstract fun searchHistoryDao(): SearchHistoryDao
     abstract fun watchHistoryDao(): WatchHistoryDao
     abstract fun mediaInfoDao(): MediaInfoDao

@@ -74,13 +74,13 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
-private val wsPlayerShapes = Shapes(
+private val stShapes = Shapes(
     large = RoundedCornerShape(32.dp),
     extraLarge = RoundedCornerShape(128.dp)
 )
 
 @Composable
-fun WsPlayerTheme(
+fun StTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
@@ -99,6 +99,6 @@ fun WsPlayerTheme(
     MaterialTheme(
         colorScheme = colors,
         content = content,
-        shapes = wsPlayerShapes
+        shapes = stShapes
     )
 }
